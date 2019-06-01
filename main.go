@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/hashicorp/terraform/plugin"
-	"github.com/rvichery/terraform-provider-nuagenetworks/nuagenetworks"
+	"github.com/tpretz/terraform-provider-nuagenetworks/nuagenetworks"
 )
 
 func main() {
