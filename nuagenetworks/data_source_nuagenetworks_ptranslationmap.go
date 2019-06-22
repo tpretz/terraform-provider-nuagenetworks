@@ -33,27 +33,11 @@ func dataSourcePTranslationMap() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "provider_alias_ip": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
             "provider_ip": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "associated_domain_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -66,9 +50,8 @@ func dataSourcePTranslationMap() *schema.Resource {
 }
 
 
-func dataSourcePTranslationMapRead(d *schema.ResourceData, m interface{}) error {
+func dataSourcePTranslationMapRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredPTranslationMaps := vspk.PTranslationMapsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -87,7 +70,7 @@ func dataSourcePTranslationMapRead(d *schema.ResourceData, m interface{}) error 
     parent := &vspk.PSNATPool{ID: d.Get("parent_psnat_pool").(string)}
     filteredPTranslationMaps, err = parent.PTranslationMaps(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     PTranslationMap := &vspk.PTranslationMap{}
@@ -105,12 +88,8 @@ func dataSourcePTranslationMapRead(d *schema.ResourceData, m interface{}) error 
 
     d.Set("spat_source_list", PTranslationMap.SPATSourceList)
     d.Set("mapping_type", PTranslationMap.MappingType)
-    d.Set("last_updated_by", PTranslationMap.LastUpdatedBy)
-    d.Set("entity_scope", PTranslationMap.EntityScope)
     d.Set("provider_alias_ip", PTranslationMap.ProviderAliasIP)
     d.Set("provider_ip", PTranslationMap.ProviderIP)
-    d.Set("associated_domain_id", PTranslationMap.AssociatedDomainID)
-    d.Set("external_id", PTranslationMap.ExternalID)
     
     d.Set("id", PTranslationMap.Identifier())
     d.Set("parent_id", PTranslationMap.ParentID)
@@ -119,5 +98,5 @@ func dataSourcePTranslationMapRead(d *schema.ResourceData, m interface{}) error 
 
     d.SetId(PTranslationMap.Identifier())
     
-    return nil
+    return
 }

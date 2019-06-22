@@ -42,11 +42,8 @@ type DefaultGateway struct {
 	ParentType        string `json:"parentType,omitempty"`
 	Owner             string `json:"owner,omitempty"`
 	Name              string `json:"name,omitempty"`
-	LastUpdatedBy     string `json:"lastUpdatedBy,omitempty"`
 	GatewayIPAddress  string `json:"gatewayIPAddress,omitempty"`
 	GatewayMACAddress string `json:"gatewayMACAddress,omitempty"`
-	EntityScope       string `json:"entityScope,omitempty"`
-	ExternalID        string `json:"externalID,omitempty"`
 }
 
 // NewDefaultGateway returns a new *DefaultGateway
@@ -89,32 +86,4 @@ func (o *DefaultGateway) Save() *bambou.Error {
 func (o *DefaultGateway) Delete() *bambou.Error {
 
 	return bambou.CurrentSession().DeleteEntity(o)
-}
-
-// Metadatas retrieves the list of child Metadatas of the DefaultGateway
-func (o *DefaultGateway) Metadatas(info *bambou.FetchingInfo) (MetadatasList, *bambou.Error) {
-
-	var list MetadatasList
-	err := bambou.CurrentSession().FetchChildren(o, MetadataIdentity, &list, info)
-	return list, err
-}
-
-// CreateMetadata creates a new child Metadata under the DefaultGateway
-func (o *DefaultGateway) CreateMetadata(child *Metadata) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
-}
-
-// GlobalMetadatas retrieves the list of child GlobalMetadatas of the DefaultGateway
-func (o *DefaultGateway) GlobalMetadatas(info *bambou.FetchingInfo) (GlobalMetadatasList, *bambou.Error) {
-
-	var list GlobalMetadatasList
-	err := bambou.CurrentSession().FetchChildren(o, GlobalMetadataIdentity, &list, info)
-	return list, err
-}
-
-// CreateGlobalMetadata creates a new child GlobalMetadata under the DefaultGateway
-func (o *DefaultGateway) CreateGlobalMetadata(child *GlobalMetadata) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
 }

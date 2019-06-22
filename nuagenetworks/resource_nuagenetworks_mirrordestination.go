@@ -15,11 +15,6 @@ func resourceMirrorDestination() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -37,7 +32,7 @@ func resourceMirrorDestination() *schema.Resource {
             },
             "name": &schema.Schema{
                 Type:     schema.TypeString,
-                Required: true,
+                Optional: true,
             },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
@@ -50,7 +45,7 @@ func resourceMirrorDestination() *schema.Resource {
             },
             "destination_ip": &schema.Schema{
                 Type:     schema.TypeString,
-                Required: true,
+                Optional: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -69,11 +64,15 @@ func resourceMirrorDestinationCreate(d *schema.ResourceData, m interface{}) erro
 
     // Initialize MirrorDestination object
     o := &vspk.MirrorDestination{
-        Name: d.Get("name").(string),
-        DestinationIp: d.Get("destination_ip").(string),
+    }
+    if attr, ok := d.GetOk("name"); ok {
+        o.Name = attr.(string)
     }
     if attr, ok := d.GetOk("service_id"); ok {
         o.ServiceId = attr.(int)
+    }
+    if attr, ok := d.GetOk("destination_ip"); ok {
+        o.DestinationIp = attr.(string)
     }
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)
@@ -126,11 +125,15 @@ func resourceMirrorDestinationUpdate(d *schema.ResourceData, m interface{}) erro
         return err
     }
     
-    o.Name = d.Get("name").(string)
-    o.DestinationIp = d.Get("destination_ip").(string)
     
+    if attr, ok := d.GetOk("name"); ok {
+        o.Name = attr.(string)
+    }
     if attr, ok := d.GetOk("service_id"); ok {
         o.ServiceId = attr.(int)
+    }
+    if attr, ok := d.GetOk("destination_ip"); ok {
+        o.DestinationIp = attr.(string)
     }
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)

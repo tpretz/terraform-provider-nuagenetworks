@@ -48,7 +48,6 @@ type InfrastructureEVDFProfile struct {
 	ActiveController  string `json:"activeController,omitempty"`
 	ServiceIPv4Subnet string `json:"serviceIPv4Subnet,omitempty"`
 	Description       string `json:"description,omitempty"`
-	EnterpriseID      string `json:"enterpriseID,omitempty"`
 	EntityScope       string `json:"entityScope,omitempty"`
 	ProxyDNSName      string `json:"proxyDNSName,omitempty"`
 	UseTwoFactor      bool   `json:"useTwoFactor"`
@@ -62,7 +61,7 @@ func NewInfrastructureEVDFProfile() *InfrastructureEVDFProfile {
 
 	return &InfrastructureEVDFProfile{
 		ServiceIPv4Subnet: "0.0.0.0/8",
-		UseTwoFactor:      true,
+		UseTwoFactor:      false,
 		NuagePlatform:     "KVM",
 	}
 }

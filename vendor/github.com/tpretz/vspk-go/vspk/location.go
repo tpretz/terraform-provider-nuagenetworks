@@ -50,6 +50,7 @@ type Location struct {
 	Locality             string  `json:"locality,omitempty"`
 	Longitude            float64 `json:"longitude,omitempty"`
 	Country              string  `json:"country,omitempty"`
+	AssociatedEntityID   string  `json:"associatedEntityID,omitempty"`
 	AssociatedEntityName string  `json:"associatedEntityName,omitempty"`
 	AssociatedEntityType string  `json:"associatedEntityType,omitempty"`
 	State                string  `json:"state,omitempty"`

@@ -43,7 +43,6 @@ type Tier struct {
 	Owner              string `json:"owner,omitempty"`
 	PacketCount        int    `json:"packetCount,omitempty"`
 	LastUpdatedBy      string `json:"lastUpdatedBy,omitempty"`
-	Description        string `json:"description,omitempty"`
 	TierType           string `json:"tierType,omitempty"`
 	Timeout            int    `json:"timeout,omitempty"`
 	EntityScope        string `json:"entityScope,omitempty"`

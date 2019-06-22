@@ -15,11 +15,6 @@ func resourceVirtualFirewallRule() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -48,10 +43,6 @@ func resourceVirtualFirewallRule() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "ipv6_address_override": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
             "dscp": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -64,18 +55,6 @@ func resourceVirtualFirewallRule() *schema.Resource {
             "action": &schema.Schema{
                 Type:     schema.TypeString,
                 Required: true,
-            },
-            "address_override": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
-            "web_filter_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
-            "web_filter_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
             },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
@@ -143,26 +122,11 @@ func resourceVirtualFirewallRule() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "associated_egress_entry_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "associated_ingress_entry_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "associated_l7_application_signature_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
             "associated_live_entity_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "associated_live_template_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
                 Computed: true,
@@ -189,10 +153,6 @@ func resourceVirtualFirewallRule() *schema.Resource {
                 Type:     schema.TypeBool,
                 Optional: true,
                 Default: false,
-            },
-            "ether_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
             },
             "overlay_mirror_destination_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -223,20 +183,8 @@ func resourceVirtualFirewallRuleCreate(d *schema.ResourceData, m interface{}) er
     if attr, ok := d.GetOk("icmp_type"); ok {
         o.ICMPType = attr.(string)
     }
-    if attr, ok := d.GetOk("ipv6_address_override"); ok {
-        o.IPv6AddressOverride = attr.(string)
-    }
     if attr, ok := d.GetOk("dscp"); ok {
         o.DSCP = attr.(string)
-    }
-    if attr, ok := d.GetOk("address_override"); ok {
-        o.AddressOverride = attr.(string)
-    }
-    if attr, ok := d.GetOk("web_filter_id"); ok {
-        o.WebFilterID = attr.(string)
-    }
-    if attr, ok := d.GetOk("web_filter_type"); ok {
-        o.WebFilterType = attr.(string)
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
@@ -282,9 +230,6 @@ func resourceVirtualFirewallRuleCreate(d *schema.ResourceData, m interface{}) er
     }
     if attr, ok := d.GetOk("stats_logging_enabled"); ok {
         o.StatsLoggingEnabled = attr.(bool)
-    }
-    if attr, ok := d.GetOk("ether_type"); ok {
-        o.EtherType = attr.(string)
     }
     if attr, ok := d.GetOk("overlay_mirror_destination_id"); ok {
         o.OverlayMirrorDestinationID = attr.(string)
@@ -318,13 +263,9 @@ func resourceVirtualFirewallRuleRead(d *schema.ResourceData, m interface{}) erro
     d.Set("acl_template_name", o.ACLTemplateName)
     d.Set("icmp_code", o.ICMPCode)
     d.Set("icmp_type", o.ICMPType)
-    d.Set("ipv6_address_override", o.IPv6AddressOverride)
     d.Set("dscp", o.DSCP)
     d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("action", o.Action)
-    d.Set("address_override", o.AddressOverride)
-    d.Set("web_filter_id", o.WebFilterID)
-    d.Set("web_filter_type", o.WebFilterType)
     d.Set("description", o.Description)
     d.Set("destination_port", o.DestinationPort)
     d.Set("network_id", o.NetworkID)
@@ -340,17 +281,13 @@ func resourceVirtualFirewallRuleRead(d *schema.ResourceData, m interface{}) erro
     d.Set("source_port", o.SourcePort)
     d.Set("priority", o.Priority)
     d.Set("protocol", o.Protocol)
-    d.Set("associated_egress_entry_id", o.AssociatedEgressEntryID)
-    d.Set("associated_ingress_entry_id", o.AssociatedIngressEntryID)
     d.Set("associated_l7_application_signature_id", o.AssociatedL7ApplicationSignatureID)
     d.Set("associated_live_entity_id", o.AssociatedLiveEntityID)
-    d.Set("associated_live_template_id", o.AssociatedLiveTemplateID)
     d.Set("associated_traffic_type", o.AssociatedTrafficType)
     d.Set("associated_traffic_type_id", o.AssociatedTrafficTypeID)
     d.Set("stateful", o.Stateful)
     d.Set("stats_id", o.StatsID)
     d.Set("stats_logging_enabled", o.StatsLoggingEnabled)
-    d.Set("ether_type", o.EtherType)
     d.Set("overlay_mirror_destination_id", o.OverlayMirrorDestinationID)
     d.Set("external_id", o.ExternalID)
     
@@ -381,20 +318,8 @@ func resourceVirtualFirewallRuleUpdate(d *schema.ResourceData, m interface{}) er
     if attr, ok := d.GetOk("icmp_type"); ok {
         o.ICMPType = attr.(string)
     }
-    if attr, ok := d.GetOk("ipv6_address_override"); ok {
-        o.IPv6AddressOverride = attr.(string)
-    }
     if attr, ok := d.GetOk("dscp"); ok {
         o.DSCP = attr.(string)
-    }
-    if attr, ok := d.GetOk("address_override"); ok {
-        o.AddressOverride = attr.(string)
-    }
-    if attr, ok := d.GetOk("web_filter_id"); ok {
-        o.WebFilterID = attr.(string)
-    }
-    if attr, ok := d.GetOk("web_filter_type"); ok {
-        o.WebFilterType = attr.(string)
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
@@ -440,9 +365,6 @@ func resourceVirtualFirewallRuleUpdate(d *schema.ResourceData, m interface{}) er
     }
     if attr, ok := d.GetOk("stats_logging_enabled"); ok {
         o.StatsLoggingEnabled = attr.(bool)
-    }
-    if attr, ok := d.GetOk("ether_type"); ok {
-        o.EtherType = attr.(string)
     }
     if attr, ok := d.GetOk("overlay_mirror_destination_id"); ok {
         o.OverlayMirrorDestinationID = attr.(string)

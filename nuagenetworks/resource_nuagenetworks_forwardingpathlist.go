@@ -15,11 +15,6 @@ func resourceForwardingPathList() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -50,11 +45,6 @@ func resourceForwardingPathList() *schema.Resource {
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "forwarding_path_list_id": &schema.Schema{
-                Type:     schema.TypeInt,
                 Optional: true,
                 Computed: true,
             },
@@ -109,7 +99,6 @@ func resourceForwardingPathListRead(d *schema.ResourceData, m interface{}) error
     d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("description", o.Description)
     d.Set("entity_scope", o.EntityScope)
-    d.Set("forwarding_path_list_id", o.ForwardingPathListID)
     d.Set("external_id", o.ExternalID)
     
     d.Set("id", o.Identifier())

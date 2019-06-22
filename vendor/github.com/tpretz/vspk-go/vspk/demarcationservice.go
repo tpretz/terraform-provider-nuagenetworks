@@ -41,13 +41,10 @@ type DemarcationService struct {
 	ParentID            string `json:"parentID,omitempty"`
 	ParentType          string `json:"parentType,omitempty"`
 	Owner               string `json:"owner,omitempty"`
-	LastUpdatedBy       string `json:"lastUpdatedBy,omitempty"`
-	EntityScope         string `json:"entityScope,omitempty"`
 	RouteDistinguisher  string `json:"routeDistinguisher,omitempty"`
 	Priority            int    `json:"priority,omitempty"`
 	AssociatedGatewayID string `json:"associatedGatewayID,omitempty"`
 	AssociatedVLANID    string `json:"associatedVLANID,omitempty"`
-	ExternalID          string `json:"externalID,omitempty"`
 	Type                string `json:"type,omitempty"`
 }
 
@@ -91,32 +88,4 @@ func (o *DemarcationService) Save() *bambou.Error {
 func (o *DemarcationService) Delete() *bambou.Error {
 
 	return bambou.CurrentSession().DeleteEntity(o)
-}
-
-// Metadatas retrieves the list of child Metadatas of the DemarcationService
-func (o *DemarcationService) Metadatas(info *bambou.FetchingInfo) (MetadatasList, *bambou.Error) {
-
-	var list MetadatasList
-	err := bambou.CurrentSession().FetchChildren(o, MetadataIdentity, &list, info)
-	return list, err
-}
-
-// CreateMetadata creates a new child Metadata under the DemarcationService
-func (o *DemarcationService) CreateMetadata(child *Metadata) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
-}
-
-// GlobalMetadatas retrieves the list of child GlobalMetadatas of the DemarcationService
-func (o *DemarcationService) GlobalMetadatas(info *bambou.FetchingInfo) (GlobalMetadatasList, *bambou.Error) {
-
-	var list GlobalMetadatasList
-	err := bambou.CurrentSession().FetchChildren(o, GlobalMetadataIdentity, &list, info)
-	return list, err
-}
-
-// CreateGlobalMetadata creates a new child GlobalMetadata under the DemarcationService
-func (o *DemarcationService) CreateGlobalMetadata(child *GlobalMetadata) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
 }

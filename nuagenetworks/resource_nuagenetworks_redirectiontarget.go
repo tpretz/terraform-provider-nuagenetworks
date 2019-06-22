@@ -15,11 +15,6 @@ func resourceRedirectionTarget() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -57,10 +52,6 @@ func resourceRedirectionTarget() *schema.Resource {
                 Optional: true,
             },
             "description": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
-            "destination_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
@@ -119,9 +110,6 @@ func resourceRedirectionTargetCreate(d *schema.ResourceData, m interface{}) erro
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
     }
-    if attr, ok := d.GetOk("destination_type"); ok {
-        o.DestinationType = attr.(string)
-    }
     if attr, ok := d.GetOk("virtual_network_id"); ok {
         o.VirtualNetworkID = attr.(string)
     }
@@ -169,7 +157,6 @@ func resourceRedirectionTargetRead(d *schema.ResourceData, m interface{}) error 
     d.Set("redundancy_enabled", o.RedundancyEnabled)
     d.Set("template_id", o.TemplateID)
     d.Set("description", o.Description)
-    d.Set("destination_type", o.DestinationType)
     d.Set("virtual_network_id", o.VirtualNetworkID)
     d.Set("end_point_type", o.EndPointType)
     d.Set("entity_scope", o.EntityScope)
@@ -208,9 +195,6 @@ func resourceRedirectionTargetUpdate(d *schema.ResourceData, m interface{}) erro
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
-    }
-    if attr, ok := d.GetOk("destination_type"); ok {
-        o.DestinationType = attr.(string)
     }
     if attr, ok := d.GetOk("virtual_network_id"); ok {
         o.VirtualNetworkID = attr.(string)

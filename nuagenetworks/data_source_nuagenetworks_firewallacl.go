@@ -28,10 +28,6 @@ func dataSourceFirewallAcl() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "active": &schema.Schema{
                 Type:     schema.TypeBool,
                 Computed: true,
@@ -48,22 +44,10 @@ func dataSourceFirewallAcl() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "rule_ids": &schema.Schema{
                 Type:     schema.TypeList,
                 Computed: true,
                 Elem:     &schema.Schema{Type: schema.TypeString},
-            },
-            "auto_generate_priority": &schema.Schema{
-                Type:     schema.TypeBool,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
             },
             "parent_domain": &schema.Schema{
                 Type:     schema.TypeString,
@@ -80,9 +64,8 @@ func dataSourceFirewallAcl() *schema.Resource {
 }
 
 
-func dataSourceFirewallAclRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceFirewallAclRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredFirewallAcls := vspk.FirewallAclsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -102,13 +85,13 @@ func dataSourceFirewallAclRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.Domain{ID: attr.(string)}
         filteredFirewallAcls, err = parent.FirewallAcls(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredFirewallAcls, err = parent.FirewallAcls(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -126,15 +109,11 @@ func dataSourceFirewallAclRead(d *schema.ResourceData, m interface{}) error {
     FirewallAcl = filteredFirewallAcls[0]
 
     d.Set("name", FirewallAcl.Name)
-    d.Set("last_updated_by", FirewallAcl.LastUpdatedBy)
     d.Set("active", FirewallAcl.Active)
     d.Set("default_allow_ip", FirewallAcl.DefaultAllowIP)
     d.Set("default_allow_non_ip", FirewallAcl.DefaultAllowNonIP)
     d.Set("description", FirewallAcl.Description)
-    d.Set("entity_scope", FirewallAcl.EntityScope)
     d.Set("rule_ids", FirewallAcl.RuleIds)
-    d.Set("auto_generate_priority", FirewallAcl.AutoGeneratePriority)
-    d.Set("external_id", FirewallAcl.ExternalID)
     
     d.Set("id", FirewallAcl.Identifier())
     d.Set("parent_id", FirewallAcl.ParentID)
@@ -143,5 +122,5 @@ func dataSourceFirewallAclRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(FirewallAcl.Identifier())
     
-    return nil
+    return
 }

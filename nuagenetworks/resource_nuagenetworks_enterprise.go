@@ -15,11 +15,6 @@ func resourceEnterprise() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -68,11 +63,6 @@ func resourceEnterprise() *schema.Resource {
                 Optional: true,
                 Computed: true,
             },
-            "web_filter_enabled": &schema.Schema{
-                Type:     schema.TypeBool,
-                Optional: true,
-                Computed: true,
-            },
             "receive_multi_cast_list_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -95,7 +85,7 @@ func resourceEnterprise() *schema.Resource {
             "dictionary_version": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
-                Default: 2,
+                Default: 1,
             },
             "virtual_firewall_rules_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
@@ -118,11 +108,6 @@ func resourceEnterprise() *schema.Resource {
                 Type:     schema.TypeList,
                 Optional: true,
                 Elem:     &schema.Schema{Type: schema.TypeString},
-            },
-            "allowed_forwarding_mode": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
             },
             "floating_ips_quota": &schema.Schema{
                 Type:     schema.TypeInt,
@@ -159,11 +144,6 @@ func resourceEnterprise() *schema.Resource {
             "local_as": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
-            },
-            "use_global_mac": &schema.Schema{
-                Type:     schema.TypeBool,
-                Optional: true,
-                Default: false,
             },
             "associated_enterprise_security_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -245,9 +225,6 @@ func resourceEnterpriseCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("local_as"); ok {
         o.LocalAS = attr.(int)
     }
-    if attr, ok := d.GetOk("use_global_mac"); ok {
-        o.UseGlobalMAC = attr.(bool)
-    }
     if attr, ok := d.GetOk("customer_id"); ok {
         o.CustomerID = attr.(int)
     }
@@ -290,7 +267,6 @@ func resourceEnterpriseRead(d *schema.ResourceData, m interface{}) error {
     d.Set("vnf_management_enabled", o.VNFManagementEnabled)
     d.Set("name", o.Name)
     d.Set("last_updated_by", o.LastUpdatedBy)
-    d.Set("web_filter_enabled", o.WebFilterEnabled)
     d.Set("receive_multi_cast_list_id", o.ReceiveMultiCastListID)
     d.Set("send_multi_cast_list_id", o.SendMultiCastListID)
     d.Set("description", o.Description)
@@ -301,7 +277,6 @@ func resourceEnterpriseRead(d *schema.ResourceData, m interface{}) error {
     d.Set("allow_gateway_management", o.AllowGatewayManagement)
     d.Set("allow_trusted_forwarding_class", o.AllowTrustedForwardingClass)
     d.Set("allowed_forwarding_classes", o.AllowedForwardingClasses)
-    d.Set("allowed_forwarding_mode", o.AllowedForwardingMode)
     d.Set("floating_ips_quota", o.FloatingIPsQuota)
     d.Set("floating_ips_used", o.FloatingIPsUsed)
     d.Set("flow_collection_enabled", o.FlowCollectionEnabled)
@@ -310,7 +285,6 @@ func resourceEnterpriseRead(d *schema.ResourceData, m interface{}) error {
     d.Set("enterprise_profile_id", o.EnterpriseProfileID)
     d.Set("entity_scope", o.EntityScope)
     d.Set("local_as", o.LocalAS)
-    d.Set("use_global_mac", o.UseGlobalMAC)
     d.Set("associated_enterprise_security_id", o.AssociatedEnterpriseSecurityID)
     d.Set("associated_group_key_encryption_profile_id", o.AssociatedGroupKeyEncryptionProfileID)
     d.Set("associated_key_server_monitor_id", o.AssociatedKeyServerMonitorID)
@@ -377,9 +351,6 @@ func resourceEnterpriseUpdate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("local_as"); ok {
         o.LocalAS = attr.(int)
-    }
-    if attr, ok := d.GetOk("use_global_mac"); ok {
-        o.UseGlobalMAC = attr.(bool)
     }
     if attr, ok := d.GetOk("customer_id"); ok {
         o.CustomerID = attr.(int)

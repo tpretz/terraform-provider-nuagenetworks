@@ -48,10 +48,8 @@ type VNFDescriptor struct {
 	Description                    string `json:"description,omitempty"`
 	MetadataID                     string `json:"metadataID,omitempty"`
 	Visible                        bool   `json:"visible"`
-	EntityScope                    string `json:"entityScope,omitempty"`
 	AssociatedVNFThresholdPolicyID string `json:"associatedVNFThresholdPolicyID,omitempty"`
 	StorageGB                      int    `json:"storageGB,omitempty"`
-	ExternalID                     string `json:"externalID,omitempty"`
 	Type                           string `json:"type,omitempty"`
 }
 
@@ -98,34 +96,6 @@ func (o *VNFDescriptor) Save() *bambou.Error {
 func (o *VNFDescriptor) Delete() *bambou.Error {
 
 	return bambou.CurrentSession().DeleteEntity(o)
-}
-
-// Metadatas retrieves the list of child Metadatas of the VNFDescriptor
-func (o *VNFDescriptor) Metadatas(info *bambou.FetchingInfo) (MetadatasList, *bambou.Error) {
-
-	var list MetadatasList
-	err := bambou.CurrentSession().FetchChildren(o, MetadataIdentity, &list, info)
-	return list, err
-}
-
-// CreateMetadata creates a new child Metadata under the VNFDescriptor
-func (o *VNFDescriptor) CreateMetadata(child *Metadata) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
-}
-
-// GlobalMetadatas retrieves the list of child GlobalMetadatas of the VNFDescriptor
-func (o *VNFDescriptor) GlobalMetadatas(info *bambou.FetchingInfo) (GlobalMetadatasList, *bambou.Error) {
-
-	var list GlobalMetadatasList
-	err := bambou.CurrentSession().FetchChildren(o, GlobalMetadataIdentity, &list, info)
-	return list, err
-}
-
-// CreateGlobalMetadata creates a new child GlobalMetadata under the VNFDescriptor
-func (o *VNFDescriptor) CreateGlobalMetadata(child *GlobalMetadata) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
 }
 
 // VNFInterfaceDescriptors retrieves the list of child VNFInterfaceDescriptors of the VNFDescriptor

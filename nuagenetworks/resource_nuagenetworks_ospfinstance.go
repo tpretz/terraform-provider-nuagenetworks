@@ -15,11 +15,6 @@ func resourceOSPFInstance() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -73,7 +68,7 @@ func resourceOSPFInstance() *schema.Resource {
             },
             "export_limit": &schema.Schema{
                 Type:     schema.TypeInt,
-                Optional: true,
+                Required: true,
             },
             "export_to_overlay": &schema.Schema{
                 Type:     schema.TypeBool,
@@ -102,6 +97,7 @@ func resourceOSPFInstanceCreate(d *schema.ResourceData, m interface{}) error {
     // Initialize OSPFInstance object
     o := &vspk.OSPFInstance{
         Name: d.Get("name").(string),
+        ExportLimit: d.Get("export_limit").(int),
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
@@ -117,9 +113,6 @@ func resourceOSPFInstanceCreate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("super_backbone_enabled"); ok {
         o.SuperBackboneEnabled = attr.(bool)
-    }
-    if attr, ok := d.GetOk("export_limit"); ok {
-        o.ExportLimit = attr.(int)
     }
     if attr, ok := d.GetOk("export_to_overlay"); ok {
         o.ExportToOverlay = attr.(bool)
@@ -185,6 +178,7 @@ func resourceOSPFInstanceUpdate(d *schema.ResourceData, m interface{}) error {
     }
     
     o.Name = d.Get("name").(string)
+    o.ExportLimit = d.Get("export_limit").(int)
     
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
@@ -200,9 +194,6 @@ func resourceOSPFInstanceUpdate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("super_backbone_enabled"); ok {
         o.SuperBackboneEnabled = attr.(bool)
-    }
-    if attr, ok := d.GetOk("export_limit"); ok {
-        o.ExportLimit = attr.(int)
     }
     if attr, ok := d.GetOk("export_to_overlay"); ok {
         o.ExportToOverlay = attr.(bool)

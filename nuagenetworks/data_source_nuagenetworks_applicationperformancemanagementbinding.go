@@ -51,26 +51,20 @@ func dataSourceApplicationperformancemanagementbinding() *schema.Resource {
             "parent_domain": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_l2_domain", "parent_applicationperformancemanagement"},
+                ConflictsWith: []string{"parent_l2_domain"},
             },
             "parent_l2_domain": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_applicationperformancemanagement"},
-            },
-            "parent_applicationperformancemanagement": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_l2_domain"},
+                ConflictsWith: []string{"parent_domain"},
             },
         },
     }
 }
 
 
-func dataSourceApplicationperformancemanagementbindingRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceApplicationperformancemanagementbindingRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredApplicationperformancemanagementbindings := vspk.ApplicationperformancemanagementbindingsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -90,19 +84,13 @@ func dataSourceApplicationperformancemanagementbindingRead(d *schema.ResourceDat
         parent := &vspk.Domain{ID: attr.(string)}
         filteredApplicationperformancemanagementbindings, err = parent.Applicationperformancemanagementbindings(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredApplicationperformancemanagementbindings, err = parent.Applicationperformancemanagementbindings(fetchFilter)
         if err != nil {
-            return err
-        }
-    } else if attr, ok := d.GetOk("parent_applicationperformancemanagement"); ok {
-        parent := &vspk.Applicationperformancemanagement{ID: attr.(string)}
-        filteredApplicationperformancemanagementbindings, err = parent.Applicationperformancemanagementbindings(fetchFilter)
-        if err != nil {
-            return err
+            return
         }
     }
 
@@ -133,5 +121,5 @@ func dataSourceApplicationperformancemanagementbindingRead(d *schema.ResourceDat
 
     d.SetId(Applicationperformancemanagementbinding.Identifier())
     
-    return nil
+    return
 }

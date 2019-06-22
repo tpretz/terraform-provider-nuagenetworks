@@ -15,11 +15,6 @@ func resourceLicense() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -47,11 +42,6 @@ func resourceLicense() *schema.Resource {
             "additional_supported_versions": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-            },
-            "request_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
             },
             "phone": &schema.Schema{
                 Type:     schema.TypeString,
@@ -191,11 +181,6 @@ func resourceLicense() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "system": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
         },
     }
 }
@@ -331,7 +316,6 @@ func resourceLicenseRead(d *schema.ResourceData, m interface{}) error {
     d.Set("major_release", o.MajorRelease)
     d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("additional_supported_versions", o.AdditionalSupportedVersions)
-    d.Set("request_id", o.RequestID)
     d.Set("phone", o.Phone)
     d.Set("license", o.License)
     d.Set("license_encryption", o.LicenseEncryption)
@@ -367,7 +351,6 @@ func resourceLicenseRead(d *schema.ResourceData, m interface{}) error {
     d.Set("expiration_date", o.ExpirationDate)
     d.Set("expiry_timestamp", o.ExpiryTimestamp)
     d.Set("external_id", o.ExternalID)
-    d.Set("system", o.System)
     
     d.Set("id", o.Identifier())
     d.Set("parent_id", o.ParentID)

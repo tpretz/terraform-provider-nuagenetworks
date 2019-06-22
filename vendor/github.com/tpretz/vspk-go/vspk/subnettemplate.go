@@ -66,8 +66,7 @@ type SubnetTemplate struct {
 func NewSubnetTemplate() *SubnetTemplate {
 
 	return &SubnetTemplate{
-		DPI:          "INHERITED",
-		UseGlobalMAC: "ENTERPRISE_DEFAULT",
+		DPI: "INHERITED",
 	}
 }
 

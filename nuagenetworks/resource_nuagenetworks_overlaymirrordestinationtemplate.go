@@ -15,11 +15,6 @@ func resourceOverlayMirrorDestinationTemplate() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -49,10 +44,6 @@ func resourceOverlayMirrorDestinationTemplate() *schema.Resource {
                 Optional: true,
             },
             "description": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
-            "destination_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
@@ -95,9 +86,6 @@ func resourceOverlayMirrorDestinationTemplateCreate(d *schema.ResourceData, m in
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
     }
-    if attr, ok := d.GetOk("destination_type"); ok {
-        o.DestinationType = attr.(string)
-    }
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)
     }
@@ -128,7 +116,6 @@ func resourceOverlayMirrorDestinationTemplateRead(d *schema.ResourceData, m inte
     d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("redundancy_enabled", o.RedundancyEnabled)
     d.Set("description", o.Description)
-    d.Set("destination_type", o.DestinationType)
     d.Set("end_point_type", o.EndPointType)
     d.Set("entity_scope", o.EntityScope)
     d.Set("trigger_type", o.TriggerType)
@@ -160,9 +147,6 @@ func resourceOverlayMirrorDestinationTemplateUpdate(d *schema.ResourceData, m in
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
-    }
-    if attr, ok := d.GetOk("destination_type"); ok {
-        o.DestinationType = attr.(string)
     }
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)

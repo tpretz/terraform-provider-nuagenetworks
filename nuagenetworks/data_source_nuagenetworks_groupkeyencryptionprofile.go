@@ -48,10 +48,6 @@ func dataSourceGroupKeyEncryptionProfile() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "dr_seed_lifetime": &schema.Schema{
-                Type:     schema.TypeInt,
-                Computed: true,
-            },
             "name": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -133,9 +129,8 @@ func dataSourceGroupKeyEncryptionProfile() *schema.Resource {
 }
 
 
-func dataSourceGroupKeyEncryptionProfileRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceGroupKeyEncryptionProfileRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredGroupKeyEncryptionProfiles := vspk.GroupKeyEncryptionProfilesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -154,7 +149,7 @@ func dataSourceGroupKeyEncryptionProfileRead(d *schema.ResourceData, m interface
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     filteredGroupKeyEncryptionProfiles, err = parent.GroupKeyEncryptionProfiles(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     GroupKeyEncryptionProfile := &vspk.GroupKeyEncryptionProfile{}
@@ -176,7 +171,6 @@ func dataSourceGroupKeyEncryptionProfileRead(d *schema.ResourceData, m interface
     d.Set("sek_payload_encryption_bc_algorithm", GroupKeyEncryptionProfile.SEKPayloadEncryptionBCAlgorithm)
     d.Set("sek_payload_encryption_key_length", GroupKeyEncryptionProfile.SEKPayloadEncryptionKeyLength)
     d.Set("sek_payload_signing_algorithm", GroupKeyEncryptionProfile.SEKPayloadSigningAlgorithm)
-    d.Set("dr_seed_lifetime", GroupKeyEncryptionProfile.DRSeedLifetime)
     d.Set("name", GroupKeyEncryptionProfile.Name)
     d.Set("last_updated_by", GroupKeyEncryptionProfile.LastUpdatedBy)
     d.Set("seed_generation_interval", GroupKeyEncryptionProfile.SeedGenerationInterval)
@@ -203,5 +197,5 @@ func dataSourceGroupKeyEncryptionProfileRead(d *schema.ResourceData, m interface
 
     d.SetId(GroupKeyEncryptionProfile.Identifier())
     
-    return nil
+    return
 }

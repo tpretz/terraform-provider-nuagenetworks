@@ -92,10 +92,6 @@ func dataSourceSharedNetworkResource() *schema.Resource {
                 Type:     schema.TypeBool,
                 Computed: true,
             },
-            "enterprise_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -132,14 +128,6 @@ func dataSourceSharedNetworkResource() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "subnet_route_distinguisher": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "subnet_route_target": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -167,9 +155,8 @@ func dataSourceSharedNetworkResource() *schema.Resource {
 }
 
 
-func dataSourceSharedNetworkResourceRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceSharedNetworkResourceRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredSharedNetworkResources := vspk.SharedNetworkResourcesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -189,19 +176,19 @@ func dataSourceSharedNetworkResourceRead(d *schema.ResourceData, m interface{}) 
         parent := &vspk.PATMapper{ID: attr.(string)}
         filteredSharedNetworkResources, err = parent.SharedNetworkResources(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredSharedNetworkResources, err = parent.SharedNetworkResources(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredSharedNetworkResources, err = parent.SharedNetworkResources(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -235,7 +222,6 @@ func dataSourceSharedNetworkResourceRead(d *schema.ResourceData, m interface{}) 
     d.Set("shared_resource_parent_id", SharedNetworkResource.SharedResourceParentID)
     d.Set("vn_id", SharedNetworkResource.VnID)
     d.Set("underlay", SharedNetworkResource.Underlay)
-    d.Set("enterprise_id", SharedNetworkResource.EnterpriseID)
     d.Set("entity_scope", SharedNetworkResource.EntityScope)
     d.Set("domain_route_distinguisher", SharedNetworkResource.DomainRouteDistinguisher)
     d.Set("domain_route_target", SharedNetworkResource.DomainRouteTarget)
@@ -245,8 +231,6 @@ func dataSourceSharedNetworkResourceRead(d *schema.ResourceData, m interface{}) 
     d.Set("uplink_vport_name", SharedNetworkResource.UplinkVPortName)
     d.Set("use_global_mac", SharedNetworkResource.UseGlobalMAC)
     d.Set("associated_pat_mapper_id", SharedNetworkResource.AssociatedPATMapperID)
-    d.Set("subnet_route_distinguisher", SharedNetworkResource.SubnetRouteDistinguisher)
-    d.Set("subnet_route_target", SharedNetworkResource.SubnetRouteTarget)
     d.Set("external_id", SharedNetworkResource.ExternalID)
     d.Set("dynamic_pat_allocation_enabled", SharedNetworkResource.DynamicPATAllocationEnabled)
     d.Set("type", SharedNetworkResource.Type)
@@ -258,5 +242,5 @@ func dataSourceSharedNetworkResourceRead(d *schema.ResourceData, m interface{}) 
 
     d.SetId(SharedNetworkResource.Identifier())
     
-    return nil
+    return
 }

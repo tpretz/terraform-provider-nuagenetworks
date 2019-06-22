@@ -15,11 +15,6 @@ func resourcePSPATMap() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -39,33 +34,14 @@ func resourcePSPATMap() *schema.Resource {
                 Type:     schema.TypeString,
                 Required: true,
             },
-            "family": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "reserved_spatips": &schema.Schema{
                 Type:     schema.TypeList,
                 Required: true,
                 Elem:     &schema.Schema{Type: schema.TypeString},
             },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "associated_spat_sources_pool_id": &schema.Schema{
                 Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
+                Required: true,
             },
             "parent_psnat_pool": &schema.Schema{
                 Type:     schema.TypeString,
@@ -82,12 +58,6 @@ func resourcePSPATMapCreate(d *schema.ResourceData, m interface{}) error {
         Name: d.Get("name").(string),
         ReservedSPATIPs: d.Get("reserved_spatips").([]interface{}),
         AssociatedSPATSourcesPoolID: d.Get("associated_spat_sources_pool_id").(string),
-    }
-    if attr, ok := d.GetOk("family"); ok {
-        o.Family = attr.(string)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
     parent := &vspk.PSNATPool{ID: d.Get("parent_psnat_pool").(string)}
     err := parent.CreatePSPATMap(o)
@@ -113,12 +83,8 @@ func resourcePSPATMapRead(d *schema.ResourceData, m interface{}) error {
     }
 
     d.Set("name", o.Name)
-    d.Set("family", o.Family)
-    d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("reserved_spatips", o.ReservedSPATIPs)
-    d.Set("entity_scope", o.EntityScope)
     d.Set("associated_spat_sources_pool_id", o.AssociatedSPATSourcesPoolID)
-    d.Set("external_id", o.ExternalID)
     
     d.Set("id", o.Identifier())
     d.Set("parent_id", o.ParentID)
@@ -142,12 +108,6 @@ func resourcePSPATMapUpdate(d *schema.ResourceData, m interface{}) error {
     o.ReservedSPATIPs = d.Get("reserved_spatips").([]interface{})
     o.AssociatedSPATSourcesPoolID = d.Get("associated_spat_sources_pool_id").(string)
     
-    if attr, ok := d.GetOk("family"); ok {
-        o.Family = attr.(string)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
-    }
 
     o.Save()
 

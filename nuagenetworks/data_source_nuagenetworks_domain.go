@@ -56,10 +56,6 @@ func dataSourceDomain() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "vxlanecmp_enabled": &schema.Schema{
-                Type:     schema.TypeBool,
-                Computed: true,
-            },
             "label_id": &schema.Schema{
                 Type:     schema.TypeInt,
                 Computed: true,
@@ -74,6 +70,14 @@ func dataSourceDomain() *schema.Resource {
             },
             "back_haul_service_id": &schema.Schema{
                 Type:     schema.TypeInt,
+                Computed: true,
+            },
+            "back_haul_subnet_ip_address": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
+            "back_haul_subnet_mask": &schema.Schema{
+                Type:     schema.TypeString,
                 Computed: true,
             },
             "back_haul_vnid": &schema.Schema{
@@ -120,10 +124,6 @@ func dataSourceDomain() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "aggregate_flows_enabled": &schema.Schema{
-                Type:     schema.TypeBool,
-                Computed: true,
-            },
             "dhcp_server_addresses": &schema.Schema{
                 Type:     schema.TypeList,
                 Computed: true,
@@ -146,10 +146,6 @@ func dataSourceDomain() *schema.Resource {
                 Computed: true,
             },
             "underlay_enabled": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "enterprise_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -229,43 +225,33 @@ func dataSourceDomain() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "external_label": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "parent_domain": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_enterprise", "parent_domain_template", "parent_firewall_acl", "parent_gateway"},
+                ConflictsWith: []string{"parent_enterprise", "parent_domain_template", "parent_firewall_acl"},
             },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_domain_template", "parent_firewall_acl", "parent_gateway"},
+                ConflictsWith: []string{"parent_domain", "parent_domain_template", "parent_firewall_acl"},
             },
             "parent_domain_template": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_enterprise", "parent_firewall_acl", "parent_gateway"},
+                ConflictsWith: []string{"parent_domain", "parent_enterprise", "parent_firewall_acl"},
             },
             "parent_firewall_acl": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_enterprise", "parent_domain_template", "parent_gateway"},
-            },
-            "parent_gateway": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_enterprise", "parent_domain_template", "parent_firewall_acl"},
+                ConflictsWith: []string{"parent_domain", "parent_enterprise", "parent_domain_template"},
             },
         },
     }
 }
 
 
-func dataSourceDomainRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceDomainRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredDomains := vspk.DomainsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -285,37 +271,31 @@ func dataSourceDomainRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.Domain{ID: attr.(string)}
         filteredDomains, err = parent.Domains(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredDomains, err = parent.Domains(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_domain_template"); ok {
         parent := &vspk.DomainTemplate{ID: attr.(string)}
         filteredDomains, err = parent.Domains(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_firewall_acl"); ok {
         parent := &vspk.FirewallAcl{ID: attr.(string)}
         filteredDomains, err = parent.Domains(fetchFilter)
         if err != nil {
-            return err
-        }
-    } else if attr, ok := d.GetOk("parent_gateway"); ok {
-        parent := &vspk.Gateway{ID: attr.(string)}
-        filteredDomains, err = parent.Domains(fetchFilter)
-        if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredDomains, err = parent.Domains(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -340,11 +320,12 @@ func dataSourceDomainRead(d *schema.ResourceData, m interface{}) error {
     d.Set("fip_ignore_default_route", Domain.FIPIgnoreDefaultRoute)
     d.Set("fip_underlay", Domain.FIPUnderlay)
     d.Set("dpi", Domain.DPI)
-    d.Set("vxlanecmp_enabled", Domain.VXLANECMPEnabled)
     d.Set("label_id", Domain.LabelID)
     d.Set("back_haul_route_distinguisher", Domain.BackHaulRouteDistinguisher)
     d.Set("back_haul_route_target", Domain.BackHaulRouteTarget)
     d.Set("back_haul_service_id", Domain.BackHaulServiceID)
+    d.Set("back_haul_subnet_ip_address", Domain.BackHaulSubnetIPAddress)
+    d.Set("back_haul_subnet_mask", Domain.BackHaulSubnetMask)
     d.Set("back_haul_vnid", Domain.BackHaulVNID)
     d.Set("maintenance_mode", Domain.MaintenanceMode)
     d.Set("name", Domain.Name)
@@ -356,14 +337,12 @@ func dataSourceDomainRead(d *schema.ResourceData, m interface{}) error {
     d.Set("permitted_action", Domain.PermittedAction)
     d.Set("service_id", Domain.ServiceID)
     d.Set("description", Domain.Description)
-    d.Set("aggregate_flows_enabled", Domain.AggregateFlowsEnabled)
     d.Set("dhcp_server_addresses", Domain.DhcpServerAddresses)
     d.Set("global_routing_enabled", Domain.GlobalRoutingEnabled)
     d.Set("flow_collection_enabled", Domain.FlowCollectionEnabled)
     d.Set("import_route_target", Domain.ImportRouteTarget)
     d.Set("encryption", Domain.Encryption)
     d.Set("underlay_enabled", Domain.UnderlayEnabled)
-    d.Set("enterprise_id", Domain.EnterpriseID)
     d.Set("entity_scope", Domain.EntityScope)
     d.Set("local_as", Domain.LocalAS)
     d.Set("policy_change_status", Domain.PolicyChangeStatus)
@@ -383,7 +362,6 @@ func dataSourceDomainRead(d *schema.ResourceData, m interface{}) error {
     d.Set("customer_id", Domain.CustomerID)
     d.Set("export_route_target", Domain.ExportRouteTarget)
     d.Set("external_id", Domain.ExternalID)
-    d.Set("external_label", Domain.ExternalLabel)
     
     d.Set("id", Domain.Identifier())
     d.Set("parent_id", Domain.ParentID)
@@ -392,5 +370,5 @@ func dataSourceDomainRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(Domain.Identifier())
     
-    return nil
+    return
 }

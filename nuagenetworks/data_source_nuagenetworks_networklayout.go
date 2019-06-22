@@ -53,9 +53,8 @@ func dataSourceNetworkLayout() *schema.Resource {
 }
 
 
-func dataSourceNetworkLayoutRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceNetworkLayoutRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredNetworkLayouts := vspk.NetworkLayoutsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -74,7 +73,7 @@ func dataSourceNetworkLayoutRead(d *schema.ResourceData, m interface{}) error {
     parent := m.(*vspk.Me)
     filteredNetworkLayouts, err = parent.NetworkLayouts(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     NetworkLayout := &vspk.NetworkLayout{}
@@ -104,5 +103,5 @@ func dataSourceNetworkLayoutRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(NetworkLayout.Identifier())
     
-    return nil
+    return
 }

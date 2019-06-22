@@ -89,9 +89,8 @@ func dataSourceIKEGatewayProfile() *schema.Resource {
 }
 
 
-func dataSourceIKEGatewayProfileRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceIKEGatewayProfileRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredIKEGatewayProfiles := vspk.IKEGatewayProfilesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -110,7 +109,7 @@ func dataSourceIKEGatewayProfileRead(d *schema.ResourceData, m interface{}) erro
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     filteredIKEGatewayProfiles, err = parent.IKEGatewayProfiles(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     IKEGatewayProfile := &vspk.IKEGatewayProfile{}
@@ -148,5 +147,5 @@ func dataSourceIKEGatewayProfileRead(d *schema.ResourceData, m interface{}) erro
 
     d.SetId(IKEGatewayProfile.Identifier())
     
-    return nil
+    return
 }

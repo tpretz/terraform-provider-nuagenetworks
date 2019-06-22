@@ -28,19 +28,7 @@ func dataSourcePolicyObjectGroup() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "description": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -50,16 +38,15 @@ func dataSourcePolicyObjectGroup() *schema.Resource {
             },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,
-                Optional: true,
+                Required: true,
             },
         },
     }
 }
 
 
-func dataSourcePolicyObjectGroupRead(d *schema.ResourceData, m interface{}) error {
+func dataSourcePolicyObjectGroupRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredPolicyObjectGroups := vspk.PolicyObjectGroupsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -75,18 +62,10 @@ func dataSourcePolicyObjectGroupRead(d *schema.ResourceData, m interface{}) erro
            
         }
     }
-    if attr, ok := d.GetOk("parent_enterprise"); ok {
-        parent := &vspk.Enterprise{ID: attr.(string)}
-        filteredPolicyObjectGroups, err = parent.PolicyObjectGroups(fetchFilter)
-        if err != nil {
-            return err
-        }
-    } else {
-        parent := m.(*vspk.Me)
-        filteredPolicyObjectGroups, err = parent.PolicyObjectGroups(fetchFilter)
-        if err != nil {
-            return err
-        }
+    parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
+    filteredPolicyObjectGroups, err = parent.PolicyObjectGroups(fetchFilter)
+    if err != nil {
+        return
     }
 
     PolicyObjectGroup := &vspk.PolicyObjectGroup{}
@@ -103,10 +82,7 @@ func dataSourcePolicyObjectGroupRead(d *schema.ResourceData, m interface{}) erro
     PolicyObjectGroup = filteredPolicyObjectGroups[0]
 
     d.Set("name", PolicyObjectGroup.Name)
-    d.Set("last_updated_by", PolicyObjectGroup.LastUpdatedBy)
     d.Set("description", PolicyObjectGroup.Description)
-    d.Set("entity_scope", PolicyObjectGroup.EntityScope)
-    d.Set("external_id", PolicyObjectGroup.ExternalID)
     d.Set("type", PolicyObjectGroup.Type)
     
     d.Set("id", PolicyObjectGroup.Identifier())
@@ -116,5 +92,5 @@ func dataSourcePolicyObjectGroupRead(d *schema.ResourceData, m interface{}) erro
 
     d.SetId(PolicyObjectGroup.Identifier())
     
-    return nil
+    return
 }

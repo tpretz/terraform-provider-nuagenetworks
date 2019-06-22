@@ -69,9 +69,8 @@ func dataSourceMultiCastChannelMap() *schema.Resource {
 }
 
 
-func dataSourceMultiCastChannelMapRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceMultiCastChannelMapRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredMultiCastChannelMaps := vspk.MultiCastChannelMapsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -91,31 +90,31 @@ func dataSourceMultiCastChannelMapRead(d *schema.ResourceData, m interface{}) er
         parent := &vspk.VMInterface{ID: attr.(string)}
         filteredMultiCastChannelMaps, err = parent.MultiCastChannelMaps(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_host_interface"); ok {
         parent := &vspk.HostInterface{ID: attr.(string)}
         filteredMultiCastChannelMaps, err = parent.MultiCastChannelMaps(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_container_interface"); ok {
         parent := &vspk.ContainerInterface{ID: attr.(string)}
         filteredMultiCastChannelMaps, err = parent.MultiCastChannelMaps(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_multi_cast_list"); ok {
         parent := &vspk.MultiCastList{ID: attr.(string)}
         filteredMultiCastChannelMaps, err = parent.MultiCastChannelMaps(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredMultiCastChannelMaps, err = parent.MultiCastChannelMaps(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -145,5 +144,5 @@ func dataSourceMultiCastChannelMapRead(d *schema.ResourceData, m interface{}) er
 
     d.SetId(MultiCastChannelMap.Identifier())
     
-    return nil
+    return
 }

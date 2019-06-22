@@ -72,16 +72,8 @@ func dataSourceGateway() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "patches": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "gateway_connected": &schema.Schema{
                 Type:     schema.TypeBool,
-                Computed: true,
-            },
-            "gateway_model": &schema.Schema{
-                Type:     schema.TypeString,
                 Computed: true,
             },
             "gateway_version": &schema.Schema{
@@ -102,10 +94,6 @@ func dataSourceGateway() *schema.Resource {
             },
             "pending": &schema.Schema{
                 Type:     schema.TypeBool,
-                Computed: true,
-            },
-            "vendor": &schema.Schema{
-                Type:     schema.TypeString,
                 Computed: true,
             },
             "serial_number": &schema.Schema{
@@ -160,10 +148,6 @@ func dataSourceGateway() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "associated_gateway_security_profile_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "associated_nsg_info_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -188,29 +172,23 @@ func dataSourceGateway() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "parent_l2_domain": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_enterprise", "parent_redundancy_group"},
-            },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_l2_domain", "parent_redundancy_group"},
+                ConflictsWith: []string{"parent_redundancy_group"},
             },
             "parent_redundancy_group": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_l2_domain", "parent_enterprise"},
+                ConflictsWith: []string{"parent_enterprise"},
             },
         },
     }
 }
 
 
-func dataSourceGatewayRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceGatewayRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredGateways := vspk.GatewaysList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -226,29 +204,23 @@ func dataSourceGatewayRead(d *schema.ResourceData, m interface{}) error {
            
         }
     }
-    if attr, ok := d.GetOk("parent_l2_domain"); ok {
-        parent := &vspk.L2Domain{ID: attr.(string)}
-        filteredGateways, err = parent.Gateways(fetchFilter)
-        if err != nil {
-            return err
-        }
-    } else if attr, ok := d.GetOk("parent_enterprise"); ok {
+    if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredGateways, err = parent.Gateways(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_redundancy_group"); ok {
         parent := &vspk.RedundancyGroup{ID: attr.(string)}
         filteredGateways, err = parent.Gateways(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredGateways, err = parent.Gateways(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -277,15 +249,12 @@ func dataSourceGatewayRead(d *schema.ResourceData, m interface{}) error {
     d.Set("management_id", Gateway.ManagementID)
     d.Set("last_updated_by", Gateway.LastUpdatedBy)
     d.Set("datapath_id", Gateway.DatapathID)
-    d.Set("patches", Gateway.Patches)
     d.Set("gateway_connected", Gateway.GatewayConnected)
-    d.Set("gateway_model", Gateway.GatewayModel)
     d.Set("gateway_version", Gateway.GatewayVersion)
     d.Set("redundancy_group_id", Gateway.RedundancyGroupID)
     d.Set("peer", Gateway.Peer)
     d.Set("template_id", Gateway.TemplateID)
     d.Set("pending", Gateway.Pending)
-    d.Set("vendor", Gateway.Vendor)
     d.Set("serial_number", Gateway.SerialNumber)
     d.Set("permitted_action", Gateway.PermittedAction)
     d.Set("personality", Gateway.Personality)
@@ -299,7 +268,6 @@ func dataSourceGatewayRead(d *schema.ResourceData, m interface{}) error {
     d.Set("product_name", Gateway.ProductName)
     d.Set("use_gateway_vlanvnid", Gateway.UseGatewayVLANVNID)
     d.Set("associated_gateway_security_id", Gateway.AssociatedGatewaySecurityID)
-    d.Set("associated_gateway_security_profile_id", Gateway.AssociatedGatewaySecurityProfileID)
     d.Set("associated_nsg_info_id", Gateway.AssociatedNSGInfoID)
     d.Set("associated_netconf_profile_id", Gateway.AssociatedNetconfProfileID)
     d.Set("vtep", Gateway.Vtep)
@@ -314,5 +282,5 @@ func dataSourceGatewayRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(Gateway.Identifier())
     
-    return nil
+    return
 }

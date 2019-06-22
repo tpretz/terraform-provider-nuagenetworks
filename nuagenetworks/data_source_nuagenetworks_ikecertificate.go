@@ -81,9 +81,8 @@ func dataSourceIKECertificate() *schema.Resource {
 }
 
 
-func dataSourceIKECertificateRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceIKECertificateRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredIKECertificates := vspk.IKECertificatesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -102,7 +101,7 @@ func dataSourceIKECertificateRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     filteredIKECertificates, err = parent.IKECertificates(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     IKECertificate := &vspk.IKECertificate{}
@@ -138,5 +137,5 @@ func dataSourceIKECertificateRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(IKECertificate.Identifier())
     
-    return nil
+    return
 }

@@ -49,9 +49,8 @@ func dataSourceMultiNICVPort() *schema.Resource {
 }
 
 
-func dataSourceMultiNICVPortRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceMultiNICVPortRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredMultiNICVPorts := vspk.MultiNICVPortsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -70,7 +69,7 @@ func dataSourceMultiNICVPortRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.VRS{ID: d.Get("parent_vrs").(string)}
     filteredMultiNICVPorts, err = parent.MultiNICVPorts(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     MultiNICVPort := &vspk.MultiNICVPort{}
@@ -98,5 +97,5 @@ func dataSourceMultiNICVPortRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(MultiNICVPort.Identifier())
     
-    return nil
+    return
 }

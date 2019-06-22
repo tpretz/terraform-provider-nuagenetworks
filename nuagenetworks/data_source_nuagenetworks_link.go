@@ -81,9 +81,8 @@ func dataSourceLink() *schema.Resource {
 }
 
 
-func dataSourceLinkRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceLinkRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredLinks := vspk.LinksList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -102,7 +101,7 @@ func dataSourceLinkRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.Domain{ID: d.Get("parent_domain").(string)}
     filteredLinks, err = parent.Links(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     Link := &vspk.Link{}
@@ -138,5 +137,5 @@ func dataSourceLinkRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(Link.Identifier())
     
-    return nil
+    return
 }

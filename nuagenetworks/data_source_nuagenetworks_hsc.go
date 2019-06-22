@@ -44,11 +44,6 @@ func dataSourceHSC() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "addresses": &schema.Schema{
-                Type:     schema.TypeList,
-                Computed: true,
-                Elem:     &schema.Schema{Type: schema.TypeString},
-            },
             "peak_cpuusage": &schema.Schema{
                 Type:     schema.TypeFloat,
                 Computed: true,
@@ -137,9 +132,8 @@ func dataSourceHSC() *schema.Resource {
 }
 
 
-func dataSourceHSCRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceHSCRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredHSCs := vspk.HSCsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -158,7 +152,7 @@ func dataSourceHSCRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.VSP{ID: d.Get("parent_vsp").(string)}
     filteredHSCs, err = parent.HSCs(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     HSC := &vspk.HSC{}
@@ -179,7 +173,6 @@ func dataSourceHSCRead(d *schema.ResourceData, m interface{}) error {
     d.Set("last_state_change", HSC.LastStateChange)
     d.Set("last_updated_by", HSC.LastUpdatedBy)
     d.Set("address", HSC.Address)
-    d.Set("addresses", HSC.Addresses)
     d.Set("peak_cpuusage", HSC.PeakCPUUsage)
     d.Set("peak_memory_usage", HSC.PeakMemoryUsage)
     d.Set("description", HSC.Description)
@@ -207,5 +200,5 @@ func dataSourceHSCRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(HSC.Identifier())
     
-    return nil
+    return
 }

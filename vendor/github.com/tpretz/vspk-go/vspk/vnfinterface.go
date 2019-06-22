@@ -49,11 +49,9 @@ type VNFInterface struct {
 	IPv6Address         string `json:"IPv6Address,omitempty"`
 	IPv6Gateway         string `json:"IPv6Gateway,omitempty"`
 	Name                string `json:"name,omitempty"`
-	LastUpdatedBy       string `json:"lastUpdatedBy,omitempty"`
 	Gateway             string `json:"gateway,omitempty"`
 	Netmask             string `json:"netmask,omitempty"`
 	NetworkName         string `json:"networkName,omitempty"`
-	EntityScope         string `json:"entityScope,omitempty"`
 	PolicyDecisionID    string `json:"policyDecisionID,omitempty"`
 	DomainID            string `json:"domainID,omitempty"`
 	DomainName          string `json:"domainName,omitempty"`
@@ -61,7 +59,6 @@ type VNFInterface struct {
 	ZoneName            string `json:"zoneName,omitempty"`
 	AttachedNetworkID   string `json:"attachedNetworkID,omitempty"`
 	AttachedNetworkType string `json:"attachedNetworkType,omitempty"`
-	ExternalID          string `json:"externalID,omitempty"`
 	Type                string `json:"type,omitempty"`
 }
 
@@ -105,32 +102,4 @@ func (o *VNFInterface) Save() *bambou.Error {
 func (o *VNFInterface) Delete() *bambou.Error {
 
 	return bambou.CurrentSession().DeleteEntity(o)
-}
-
-// Metadatas retrieves the list of child Metadatas of the VNFInterface
-func (o *VNFInterface) Metadatas(info *bambou.FetchingInfo) (MetadatasList, *bambou.Error) {
-
-	var list MetadatasList
-	err := bambou.CurrentSession().FetchChildren(o, MetadataIdentity, &list, info)
-	return list, err
-}
-
-// CreateMetadata creates a new child Metadata under the VNFInterface
-func (o *VNFInterface) CreateMetadata(child *Metadata) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
-}
-
-// GlobalMetadatas retrieves the list of child GlobalMetadatas of the VNFInterface
-func (o *VNFInterface) GlobalMetadatas(info *bambou.FetchingInfo) (GlobalMetadatasList, *bambou.Error) {
-
-	var list GlobalMetadatasList
-	err := bambou.CurrentSession().FetchChildren(o, GlobalMetadataIdentity, &list, info)
-	return list, err
-}
-
-// CreateGlobalMetadata creates a new child GlobalMetadata under the VNFInterface
-func (o *VNFInterface) CreateGlobalMetadata(child *GlobalMetadata) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
 }

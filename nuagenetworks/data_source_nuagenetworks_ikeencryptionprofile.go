@@ -64,10 +64,6 @@ func dataSourceIKEEncryptionprofile() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "ipsec_sa_replay_window_size_value": &schema.Schema{
-                Type:     schema.TypeInt,
-                Computed: true,
-            },
             "isakmp_authentication_mode": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -108,6 +104,10 @@ func dataSourceIKEEncryptionprofile() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
+            "ipsec_sa_replay_window_size_value": &schema.Schema{
+                Type:     schema.TypeInt,
+                Computed: true,
+            },
             "associated_enterprise_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -125,9 +125,8 @@ func dataSourceIKEEncryptionprofile() *schema.Resource {
 }
 
 
-func dataSourceIKEEncryptionprofileRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceIKEEncryptionprofileRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredIKEEncryptionprofiles := vspk.IKEEncryptionprofilesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -146,7 +145,7 @@ func dataSourceIKEEncryptionprofileRead(d *schema.ResourceData, m interface{}) e
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     filteredIKEEncryptionprofiles, err = parent.IKEEncryptionprofiles(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     IKEEncryptionprofile := &vspk.IKEEncryptionprofile{}
@@ -172,7 +171,6 @@ func dataSourceIKEEncryptionprofileRead(d *schema.ResourceData, m interface{}) e
     d.Set("ipsec_pre_fragment", IKEEncryptionprofile.IPsecPreFragment)
     d.Set("ipsec_sa_lifetime", IKEEncryptionprofile.IPsecSALifetime)
     d.Set("ipsec_sa_replay_window_size", IKEEncryptionprofile.IPsecSAReplayWindowSize)
-    d.Set("ipsec_sa_replay_window_size_value", IKEEncryptionprofile.IPsecSAReplayWindowSizeValue)
     d.Set("isakmp_authentication_mode", IKEEncryptionprofile.ISAKMPAuthenticationMode)
     d.Set("isakmp_diffie_helman_group_identifier", IKEEncryptionprofile.ISAKMPDiffieHelmanGroupIdentifier)
     d.Set("isakmp_encryption_algorithm", IKEEncryptionprofile.ISAKMPEncryptionAlgorithm)
@@ -183,6 +181,7 @@ func dataSourceIKEEncryptionprofileRead(d *schema.ResourceData, m interface{}) e
     d.Set("sequence", IKEEncryptionprofile.Sequence)
     d.Set("description", IKEEncryptionprofile.Description)
     d.Set("entity_scope", IKEEncryptionprofile.EntityScope)
+    d.Set("ipsec_sa_replay_window_size_value", IKEEncryptionprofile.IpsecSAReplayWindowSizeValue)
     d.Set("associated_enterprise_id", IKEEncryptionprofile.AssociatedEnterpriseID)
     d.Set("external_id", IKEEncryptionprofile.ExternalID)
     
@@ -193,5 +192,5 @@ func dataSourceIKEEncryptionprofileRead(d *schema.ResourceData, m interface{}) e
 
     d.SetId(IKEEncryptionprofile.Identifier())
     
-    return nil
+    return
 }

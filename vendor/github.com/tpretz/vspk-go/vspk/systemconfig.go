@@ -77,8 +77,6 @@ type SystemConfig struct {
 	VPortInitStatefulTimer                            int    `json:"VPortInitStatefulTimer,omitempty"`
 	LRUCacheSizePerSubnet                             int    `json:"LRUCacheSizePerSubnet,omitempty"`
 	VSCOnSameVersionAsVSD                             bool   `json:"VSCOnSameVersionAsVSD"`
-	VSDAARApplicationVersion                          string `json:"VSDAARApplicationVersion,omitempty"`
-	VSDAARApplicationVersionPublishDate               string `json:"VSDAARApplicationVersionPublishDate,omitempty"`
 	VSDReadOnlyMode                                   bool   `json:"VSDReadOnlyMode"`
 	VSDUpgradeIsComplete                              bool   `json:"VSDUpgradeIsComplete"`
 	NSGUplinkHoldDownTimer                            int    `json:"NSGUplinkHoldDownTimer,omitempty"`
@@ -95,14 +93,12 @@ type SystemConfig struct {
 	PageMaxSize                                       int    `json:"pageMaxSize,omitempty"`
 	PageSize                                          int    `json:"pageSize,omitempty"`
 	LastUpdatedBy                                     string `json:"lastUpdatedBy,omitempty"`
-	GatewayProbeInterval                              int    `json:"gatewayProbeInterval,omitempty"`
-	GatewayProbeWindow                                int    `json:"gatewayProbeWindow,omitempty"`
-	GatewayRebalancingInterval                        int    `json:"gatewayRebalancingInterval,omitempty"`
 	MaxFailedLogins                                   int    `json:"maxFailedLogins,omitempty"`
 	MaxResponse                                       int    `json:"maxResponse,omitempty"`
 	AccumulateLicensesEnabled                         bool   `json:"accumulateLicensesEnabled"`
 	VcinLoadBalancerIP                                string `json:"vcinLoadBalancerIP,omitempty"`
 	PerDomainVlanIdEnabled                            bool   `json:"perDomainVlanIdEnabled"`
+	PerformancePathSelectionVNID                      int    `json:"performancePathSelectionVNID,omitempty"`
 	ServiceIDUpperLimit                               int    `json:"serviceIDUpperLimit,omitempty"`
 	KeyServerMonitorEnabled                           bool   `json:"keyServerMonitorEnabled"`
 	KeyServerVSDDataSynchronizationInterval           int    `json:"keyServerVSDDataSynchronizationInterval,omitempty"`
@@ -158,7 +154,6 @@ type SystemConfig struct {
 	StatsCollectorAddress                             string `json:"statsCollectorAddress,omitempty"`
 	StatsCollectorPort                                string `json:"statsCollectorPort,omitempty"`
 	StatsCollectorProtoBufPort                        string `json:"statsCollectorProtoBufPort,omitempty"`
-	StatsDatabaseProxy                                string `json:"statsDatabaseProxy,omitempty"`
 	StatsMaxDataPoints                                int    `json:"statsMaxDataPoints,omitempty"`
 	StatsMinDuration                                  int    `json:"statsMinDuration,omitempty"`
 	StatsNumberOfDataPoints                           int    `json:"statsNumberOfDataPoints,omitempty"`
@@ -195,112 +190,36 @@ type SystemConfig struct {
 func NewSystemConfig() *SystemConfig {
 
 	return &SystemConfig{
-		AARFlowStatsInterval:            30,
-		AARProbeStatsInterval:           30,
-		ACLAllowOrigin:                  "*",
-		ECMPCount:                       1,
-		LDAPSyncInterval:                600,
-		LDAPTrustStoreCertifcate:        "/usr/lib/jvm/java-8-oracle/jre/lib/security/cacerts",
-		LDAPTrustStorePassword:          "changeit",
-		ADGatewayPurgeTime:              7200,
-		RDLowerLimit:                    0,
-		RDPublicNetworkLowerLimit:       0,
-		RDPublicNetworkUpperLimit:       65535,
-		RDUpperLimit:                    65535,
-		ZFBRequestRetryTimer:            30,
-		ZFBSchedulerStaleRequestTimeout: 1440,
-		PGIDLowerLimit:                  65536,
-		PGIDUpperLimit:                  2147483647,
-		DHCPOptionSize:                  16,
-		VLANIDLowerLimit:                0,
-		VLANIDUpperLimit:                0,
-		VMCacheSize:                     5000,
-		VMPurgeTime:                     60,
-		VMResyncDeletionWaitTime:        2,
-		VMResyncOutstandingInterval:     1000,
-		VMUnreachableCleanupTime:        7200,
-		VMUnreachableTime:               3600,
-		VNFTaskTimeout:                  3600,
-		VNIDLowerLimit:                  1,
-		VNIDPublicNetworkLowerLimit:     1,
-		VNIDPublicNetworkUpperLimit:     16777215,
-		VNIDUpperLimit:                  1048575,
-		APIKeyRenewalInterval:           300,
-		APIKeyValidity:                  86400,
-		VPortInitStatefulTimer:          300,
-		LRUCacheSizePerSubnet:           32,
-		VSDReadOnlyMode:                 false,
-		NSGUplinkHoldDownTimer:          5,
-		ASNumber:                        65534,
-		VSSStatsInterval:                30,
-		RTLowerLimit:                    0,
-		RTPublicNetworkLowerLimit:       0,
-		RTPublicNetworkUpperLimit:       65535,
-		RTUpperLimit:                    65535,
-		EVPNBGPCommunityTagASNumber:     65534,
-		EVPNBGPCommunityTagLowerLimit:   0,
-		EVPNBGPCommunityTagUpperLimit:   65535,
-		PageMaxSize:                     500,
-		PageSize:                        50,
-		GatewayProbeInterval:            5,
-		GatewayProbeWindow:              120,
-		GatewayRebalancingInterval:      600,
-		MaxResponse:                     500,
-		AccumulateLicensesEnabled:       false,
-		PerDomainVlanIdEnabled:          false,
-		ServiceIDUpperLimit:             2147483648,
-		OffsetCustomerID:                10000,
-		OffsetServiceID:                 20001,
-		VirtualFirewallRulesEnabled:     false,
-		EjbcaNSGCertificateProfile:      "VSPClient",
-		EjbcaNSGEndEntityProfile:        "NSG",
-		EjbcaOCSPResponderCN:            "ocspsigner",
-		EjbcaOCSPResponderURI:           "http://localhost:7080/ejbca/publicweb/status/ocsp",
-		EjbcaVspRootCa:                  "VSPCA",
-		AlarmsMaxPerObject:              10,
-		ElasticClusterName:              "nuage_elasticsearch",
-		AllowEnterpriseAvatarOnNSG:      true,
-		ImportedSaaSApplicationsVersion: "1.0",
-		InactiveTimeout:                 600000,
-		InfrastructureBGPASNumber:       65500,
-		PostProcessorThreadsCount:       20,
-		NsgBootstrapEndpoint:            "https://proxy-bootstrap:12443/nuage/api",
-		NsgConfigEndpoint:               "https://{proxyDNSName}:11443/nuage/api",
-		NsgLocalUiUrl:                   "http://registration.nsg",
-		EsiID:                           10000,
-		CsprootAuthenticationMethod:     "LOCAL",
-		StackTraceEnabled:               false,
-		StatefulACLNonTCPTimeout:        180,
-		StatefulACLTCPTimeout:           3600,
-		StaticWANServicePurgeTime:       3600,
-		StatsCollectorAddress:           "localhost",
-		StatsCollectorPort:              "29090",
-		StatsCollectorProtoBufPort:      "39090",
-		StatsMaxDataPoints:              10000,
-		StatsMinDuration:                2592000,
-		StatsNumberOfDataPoints:         30,
-		StatsTSDBServerAddress:          "localhost:9300",
-		StickyECMPIdleTimeout:           0,
-		AttachProbeToIPsecNPM:           true,
-		AttachProbeToVXLANNPM:           true,
-		SubnetResyncInterval:            10,
-		SubnetResyncOutstandingInterval: 20,
-		CustomerIDUpperLimit:            2147483647,
-		AvatarBasePath:                  "/opt/vsd/jboss/standalone/deployments/CloudMgmt-web.war",
-		AvatarBaseURL:                   "https://localhost:8443",
-		EventLogCleanupInterval:         3600,
-		EventLogEntryMaxAge:             7,
-		EventProcessorInterval:          250,
-		EventProcessorMaxEventsCount:    100,
-		EventProcessorTimeout:           25000,
-		TwoFactorCodeExpiry:             300,
-		TwoFactorCodeLength:             6,
-		TwoFactorCodeSeedLength:         96,
-		DynamicWANServiceDiffTime:       1,
-		SyslogDestinationHost:           "http://localhost",
-		SysmonCleanupTaskInterval:       20,
-		SysmonNodePresenceTimeout:       3600,
-		SysmonProbeResponseTimeout:      30,
+		AARFlowStatsInterval:        30,
+		AARProbeStatsInterval:       30,
+		ZFBRequestRetryTimer:        30,
+		PGIDLowerLimit:              65536,
+		PGIDUpperLimit:              2147483647,
+		VMCacheSize:                 5000,
+		VMPurgeTime:                 60,
+		VMResyncDeletionWaitTime:    2,
+		VMResyncOutstandingInterval: 1000,
+		VMUnreachableCleanupTime:    7200,
+		VMUnreachableTime:           3600,
+		VNFTaskTimeout:              3600,
+		VPortInitStatefulTimer:      300,
+		NSGUplinkHoldDownTimer:      5,
+		VSSStatsInterval:            30,
+		PageMaxSize:                 500,
+		PageSize:                    50,
+		AccumulateLicensesEnabled:   false,
+		PerDomainVlanIdEnabled:      false,
+		VirtualFirewallRulesEnabled: false,
+		ElasticClusterName:          "nuage_elasticsearch",
+		AllowEnterpriseAvatarOnNSG:  true,
+		InfrastructureBGPASNumber:   65500,
+		CsprootAuthenticationMethod: "LOCAL",
+		StatsMinDuration:            2592000,
+		StickyECMPIdleTimeout:       0,
+		AttachProbeToIPsecNPM:       false,
+		AttachProbeToVXLANNPM:       false,
+		SubnetResyncInterval:        10,
+		DynamicWANServiceDiffTime:   1,
 	}
 }
 

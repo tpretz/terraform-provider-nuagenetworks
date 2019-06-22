@@ -61,9 +61,8 @@ func dataSourceSiteInfo() *schema.Resource {
 }
 
 
-func dataSourceSiteInfoRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceSiteInfoRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredSiteInfos := vspk.SiteInfosList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -82,7 +81,7 @@ func dataSourceSiteInfoRead(d *schema.ResourceData, m interface{}) error {
     parent := m.(*vspk.Me)
     filteredSiteInfos, err = parent.SiteInfos(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     SiteInfo := &vspk.SiteInfo{}
@@ -114,5 +113,5 @@ func dataSourceSiteInfoRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(SiteInfo.Identifier())
     
-    return nil
+    return
 }

@@ -32,10 +32,6 @@ func dataSourceBRConnection() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "gateway": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -68,20 +64,12 @@ func dataSourceBRConnection() *schema.Resource {
                 Type:     schema.TypeBool,
                 Computed: true,
             },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "mode": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
             "uplink_id": &schema.Schema{
                 Type:     schema.TypeInt,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
                 Computed: true,
             },
             "parent_vlan_template": &schema.Schema{
@@ -99,9 +87,8 @@ func dataSourceBRConnection() *schema.Resource {
 }
 
 
-func dataSourceBRConnectionRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceBRConnectionRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredBRConnections := vspk.BRConnectionsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -121,13 +108,13 @@ func dataSourceBRConnectionRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.VLANTemplate{ID: attr.(string)}
         filteredBRConnections, err = parent.BRConnections(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vlan"); ok {
         parent := &vspk.VLAN{ID: attr.(string)}
         filteredBRConnections, err = parent.BRConnections(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -146,7 +133,6 @@ func dataSourceBRConnectionRead(d *schema.ResourceData, m interface{}) error {
 
     d.Set("dns_address", BRConnection.DNSAddress)
     d.Set("dns_address_v6", BRConnection.DNSAddressV6)
-    d.Set("last_updated_by", BRConnection.LastUpdatedBy)
     d.Set("gateway", BRConnection.Gateway)
     d.Set("gateway_v6", BRConnection.GatewayV6)
     d.Set("address", BRConnection.Address)
@@ -155,10 +141,8 @@ func dataSourceBRConnectionRead(d *schema.ResourceData, m interface{}) error {
     d.Set("advertisement_criteria", BRConnection.AdvertisementCriteria)
     d.Set("netmask", BRConnection.Netmask)
     d.Set("inherited", BRConnection.Inherited)
-    d.Set("entity_scope", BRConnection.EntityScope)
     d.Set("mode", BRConnection.Mode)
     d.Set("uplink_id", BRConnection.UplinkID)
-    d.Set("external_id", BRConnection.ExternalID)
     
     d.Set("id", BRConnection.Identifier())
     d.Set("parent_id", BRConnection.ParentID)
@@ -167,5 +151,5 @@ func dataSourceBRConnectionRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(BRConnection.Identifier())
     
-    return nil
+    return
 }

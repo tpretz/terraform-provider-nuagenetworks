@@ -15,11 +15,6 @@ func resourceVNFThresholdPolicy() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -44,11 +39,6 @@ func resourceVNFThresholdPolicy() *schema.Resource {
                 Type:     schema.TypeString,
                 Required: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "action": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -68,29 +58,15 @@ func resourceVNFThresholdPolicy() *schema.Resource {
                 Optional: true,
                 Default: 5,
             },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "monit_interval": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
                 Default: 10,
             },
-            "assoc_entity_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "storage_threshold": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
                 Default: 80,
-            },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
             },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,
@@ -127,9 +103,6 @@ func resourceVNFThresholdPolicyCreate(d *schema.ResourceData, m interface{}) err
     if attr, ok := d.GetOk("storage_threshold"); ok {
         o.StorageThreshold = attr.(int)
     }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
-    }
     if attr, ok := d.GetOk("parent_me"); ok {
         parent := &vspk.Me{ID: attr.(string)}
         err := parent.CreateVNFThresholdPolicy(o)
@@ -164,16 +137,12 @@ func resourceVNFThresholdPolicyRead(d *schema.ResourceData, m interface{}) error
 
     d.Set("cpu_threshold", o.CPUThreshold)
     d.Set("name", o.Name)
-    d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("action", o.Action)
     d.Set("memory_threshold", o.MemoryThreshold)
     d.Set("description", o.Description)
     d.Set("min_occurrence", o.MinOccurrence)
-    d.Set("entity_scope", o.EntityScope)
     d.Set("monit_interval", o.MonitInterval)
-    d.Set("assoc_entity_type", o.AssocEntityType)
     d.Set("storage_threshold", o.StorageThreshold)
-    d.Set("external_id", o.ExternalID)
     
     d.Set("id", o.Identifier())
     d.Set("parent_id", o.ParentID)
@@ -215,9 +184,6 @@ func resourceVNFThresholdPolicyUpdate(d *schema.ResourceData, m interface{}) err
     }
     if attr, ok := d.GetOk("storage_threshold"); ok {
         o.StorageThreshold = attr.(int)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
 
     o.Save()

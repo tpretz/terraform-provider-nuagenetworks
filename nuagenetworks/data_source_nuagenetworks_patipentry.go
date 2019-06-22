@@ -71,9 +71,8 @@ func dataSourcePATIPEntry() *schema.Resource {
 }
 
 
-func dataSourcePATIPEntryRead(d *schema.ResourceData, m interface{}) error {
+func dataSourcePATIPEntryRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredPATIPEntries := vspk.PATIPEntriesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -93,13 +92,13 @@ func dataSourcePATIPEntryRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.SharedNetworkResource{ID: attr.(string)}
         filteredPATIPEntries, err = parent.PATIPEntries(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_subnet"); ok {
         parent := &vspk.Subnet{ID: attr.(string)}
         filteredPATIPEntries, err = parent.PATIPEntries(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -132,5 +131,5 @@ func dataSourcePATIPEntryRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(PATIPEntry.Identifier())
     
-    return nil
+    return
 }

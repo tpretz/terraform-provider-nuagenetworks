@@ -15,11 +15,6 @@ func resourceGatewayRedundantPort() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -43,11 +38,6 @@ func resourceGatewayRedundantPort() *schema.Resource {
                 Type:     schema.TypeString,
                 Required: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "permitted_action": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -59,11 +49,6 @@ func resourceGatewayRedundantPort() *schema.Resource {
             "physical_name": &schema.Schema{
                 Type:     schema.TypeString,
                 Required: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
             },
             "port_peer1_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -90,10 +75,6 @@ func resourceGatewayRedundantPort() *schema.Resource {
                 Optional: true,
             },
             "status": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
@@ -140,9 +121,6 @@ func resourceGatewayRedundantPortCreate(d *schema.ResourceData, m interface{}) e
     if attr, ok := d.GetOk("status"); ok {
         o.Status = attr.(string)
     }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
-    }
     parent := &vspk.RedundancyGroup{ID: d.Get("parent_redundancy_group").(string)}
     err := parent.CreateGatewayRedundantPort(o)
     if err != nil {
@@ -168,11 +146,9 @@ func resourceGatewayRedundantPortRead(d *schema.ResourceData, m interface{}) err
 
     d.Set("vlan_range", o.VLANRange)
     d.Set("name", o.Name)
-    d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("permitted_action", o.PermittedAction)
     d.Set("description", o.Description)
     d.Set("physical_name", o.PhysicalName)
-    d.Set("entity_scope", o.EntityScope)
     d.Set("port_peer1_id", o.PortPeer1ID)
     d.Set("port_peer2_id", o.PortPeer2ID)
     d.Set("port_type", o.PortType)
@@ -180,7 +156,6 @@ func resourceGatewayRedundantPortRead(d *schema.ResourceData, m interface{}) err
     d.Set("user_mnemonic", o.UserMnemonic)
     d.Set("associated_egress_qos_policy_id", o.AssociatedEgressQOSPolicyID)
     d.Set("status", o.Status)
-    d.Set("external_id", o.ExternalID)
     
     d.Set("id", o.Identifier())
     d.Set("parent_id", o.ParentID)
@@ -230,9 +205,6 @@ func resourceGatewayRedundantPortUpdate(d *schema.ResourceData, m interface{}) e
     }
     if attr, ok := d.GetOk("status"); ok {
         o.Status = attr.(string)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
 
     o.Save()

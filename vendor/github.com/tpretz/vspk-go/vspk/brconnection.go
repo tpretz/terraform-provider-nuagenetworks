@@ -43,7 +43,6 @@ type BRConnection struct {
 	Owner                 string `json:"owner,omitempty"`
 	DNSAddress            string `json:"DNSAddress,omitempty"`
 	DNSAddressV6          string `json:"DNSAddressV6,omitempty"`
-	LastUpdatedBy         string `json:"lastUpdatedBy,omitempty"`
 	Gateway               string `json:"gateway,omitempty"`
 	GatewayV6             string `json:"gatewayV6,omitempty"`
 	Address               string `json:"address,omitempty"`
@@ -52,19 +51,16 @@ type BRConnection struct {
 	AdvertisementCriteria string `json:"advertisementCriteria,omitempty"`
 	Netmask               string `json:"netmask,omitempty"`
 	Inherited             bool   `json:"inherited"`
-	EntityScope           string `json:"entityScope,omitempty"`
 	Mode                  string `json:"mode,omitempty"`
 	UplinkID              int    `json:"uplinkID,omitempty"`
-	ExternalID            string `json:"externalID,omitempty"`
 }
 
 // NewBRConnection returns a new *BRConnection
 func NewBRConnection() *BRConnection {
 
 	return &BRConnection{
-		AddressFamily:         "IPV4",
-		AdvertisementCriteria: "OPERATIONAL_LINK",
-		Inherited:             false,
+		AddressFamily: "IPV4",
+		Inherited:     false,
 	}
 }
 
@@ -104,20 +100,6 @@ func (o *BRConnection) Delete() *bambou.Error {
 	return bambou.CurrentSession().DeleteEntity(o)
 }
 
-// Metadatas retrieves the list of child Metadatas of the BRConnection
-func (o *BRConnection) Metadatas(info *bambou.FetchingInfo) (MetadatasList, *bambou.Error) {
-
-	var list MetadatasList
-	err := bambou.CurrentSession().FetchChildren(o, MetadataIdentity, &list, info)
-	return list, err
-}
-
-// CreateMetadata creates a new child Metadata under the BRConnection
-func (o *BRConnection) CreateMetadata(child *Metadata) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
-}
-
 // BFDSessions retrieves the list of child BFDSessions of the BRConnection
 func (o *BRConnection) BFDSessions(info *bambou.FetchingInfo) (BFDSessionsList, *bambou.Error) {
 
@@ -128,20 +110,6 @@ func (o *BRConnection) BFDSessions(info *bambou.FetchingInfo) (BFDSessionsList, 
 
 // CreateBFDSession creates a new child BFDSession under the BRConnection
 func (o *BRConnection) CreateBFDSession(child *BFDSession) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
-}
-
-// GlobalMetadatas retrieves the list of child GlobalMetadatas of the BRConnection
-func (o *BRConnection) GlobalMetadatas(info *bambou.FetchingInfo) (GlobalMetadatasList, *bambou.Error) {
-
-	var list GlobalMetadatasList
-	err := bambou.CurrentSession().FetchChildren(o, GlobalMetadataIdentity, &list, info)
-	return list, err
-}
-
-// CreateGlobalMetadata creates a new child GlobalMetadata under the BRConnection
-func (o *BRConnection) CreateGlobalMetadata(child *GlobalMetadata) *bambou.Error {
 
 	return bambou.CurrentSession().CreateChild(o, child)
 }

@@ -15,11 +15,6 @@ func resourceEnterpriseNetwork() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -54,11 +49,11 @@ func resourceEnterpriseNetwork() *schema.Resource {
             },
             "address": &schema.Schema{
                 Type:     schema.TypeString,
-                Optional: true,
+                Required: true,
             },
             "netmask": &schema.Schema{
                 Type:     schema.TypeString,
-                Optional: true,
+                Required: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -88,18 +83,14 @@ func resourceEnterpriseNetworkCreate(d *schema.ResourceData, m interface{}) erro
     // Initialize EnterpriseNetwork object
     o := &vspk.EnterpriseNetwork{
         Name: d.Get("name").(string),
+        Address: d.Get("address").(string),
+        Netmask: d.Get("netmask").(string),
     }
     if attr, ok := d.GetOk("ip_type"); ok {
         o.IPType = attr.(string)
     }
     if attr, ok := d.GetOk("ipv6_address"); ok {
         o.IPv6Address = attr.(string)
-    }
-    if attr, ok := d.GetOk("address"); ok {
-        o.Address = attr.(string)
-    }
-    if attr, ok := d.GetOk("netmask"); ok {
-        o.Netmask = attr.(string)
     }
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)
@@ -167,18 +158,14 @@ func resourceEnterpriseNetworkUpdate(d *schema.ResourceData, m interface{}) erro
     }
     
     o.Name = d.Get("name").(string)
+    o.Address = d.Get("address").(string)
+    o.Netmask = d.Get("netmask").(string)
     
     if attr, ok := d.GetOk("ip_type"); ok {
         o.IPType = attr.(string)
     }
     if attr, ok := d.GetOk("ipv6_address"); ok {
         o.IPv6Address = attr.(string)
-    }
-    if attr, ok := d.GetOk("address"); ok {
-        o.Address = attr.(string)
-    }
-    if attr, ok := d.GetOk("netmask"); ok {
-        o.Netmask = attr.(string)
     }
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)

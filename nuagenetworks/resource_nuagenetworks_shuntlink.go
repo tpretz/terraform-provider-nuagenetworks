@@ -15,11 +15,6 @@ func resourceShuntLink() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -63,13 +58,30 @@ func resourceShuntLink() *schema.Resource {
                 Optional: true,
                 Computed: true,
             },
-            "permitted_action": &schema.Schema{
+            "peer1_ip_address": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
+            },
+            "peer1_subnet": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+                Computed: true,
+            },
+            "peer2_ip_address": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+                Computed: true,
+            },
+            "peer2_subnet": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+                Computed: true,
             },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Default: "null",
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -94,9 +106,6 @@ func resourceShuntLinkCreate(d *schema.ResourceData, m interface{}) error {
     o := &vspk.ShuntLink{
         VLANPeer1ID: d.Get("vlan_peer1_id").(string),
         VLANPeer2ID: d.Get("vlan_peer2_id").(string),
-    }
-    if attr, ok := d.GetOk("permitted_action"); ok {
-        o.PermittedAction = attr.(string)
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
@@ -133,7 +142,10 @@ func resourceShuntLinkRead(d *schema.ResourceData, m interface{}) error {
     d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("gateway_peer1_id", o.GatewayPeer1ID)
     d.Set("gateway_peer2_id", o.GatewayPeer2ID)
-    d.Set("permitted_action", o.PermittedAction)
+    d.Set("peer1_ip_address", o.Peer1IPAddress)
+    d.Set("peer1_subnet", o.Peer1Subnet)
+    d.Set("peer2_ip_address", o.Peer2IPAddress)
+    d.Set("peer2_subnet", o.Peer2Subnet)
     d.Set("description", o.Description)
     d.Set("entity_scope", o.EntityScope)
     d.Set("external_id", o.ExternalID)
@@ -159,9 +171,6 @@ func resourceShuntLinkUpdate(d *schema.ResourceData, m interface{}) error {
     o.VLANPeer1ID = d.Get("vlan_peer1_id").(string)
     o.VLANPeer2ID = d.Get("vlan_peer2_id").(string)
     
-    if attr, ok := d.GetOk("permitted_action"); ok {
-        o.PermittedAction = attr.(string)
-    }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
     }

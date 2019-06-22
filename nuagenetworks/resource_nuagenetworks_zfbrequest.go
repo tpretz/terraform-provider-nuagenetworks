@@ -15,11 +15,6 @@ func resourceZFBRequest() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -85,11 +80,6 @@ func resourceZFBRequest() *schema.Resource {
                 Computed: true,
             },
             "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "registration_url": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
                 Computed: true,
@@ -261,7 +251,6 @@ func resourceZFBRequestRead(d *schema.ResourceData, m interface{}) error {
     d.Set("family", o.Family)
     d.Set("last_connected_time", o.LastConnectedTime)
     d.Set("last_updated_by", o.LastUpdatedBy)
-    d.Set("registration_url", o.RegistrationURL)
     d.Set("serial_number", o.SerialNumber)
     d.Set("entity_scope", o.EntityScope)
     d.Set("hostname", o.Hostname)

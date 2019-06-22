@@ -24,10 +24,6 @@ func dataSourcePATNATPool() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "ip_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "name": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -121,9 +117,8 @@ func dataSourcePATNATPool() *schema.Resource {
 }
 
 
-func dataSourcePATNATPoolRead(d *schema.ResourceData, m interface{}) error {
+func dataSourcePATNATPoolRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredPATNATPools := vspk.PATNATPoolsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -143,31 +138,31 @@ func dataSourcePATNATPoolRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredPATNATPools, err = parent.PATNATPools(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vlan"); ok {
         parent := &vspk.VLAN{ID: attr.(string)}
         filteredPATNATPools, err = parent.PATNATPools(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_ns_gateway"); ok {
         parent := &vspk.NSGateway{ID: attr.(string)}
         filteredPATNATPools, err = parent.PATNATPools(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_gateway"); ok {
         parent := &vspk.Gateway{ID: attr.(string)}
         filteredPATNATPools, err = parent.PATNATPools(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredPATNATPools, err = parent.PATNATPools(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -184,7 +179,6 @@ func dataSourcePATNATPoolRead(d *schema.ResourceData, m interface{}) error {
     
     PATNATPool = filteredPATNATPools[0]
 
-    d.Set("ip_type", PATNATPool.IPType)
     d.Set("name", PATNATPool.Name)
     d.Set("last_updated_by", PATNATPool.LastUpdatedBy)
     d.Set("address_range", PATNATPool.AddressRange)
@@ -210,5 +204,5 @@ func dataSourcePATNATPoolRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(PATNATPool.Identifier())
     
-    return nil
+    return
 }

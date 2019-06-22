@@ -15,11 +15,6 @@ func resourceConnectionendpoint() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -37,25 +32,16 @@ func resourceConnectionendpoint() *schema.Resource {
             },
             "ip_address": &schema.Schema{
                 Type:     schema.TypeString,
-                Optional: true,
+                Required: true,
             },
             "ip_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
                 Default: "IPV4",
             },
-            "ipv6_address": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
             "name": &schema.Schema{
                 Type:     schema.TypeString,
                 Required: true,
-            },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
             },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
@@ -65,15 +51,6 @@ func resourceConnectionendpoint() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
                 Default: "SOURCE",
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
             },
             "parent_infrastructure_access_profile": &schema.Schema{
                 Type:     schema.TypeString,
@@ -87,25 +64,17 @@ func resourceConnectionendpointCreate(d *schema.ResourceData, m interface{}) err
 
     // Initialize Connectionendpoint object
     o := &vspk.Connectionendpoint{
+        IPAddress: d.Get("ip_address").(string),
         Name: d.Get("name").(string),
-    }
-    if attr, ok := d.GetOk("ip_address"); ok {
-        o.IPAddress = attr.(string)
     }
     if attr, ok := d.GetOk("ip_type"); ok {
         o.IPType = attr.(string)
-    }
-    if attr, ok := d.GetOk("ipv6_address"); ok {
-        o.IPv6Address = attr.(string)
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
     }
     if attr, ok := d.GetOk("end_point_type"); ok {
         o.EndPointType = attr.(string)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
     parent := &vspk.InfrastructureAccessProfile{ID: d.Get("parent_infrastructure_access_profile").(string)}
     err := parent.CreateConnectionendpoint(o)
@@ -132,13 +101,9 @@ func resourceConnectionendpointRead(d *schema.ResourceData, m interface{}) error
 
     d.Set("ip_address", o.IPAddress)
     d.Set("ip_type", o.IPType)
-    d.Set("ipv6_address", o.IPv6Address)
     d.Set("name", o.Name)
-    d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("description", o.Description)
     d.Set("end_point_type", o.EndPointType)
-    d.Set("entity_scope", o.EntityScope)
-    d.Set("external_id", o.ExternalID)
     
     d.Set("id", o.Identifier())
     d.Set("parent_id", o.ParentID)
@@ -158,25 +123,17 @@ func resourceConnectionendpointUpdate(d *schema.ResourceData, m interface{}) err
         return err
     }
     
+    o.IPAddress = d.Get("ip_address").(string)
     o.Name = d.Get("name").(string)
     
-    if attr, ok := d.GetOk("ip_address"); ok {
-        o.IPAddress = attr.(string)
-    }
     if attr, ok := d.GetOk("ip_type"); ok {
         o.IPType = attr.(string)
-    }
-    if attr, ok := d.GetOk("ipv6_address"); ok {
-        o.IPv6Address = attr.(string)
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
     }
     if attr, ok := d.GetOk("end_point_type"); ok {
         o.EndPointType = attr.(string)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
 
     o.Save()

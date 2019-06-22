@@ -37,14 +37,12 @@ type VNFInterfaceDescriptorsParent interface {
 
 // VNFInterfaceDescriptor represents the model of a vnfinterfacedescriptor
 type VNFInterfaceDescriptor struct {
-	ID          string `json:"ID,omitempty"`
-	ParentID    string `json:"parentID,omitempty"`
-	ParentType  string `json:"parentType,omitempty"`
-	Owner       string `json:"owner,omitempty"`
-	Name        string `json:"name,omitempty"`
-	EntityScope string `json:"entityScope,omitempty"`
-	ExternalID  string `json:"externalID,omitempty"`
-	Type        string `json:"type,omitempty"`
+	ID         string `json:"ID,omitempty"`
+	ParentID   string `json:"parentID,omitempty"`
+	ParentType string `json:"parentType,omitempty"`
+	Owner      string `json:"owner,omitempty"`
+	Name       string `json:"name,omitempty"`
+	Type       string `json:"type,omitempty"`
 }
 
 // NewVNFInterfaceDescriptor returns a new *VNFInterfaceDescriptor
@@ -89,32 +87,4 @@ func (o *VNFInterfaceDescriptor) Save() *bambou.Error {
 func (o *VNFInterfaceDescriptor) Delete() *bambou.Error {
 
 	return bambou.CurrentSession().DeleteEntity(o)
-}
-
-// Metadatas retrieves the list of child Metadatas of the VNFInterfaceDescriptor
-func (o *VNFInterfaceDescriptor) Metadatas(info *bambou.FetchingInfo) (MetadatasList, *bambou.Error) {
-
-	var list MetadatasList
-	err := bambou.CurrentSession().FetchChildren(o, MetadataIdentity, &list, info)
-	return list, err
-}
-
-// CreateMetadata creates a new child Metadata under the VNFInterfaceDescriptor
-func (o *VNFInterfaceDescriptor) CreateMetadata(child *Metadata) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
-}
-
-// GlobalMetadatas retrieves the list of child GlobalMetadatas of the VNFInterfaceDescriptor
-func (o *VNFInterfaceDescriptor) GlobalMetadatas(info *bambou.FetchingInfo) (GlobalMetadatasList, *bambou.Error) {
-
-	var list GlobalMetadatasList
-	err := bambou.CurrentSession().FetchChildren(o, GlobalMetadataIdentity, &list, info)
-	return list, err
-}
-
-// CreateGlobalMetadata creates a new child GlobalMetadata under the VNFInterfaceDescriptor
-func (o *VNFInterfaceDescriptor) CreateGlobalMetadata(child *GlobalMetadata) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
 }

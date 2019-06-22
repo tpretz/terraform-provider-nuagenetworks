@@ -15,11 +15,6 @@ func resourceApplication() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -62,11 +57,6 @@ func resourceApplication() *schema.Resource {
                 Optional: true,
                 Default: "FIRST_PACKET",
             },
-            "certificate_common_name": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Default: "*",
-            },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -78,11 +68,6 @@ func resourceApplication() *schema.Resource {
             "destination_port": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-            },
-            "network_symmetry": &schema.Schema{
-                Type:     schema.TypeBool,
-                Optional: true,
-                Default: false,
             },
             "enable_pps": &schema.Schema{
                 Type:     schema.TypeBool,
@@ -181,9 +166,6 @@ func resourceApplicationCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("performance_monitor_type"); ok {
         o.PerformanceMonitorType = attr.(string)
     }
-    if attr, ok := d.GetOk("certificate_common_name"); ok {
-        o.CertificateCommonName = attr.(string)
-    }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
     }
@@ -192,9 +174,6 @@ func resourceApplicationCreate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("destination_port"); ok {
         o.DestinationPort = attr.(string)
-    }
-    if attr, ok := d.GetOk("network_symmetry"); ok {
-        o.NetworkSymmetry = attr.(bool)
     }
     if attr, ok := d.GetOk("enable_pps"); ok {
         o.EnablePPS = attr.(bool)
@@ -267,11 +246,9 @@ func resourceApplicationRead(d *schema.ResourceData, m interface{}) error {
     d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("read_only", o.ReadOnly)
     d.Set("performance_monitor_type", o.PerformanceMonitorType)
-    d.Set("certificate_common_name", o.CertificateCommonName)
     d.Set("description", o.Description)
     d.Set("destination_ip", o.DestinationIP)
     d.Set("destination_port", o.DestinationPort)
-    d.Set("network_symmetry", o.NetworkSymmetry)
     d.Set("enable_pps", o.EnablePPS)
     d.Set("one_way_delay", o.OneWayDelay)
     d.Set("one_way_jitter", o.OneWayJitter)
@@ -321,9 +298,6 @@ func resourceApplicationUpdate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("performance_monitor_type"); ok {
         o.PerformanceMonitorType = attr.(string)
     }
-    if attr, ok := d.GetOk("certificate_common_name"); ok {
-        o.CertificateCommonName = attr.(string)
-    }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
     }
@@ -332,9 +306,6 @@ func resourceApplicationUpdate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("destination_port"); ok {
         o.DestinationPort = attr.(string)
-    }
-    if attr, ok := d.GetOk("network_symmetry"); ok {
-        o.NetworkSymmetry = attr.(bool)
     }
     if attr, ok := d.GetOk("enable_pps"); ok {
         o.EnablePPS = attr.(bool)

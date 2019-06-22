@@ -15,11 +15,6 @@ func resourceNSPortTemplate() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -56,6 +51,10 @@ func resourceNSPortTemplate() *schema.Resource {
             "physical_name": &schema.Schema{
                 Type:     schema.TypeString,
                 Required: true,
+            },
+            "infrastructure_profile_id": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -106,6 +105,9 @@ func resourceNSPortTemplateCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
     }
+    if attr, ok := d.GetOk("infrastructure_profile_id"); ok {
+        o.InfrastructureProfileID = attr.(string)
+    }
     if attr, ok := d.GetOk("speed"); ok {
         o.Speed = attr.(string)
     }
@@ -146,6 +148,7 @@ func resourceNSPortTemplateRead(d *schema.ResourceData, m interface{}) error {
     d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("description", o.Description)
     d.Set("physical_name", o.PhysicalName)
+    d.Set("infrastructure_profile_id", o.InfrastructureProfileID)
     d.Set("entity_scope", o.EntityScope)
     d.Set("port_type", o.PortType)
     d.Set("speed", o.Speed)
@@ -180,6 +183,9 @@ func resourceNSPortTemplateUpdate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
+    }
+    if attr, ok := d.GetOk("infrastructure_profile_id"); ok {
+        o.InfrastructureProfileID = attr.(string)
     }
     if attr, ok := d.GetOk("speed"); ok {
         o.Speed = attr.(string)

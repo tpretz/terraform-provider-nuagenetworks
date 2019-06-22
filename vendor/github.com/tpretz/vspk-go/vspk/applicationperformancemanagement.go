@@ -46,7 +46,6 @@ type Applicationperformancemanagement struct {
 	ReadOnly                       bool   `json:"readOnly"`
 	Description                    string `json:"description,omitempty"`
 	EntityScope                    string `json:"entityScope,omitempty"`
-	AppGroupUniqueId               int    `json:"appGroupUniqueId,omitempty"`
 	AssociatedPerformanceMonitorID string `json:"associatedPerformanceMonitorID,omitempty"`
 	ExternalID                     string `json:"externalID,omitempty"`
 }
@@ -135,12 +134,4 @@ func (o *Applicationperformancemanagement) ApplicationBindings(info *bambou.Fetc
 func (o *Applicationperformancemanagement) CreateApplicationBinding(child *ApplicationBinding) *bambou.Error {
 
 	return bambou.CurrentSession().CreateChild(o, child)
-}
-
-// Applicationperformancemanagementbindings retrieves the list of child Applicationperformancemanagementbindings of the Applicationperformancemanagement
-func (o *Applicationperformancemanagement) Applicationperformancemanagementbindings(info *bambou.FetchingInfo) (ApplicationperformancemanagementbindingsList, *bambou.Error) {
-
-	var list ApplicationperformancemanagementbindingsList
-	err := bambou.CurrentSession().FetchChildren(o, ApplicationperformancemanagementbindingIdentity, &list, info)
-	return list, err
 }

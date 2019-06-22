@@ -61,9 +61,8 @@ func dataSourceNSGPatchProfile() *schema.Resource {
 }
 
 
-func dataSourceNSGPatchProfileRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceNSGPatchProfileRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredNSGPatchProfiles := vspk.NSGPatchProfilesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -82,7 +81,7 @@ func dataSourceNSGPatchProfileRead(d *schema.ResourceData, m interface{}) error 
     parent := m.(*vspk.Me)
     filteredNSGPatchProfiles, err = parent.NSGPatchProfiles(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     NSGPatchProfile := &vspk.NSGPatchProfile{}
@@ -114,5 +113,5 @@ func dataSourceNSGPatchProfileRead(d *schema.ResourceData, m interface{}) error 
 
     d.SetId(NSGPatchProfile.Identifier())
     
-    return nil
+    return
 }

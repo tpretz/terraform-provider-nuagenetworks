@@ -15,11 +15,6 @@ func resourcePolicyObjectGroup() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -39,21 +34,7 @@ func resourcePolicyObjectGroup() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "description": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
@@ -79,9 +60,6 @@ func resourcePolicyObjectGroupCreate(d *schema.ResourceData, m interface{}) erro
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
     if attr, ok := d.GetOk("type"); ok {
         o.Type = attr.(string)
@@ -113,10 +91,7 @@ func resourcePolicyObjectGroupRead(d *schema.ResourceData, m interface{}) error 
     }
 
     d.Set("name", o.Name)
-    d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("description", o.Description)
-    d.Set("entity_scope", o.EntityScope)
-    d.Set("external_id", o.ExternalID)
     d.Set("type", o.Type)
     
     d.Set("id", o.Identifier())
@@ -143,9 +118,6 @@ func resourcePolicyObjectGroupUpdate(d *schema.ResourceData, m interface{}) erro
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
     if attr, ok := d.GetOk("type"); ok {
         o.Type = attr.(string)

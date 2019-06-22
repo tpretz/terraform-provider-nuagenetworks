@@ -96,24 +96,17 @@ func dataSourceRedundancyGroup() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "parent_l2_domain": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_enterprise"},
-            },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_l2_domain"},
             },
         },
     }
 }
 
 
-func dataSourceRedundancyGroupRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceRedundancyGroupRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredRedundancyGroups := vspk.RedundancyGroupsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -129,23 +122,17 @@ func dataSourceRedundancyGroupRead(d *schema.ResourceData, m interface{}) error 
            
         }
     }
-    if attr, ok := d.GetOk("parent_l2_domain"); ok {
-        parent := &vspk.L2Domain{ID: attr.(string)}
-        filteredRedundancyGroups, err = parent.RedundancyGroups(fetchFilter)
-        if err != nil {
-            return err
-        }
-    } else if attr, ok := d.GetOk("parent_enterprise"); ok {
+    if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredRedundancyGroups, err = parent.RedundancyGroups(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredRedundancyGroups, err = parent.RedundancyGroups(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -188,5 +175,5 @@ func dataSourceRedundancyGroupRead(d *schema.ResourceData, m interface{}) error 
 
     d.SetId(RedundancyGroup.Identifier())
     
-    return nil
+    return
 }

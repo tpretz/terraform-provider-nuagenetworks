@@ -57,6 +57,10 @@ func dataSourceAutoDiscoveredGateway() *schema.Resource {
                 Computed: true,
                 Elem:     &schema.Schema{Type: schema.TypeString},
             },
+            "use_gateway_vlanvnid": &schema.Schema{
+                Type:     schema.TypeBool,
+                Computed: true,
+            },
             "vtep": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -74,9 +78,8 @@ func dataSourceAutoDiscoveredGateway() *schema.Resource {
 }
 
 
-func dataSourceAutoDiscoveredGatewayRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceAutoDiscoveredGatewayRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredAutoDiscoveredGateways := vspk.AutoDiscoveredGatewaysList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -95,7 +98,7 @@ func dataSourceAutoDiscoveredGatewayRead(d *schema.ResourceData, m interface{}) 
     parent := m.(*vspk.Me)
     filteredAutoDiscoveredGateways, err = parent.AutoDiscoveredGateways(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     AutoDiscoveredGateway := &vspk.AutoDiscoveredGateway{}
@@ -119,6 +122,7 @@ func dataSourceAutoDiscoveredGatewayRead(d *schema.ResourceData, m interface{}) 
     d.Set("description", AutoDiscoveredGateway.Description)
     d.Set("entity_scope", AutoDiscoveredGateway.EntityScope)
     d.Set("controllers", AutoDiscoveredGateway.Controllers)
+    d.Set("use_gateway_vlanvnid", AutoDiscoveredGateway.UseGatewayVLANVNID)
     d.Set("vtep", AutoDiscoveredGateway.Vtep)
     d.Set("external_id", AutoDiscoveredGateway.ExternalID)
     d.Set("system_id", AutoDiscoveredGateway.SystemID)
@@ -130,5 +134,5 @@ func dataSourceAutoDiscoveredGatewayRead(d *schema.ResourceData, m interface{}) 
 
     d.SetId(AutoDiscoveredGateway.Identifier())
     
-    return nil
+    return
 }

@@ -55,9 +55,8 @@ func dataSourceAvatar() *schema.Resource {
 }
 
 
-func dataSourceAvatarRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceAvatarRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredAvatars := vspk.AvatarsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -77,13 +76,13 @@ func dataSourceAvatarRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.User{ID: attr.(string)}
         filteredAvatars, err = parent.Avatars(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredAvatars, err = parent.Avatars(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -112,5 +111,5 @@ func dataSourceAvatarRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(Avatar.Identifier())
     
-    return nil
+    return
 }

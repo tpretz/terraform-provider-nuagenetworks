@@ -52,15 +52,11 @@ func dataSourceDomainFIPAclTemplateEntry() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
+            "action_details": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
             "address_override": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "web_filter_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "web_filter_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -68,7 +64,23 @@ func dataSourceDomainFIPAclTemplateEntry() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
+            "dest_pg_id": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
+            "dest_pg_type": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
             "destination_port": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
+            "destination_type": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
+            "destination_value": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -112,7 +124,23 @@ func dataSourceDomainFIPAclTemplateEntry() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
+            "source_pg_id": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
+            "source_pg_type": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
             "source_port": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
+            "source_type": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
+            "source_value": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -125,18 +153,6 @@ func dataSourceDomainFIPAclTemplateEntry() *schema.Resource {
                 Computed: true,
             },
             "associated_live_entity_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "associated_live_template_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "associated_traffic_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "associated_traffic_type_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -169,9 +185,8 @@ func dataSourceDomainFIPAclTemplateEntry() *schema.Resource {
 }
 
 
-func dataSourceDomainFIPAclTemplateEntryRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceDomainFIPAclTemplateEntryRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredDomainFIPAclTemplateEntries := vspk.DomainFIPAclTemplateEntriesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -190,7 +205,7 @@ func dataSourceDomainFIPAclTemplateEntryRead(d *schema.ResourceData, m interface
     parent := &vspk.DomainFIPAclTemplate{ID: d.Get("parent_domain_fip_acl_template").(string)}
     filteredDomainFIPAclTemplateEntries, err = parent.DomainFIPAclTemplateEntries(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     DomainFIPAclTemplateEntry := &vspk.DomainFIPAclTemplateEntry{}
@@ -213,11 +228,14 @@ func dataSourceDomainFIPAclTemplateEntryRead(d *schema.ResourceData, m interface
     d.Set("dscp", DomainFIPAclTemplateEntry.DSCP)
     d.Set("last_updated_by", DomainFIPAclTemplateEntry.LastUpdatedBy)
     d.Set("action", DomainFIPAclTemplateEntry.Action)
+    d.Set("action_details", DomainFIPAclTemplateEntry.ActionDetails)
     d.Set("address_override", DomainFIPAclTemplateEntry.AddressOverride)
-    d.Set("web_filter_id", DomainFIPAclTemplateEntry.WebFilterID)
-    d.Set("web_filter_type", DomainFIPAclTemplateEntry.WebFilterType)
     d.Set("description", DomainFIPAclTemplateEntry.Description)
+    d.Set("dest_pg_id", DomainFIPAclTemplateEntry.DestPgId)
+    d.Set("dest_pg_type", DomainFIPAclTemplateEntry.DestPgType)
     d.Set("destination_port", DomainFIPAclTemplateEntry.DestinationPort)
+    d.Set("destination_type", DomainFIPAclTemplateEntry.DestinationType)
+    d.Set("destination_value", DomainFIPAclTemplateEntry.DestinationValue)
     d.Set("network_id", DomainFIPAclTemplateEntry.NetworkID)
     d.Set("network_type", DomainFIPAclTemplateEntry.NetworkType)
     d.Set("mirror_destination_id", DomainFIPAclTemplateEntry.MirrorDestinationID)
@@ -228,13 +246,14 @@ func dataSourceDomainFIPAclTemplateEntryRead(d *schema.ResourceData, m interface
     d.Set("location_type", DomainFIPAclTemplateEntry.LocationType)
     d.Set("policy_state", DomainFIPAclTemplateEntry.PolicyState)
     d.Set("domain_name", DomainFIPAclTemplateEntry.DomainName)
+    d.Set("source_pg_id", DomainFIPAclTemplateEntry.SourcePgId)
+    d.Set("source_pg_type", DomainFIPAclTemplateEntry.SourcePgType)
     d.Set("source_port", DomainFIPAclTemplateEntry.SourcePort)
+    d.Set("source_type", DomainFIPAclTemplateEntry.SourceType)
+    d.Set("source_value", DomainFIPAclTemplateEntry.SourceValue)
     d.Set("priority", DomainFIPAclTemplateEntry.Priority)
     d.Set("protocol", DomainFIPAclTemplateEntry.Protocol)
     d.Set("associated_live_entity_id", DomainFIPAclTemplateEntry.AssociatedLiveEntityID)
-    d.Set("associated_live_template_id", DomainFIPAclTemplateEntry.AssociatedLiveTemplateID)
-    d.Set("associated_traffic_type", DomainFIPAclTemplateEntry.AssociatedTrafficType)
-    d.Set("associated_traffic_type_id", DomainFIPAclTemplateEntry.AssociatedTrafficTypeID)
     d.Set("stateful", DomainFIPAclTemplateEntry.Stateful)
     d.Set("stats_id", DomainFIPAclTemplateEntry.StatsID)
     d.Set("stats_logging_enabled", DomainFIPAclTemplateEntry.StatsLoggingEnabled)
@@ -248,5 +267,5 @@ func dataSourceDomainFIPAclTemplateEntryRead(d *schema.ResourceData, m interface
 
     d.SetId(DomainFIPAclTemplateEntry.Identifier())
     
-    return nil
+    return
 }

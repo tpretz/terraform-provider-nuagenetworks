@@ -15,11 +15,6 @@ func resourceNSRedundantGatewayGroup() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -55,7 +50,7 @@ func resourceNSRedundantGatewayGroup() *schema.Resource {
             },
             "gateway_peer1_id": &schema.Schema{
                 Type:     schema.TypeString,
-                Required: true,
+                Optional: true,
             },
             "gateway_peer1_name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -131,7 +126,7 @@ func resourceNSRedundantGatewayGroup() *schema.Resource {
             },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,
-                Optional: true,
+                Required: true,
             },
         },
     }
@@ -142,10 +137,12 @@ func resourceNSRedundantGatewayGroupCreate(d *schema.ResourceData, m interface{}
     // Initialize NSRedundantGatewayGroup object
     o := &vspk.NSRedundantGatewayGroup{
         Name: d.Get("name").(string),
-        GatewayPeer1ID: d.Get("gateway_peer1_id").(string),
     }
     if attr, ok := d.GetOk("gateway_peer1_autodiscovered_gateway_id"); ok {
         o.GatewayPeer1AutodiscoveredGatewayID = attr.(string)
+    }
+    if attr, ok := d.GetOk("gateway_peer1_id"); ok {
+        o.GatewayPeer1ID = attr.(string)
     }
     if attr, ok := d.GetOk("gateway_peer1_name"); ok {
         o.GatewayPeer1Name = attr.(string)
@@ -183,19 +180,10 @@ func resourceNSRedundantGatewayGroupCreate(d *schema.ResourceData, m interface{}
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)
     }
-    if attr, ok := d.GetOk("parent_me"); ok {
-        parent := &vspk.Me{ID: attr.(string)}
-        err := parent.CreateNSRedundantGatewayGroup(o)
-        if err != nil {
-            return err
-        }
-    }
-    if attr, ok := d.GetOk("parent_enterprise"); ok {
-        parent := &vspk.Enterprise{ID: attr.(string)}
-        err := parent.CreateNSRedundantGatewayGroup(o)
-        if err != nil {
-            return err
-        }
+    parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
+    err := parent.CreateNSRedundantGatewayGroup(o)
+    if err != nil {
+        return err
     }
     
     
@@ -256,10 +244,12 @@ func resourceNSRedundantGatewayGroupUpdate(d *schema.ResourceData, m interface{}
     }
     
     o.Name = d.Get("name").(string)
-    o.GatewayPeer1ID = d.Get("gateway_peer1_id").(string)
     
     if attr, ok := d.GetOk("gateway_peer1_autodiscovered_gateway_id"); ok {
         o.GatewayPeer1AutodiscoveredGatewayID = attr.(string)
+    }
+    if attr, ok := d.GetOk("gateway_peer1_id"); ok {
+        o.GatewayPeer1ID = attr.(string)
     }
     if attr, ok := d.GetOk("gateway_peer1_name"); ok {
         o.GatewayPeer1Name = attr.(string)

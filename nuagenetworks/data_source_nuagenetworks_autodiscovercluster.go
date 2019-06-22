@@ -57,9 +57,8 @@ func dataSourceAutoDiscoverCluster() *schema.Resource {
 }
 
 
-func dataSourceAutoDiscoverClusterRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceAutoDiscoverClusterRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredAutoDiscoverClusters := vspk.AutoDiscoverClustersList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -78,7 +77,7 @@ func dataSourceAutoDiscoverClusterRead(d *schema.ResourceData, m interface{}) er
     parent := &vspk.VCenterDataCenter{ID: d.Get("parent_vcenter_data_center").(string)}
     filteredAutoDiscoverClusters, err = parent.AutoDiscoverClusters(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     AutoDiscoverCluster := &vspk.AutoDiscoverCluster{}
@@ -108,5 +107,5 @@ func dataSourceAutoDiscoverClusterRead(d *schema.ResourceData, m interface{}) er
 
     d.SetId(AutoDiscoverCluster.Identifier())
     
-    return nil
+    return
 }

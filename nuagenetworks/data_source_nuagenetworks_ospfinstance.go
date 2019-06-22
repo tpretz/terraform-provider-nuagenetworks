@@ -81,9 +81,8 @@ func dataSourceOSPFInstance() *schema.Resource {
 }
 
 
-func dataSourceOSPFInstanceRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceOSPFInstanceRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredOSPFInstances := vspk.OSPFInstancesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -102,7 +101,7 @@ func dataSourceOSPFInstanceRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.Domain{ID: d.Get("parent_domain").(string)}
     filteredOSPFInstances, err = parent.OSPFInstances(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     OSPFInstance := &vspk.OSPFInstance{}
@@ -138,5 +137,5 @@ func dataSourceOSPFInstanceRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(OSPFInstance.Identifier())
     
-    return nil
+    return
 }

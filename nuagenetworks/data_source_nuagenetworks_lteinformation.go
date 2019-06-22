@@ -28,18 +28,6 @@ func dataSourceLTEInformation() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "parent_ns_port": &schema.Schema{
                 Type:     schema.TypeString,
                 Required: true,
@@ -49,9 +37,8 @@ func dataSourceLTEInformation() *schema.Resource {
 }
 
 
-func dataSourceLTEInformationRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceLTEInformationRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredLTEInformations := vspk.LTEInformationsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -70,7 +57,7 @@ func dataSourceLTEInformationRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.NSPort{ID: d.Get("parent_ns_port").(string)}
     filteredLTEInformations, err = parent.LTEInformations(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     LTEInformation := &vspk.LTEInformation{}
@@ -87,9 +74,6 @@ func dataSourceLTEInformationRead(d *schema.ResourceData, m interface{}) error {
     LTEInformation = filteredLTEInformations[0]
 
     d.Set("lte_connection_info", LTEInformation.LTEConnectionInfo)
-    d.Set("last_updated_by", LTEInformation.LastUpdatedBy)
-    d.Set("entity_scope", LTEInformation.EntityScope)
-    d.Set("external_id", LTEInformation.ExternalID)
     
     d.Set("id", LTEInformation.Identifier())
     d.Set("parent_id", LTEInformation.ParentID)
@@ -98,5 +82,5 @@ func dataSourceLTEInformationRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(LTEInformation.Identifier())
     
-    return nil
+    return
 }

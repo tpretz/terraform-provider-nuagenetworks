@@ -24,6 +24,10 @@ func dataSourceVPortMirror() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
+            "vport_name": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -60,10 +64,6 @@ func dataSourceVPortMirror() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "vport_name": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "attached_network_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -87,9 +87,8 @@ func dataSourceVPortMirror() *schema.Resource {
 }
 
 
-func dataSourceVPortMirrorRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceVPortMirrorRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredVPortMirrors := vspk.VPortMirrorsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -109,13 +108,13 @@ func dataSourceVPortMirrorRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.MirrorDestination{ID: attr.(string)}
         filteredVPortMirrors, err = parent.VPortMirrors(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredVPortMirrors, err = parent.VPortMirrors(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -132,6 +131,7 @@ func dataSourceVPortMirrorRead(d *schema.ResourceData, m interface{}) error {
     
     VPortMirror = filteredVPortMirrors[0]
 
+    d.Set("vport_name", VPortMirror.VPortName)
     d.Set("last_updated_by", VPortMirror.LastUpdatedBy)
     d.Set("network_name", VPortMirror.NetworkName)
     d.Set("mirror_destination_id", VPortMirror.MirrorDestinationID)
@@ -141,7 +141,6 @@ func dataSourceVPortMirrorRead(d *schema.ResourceData, m interface{}) error {
     d.Set("entity_scope", VPortMirror.EntityScope)
     d.Set("domain_name", VPortMirror.DomainName)
     d.Set("vport_id", VPortMirror.VportId)
-    d.Set("vport_name", VPortMirror.VportName)
     d.Set("attached_network_type", VPortMirror.AttachedNetworkType)
     d.Set("external_id", VPortMirror.ExternalID)
     
@@ -152,5 +151,5 @@ func dataSourceVPortMirrorRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(VPortMirror.Identifier())
     
-    return nil
+    return
 }

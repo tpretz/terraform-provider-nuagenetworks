@@ -24,16 +24,8 @@ func dataSourceNSGatewaySummary() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "nsg_version": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "major_alarms_count": &schema.Schema{
                 Type:     schema.TypeInt,
-                Computed: true,
-            },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
                 Computed: true,
             },
             "gateway_id": &schema.Schema{
@@ -41,10 +33,6 @@ func dataSourceNSGatewaySummary() *schema.Resource {
                 Computed: true,
             },
             "gateway_name": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "gateway_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -56,7 +44,7 @@ func dataSourceNSGatewaySummary() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "timezone_id": &schema.Schema{
+            "time_zone_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -65,14 +53,10 @@ func dataSourceNSGatewaySummary() *schema.Resource {
                 Computed: true,
             },
             "info_alarms_count": &schema.Schema{
-                Type:     schema.TypeInt,
-                Computed: true,
-            },
-            "enterprise_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "entity_scope": &schema.Schema{
+            "enterprise_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -96,11 +80,11 @@ func dataSourceNSGatewaySummary() *schema.Resource {
                 Type:     schema.TypeInt,
                 Computed: true,
             },
-            "state": &schema.Schema{
+            "nsg_version": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "external_id": &schema.Schema{
+            "state": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -133,9 +117,8 @@ func dataSourceNSGatewaySummary() *schema.Resource {
 }
 
 
-func dataSourceNSGatewaySummaryRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceNSGatewaySummaryRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredNSGatewaySummaries := vspk.NSGatewaySummariesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -155,25 +138,25 @@ func dataSourceNSGatewaySummaryRead(d *schema.ResourceData, m interface{}) error
         parent := &vspk.Domain{ID: attr.(string)}
         filteredNSGatewaySummaries, err = parent.NSGatewaySummaries(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredNSGatewaySummaries, err = parent.NSGatewaySummaries(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredNSGatewaySummaries, err = parent.NSGatewaySummaries(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_ns_gateway"); ok {
         parent := &vspk.NSGateway{ID: attr.(string)}
         filteredNSGatewaySummaries, err = parent.NSGatewaySummaries(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -190,26 +173,22 @@ func dataSourceNSGatewaySummaryRead(d *schema.ResourceData, m interface{}) error
     
     NSGatewaySummary = filteredNSGatewaySummaries[0]
 
-    d.Set("nsg_version", NSGatewaySummary.NSGVersion)
     d.Set("major_alarms_count", NSGatewaySummary.MajorAlarmsCount)
-    d.Set("last_updated_by", NSGatewaySummary.LastUpdatedBy)
     d.Set("gateway_id", NSGatewaySummary.GatewayID)
     d.Set("gateway_name", NSGatewaySummary.GatewayName)
-    d.Set("gateway_type", NSGatewaySummary.GatewayType)
     d.Set("latitude", NSGatewaySummary.Latitude)
     d.Set("address", NSGatewaySummary.Address)
-    d.Set("timezone_id", NSGatewaySummary.TimezoneID)
+    d.Set("time_zone_id", NSGatewaySummary.TimeZoneID)
     d.Set("minor_alarms_count", NSGatewaySummary.MinorAlarmsCount)
     d.Set("info_alarms_count", NSGatewaySummary.InfoAlarmsCount)
     d.Set("enterprise_id", NSGatewaySummary.EnterpriseID)
-    d.Set("entity_scope", NSGatewaySummary.EntityScope)
     d.Set("locality", NSGatewaySummary.Locality)
     d.Set("longitude", NSGatewaySummary.Longitude)
     d.Set("bootstrap_status", NSGatewaySummary.BootstrapStatus)
     d.Set("country", NSGatewaySummary.Country)
     d.Set("critical_alarms_count", NSGatewaySummary.CriticalAlarmsCount)
+    d.Set("nsg_version", NSGatewaySummary.NsgVersion)
     d.Set("state", NSGatewaySummary.State)
-    d.Set("external_id", NSGatewaySummary.ExternalID)
     d.Set("system_id", NSGatewaySummary.SystemID)
     
     d.Set("id", NSGatewaySummary.Identifier())
@@ -219,5 +198,5 @@ func dataSourceNSGatewaySummaryRead(d *schema.ResourceData, m interface{}) error
 
     d.SetId(NSGatewaySummary.Identifier())
     
-    return nil
+    return
 }

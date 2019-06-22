@@ -96,22 +96,3 @@ func (o *L4Service) Delete() *bambou.Error {
 
 	return bambou.CurrentSession().DeleteEntity(o)
 }
-
-// L4ServiceGroups retrieves the list of child L4ServiceGroups of the L4Service
-func (o *L4Service) L4ServiceGroups(info *bambou.FetchingInfo) (L4ServiceGroupsList, *bambou.Error) {
-
-	var list L4ServiceGroupsList
-	err := bambou.CurrentSession().FetchChildren(o, L4ServiceGroupIdentity, &list, info)
-	return list, err
-}
-
-// AssignL4ServiceGroups assigns the list of L4ServiceGroups to the L4Service
-func (o *L4Service) AssignL4ServiceGroups(children L4ServiceGroupsList) *bambou.Error {
-
-	list := []bambou.Identifiable{}
-	for _, c := range children {
-		list = append(list, c)
-	}
-
-	return bambou.CurrentSession().AssignChildren(o, list, L4ServiceGroupIdentity)
-}

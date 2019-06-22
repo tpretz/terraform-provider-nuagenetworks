@@ -41,7 +41,6 @@ type VCenterCluster struct {
 	ParentID                               string `json:"parentID,omitempty"`
 	ParentType                             string `json:"parentType,omitempty"`
 	Owner                                  string `json:"owner,omitempty"`
-	ARPReply                               bool   `json:"ARPReply"`
 	VRSConfigurationTimeLimit              int    `json:"VRSConfigurationTimeLimit,omitempty"`
 	VRequireNuageMetadata                  bool   `json:"vRequireNuageMetadata"`
 	Name                                   string `json:"name,omitempty"`
@@ -85,7 +84,6 @@ type VCenterCluster struct {
 	RevertiveTimer                         int    `json:"revertiveTimer,omitempty"`
 	NfsLogServer                           string `json:"nfsLogServer,omitempty"`
 	NfsMountPath                           string `json:"nfsMountPath,omitempty"`
-	AgencyMoid                             string `json:"agencyMoid,omitempty"`
 	MgmtDNS1                               string `json:"mgmtDNS1,omitempty"`
 	MgmtDNS2                               string `json:"mgmtDNS2,omitempty"`
 	MgmtGateway                            string `json:"mgmtGateway,omitempty"`

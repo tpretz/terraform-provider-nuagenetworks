@@ -15,11 +15,6 @@ func resourceVNFDescriptor() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -64,11 +59,6 @@ func resourceVNFDescriptor() *schema.Resource {
                 Optional: true,
                 Default: true,
             },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "associated_vnf_threshold_policy_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -76,10 +66,6 @@ func resourceVNFDescriptor() *schema.Resource {
             "storage_gb": &schema.Schema{
                 Type:     schema.TypeInt,
                 Required: true,
-            },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
             },
             "type": &schema.Schema{
                 Type:     schema.TypeString,
@@ -118,9 +104,6 @@ func resourceVNFDescriptorCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("associated_vnf_threshold_policy_id"); ok {
         o.AssociatedVNFThresholdPolicyID = attr.(string)
     }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
-    }
     if attr, ok := d.GetOk("type"); ok {
         o.Type = attr.(string)
     }
@@ -154,10 +137,8 @@ func resourceVNFDescriptorRead(d *schema.ResourceData, m interface{}) error {
     d.Set("description", o.Description)
     d.Set("metadata_id", o.MetadataID)
     d.Set("visible", o.Visible)
-    d.Set("entity_scope", o.EntityScope)
     d.Set("associated_vnf_threshold_policy_id", o.AssociatedVNFThresholdPolicyID)
     d.Set("storage_gb", o.StorageGB)
-    d.Set("external_id", o.ExternalID)
     d.Set("type", o.Type)
     
     d.Set("id", o.Identifier())
@@ -197,9 +178,6 @@ func resourceVNFDescriptorUpdate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("associated_vnf_threshold_policy_id"); ok {
         o.AssociatedVNFThresholdPolicyID = attr.(string)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
     if attr, ok := d.GetOk("type"); ok {
         o.Type = attr.(string)

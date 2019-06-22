@@ -76,9 +76,8 @@ func dataSourceVirtualIP() *schema.Resource {
 }
 
 
-func dataSourceVirtualIPRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceVirtualIPRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredVirtualIPs := vspk.VirtualIPsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -98,19 +97,19 @@ func dataSourceVirtualIPRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.Subnet{ID: attr.(string)}
         filteredVirtualIPs, err = parent.VirtualIPs(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_redirection_target"); ok {
         parent := &vspk.RedirectionTarget{ID: attr.(string)}
         filteredVirtualIPs, err = parent.VirtualIPs(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredVirtualIPs, err = parent.VirtualIPs(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -143,5 +142,5 @@ func dataSourceVirtualIPRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(VirtualIP.Identifier())
     
-    return nil
+    return
 }

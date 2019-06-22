@@ -57,9 +57,8 @@ func dataSourceEnterpriseSecurity() *schema.Resource {
 }
 
 
-func dataSourceEnterpriseSecurityRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceEnterpriseSecurityRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredEnterpriseSecurities := vspk.EnterpriseSecuritiesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -78,7 +77,7 @@ func dataSourceEnterpriseSecurityRead(d *schema.ResourceData, m interface{}) err
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     filteredEnterpriseSecurities, err = parent.EnterpriseSecurities(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     EnterpriseSecurity := &vspk.EnterpriseSecurity{}
@@ -108,5 +107,5 @@ func dataSourceEnterpriseSecurityRead(d *schema.ResourceData, m interface{}) err
 
     d.SetId(EnterpriseSecurity.Identifier())
     
-    return nil
+    return
 }

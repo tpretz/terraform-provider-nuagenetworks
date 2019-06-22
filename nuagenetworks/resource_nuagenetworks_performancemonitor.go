@@ -15,11 +15,6 @@ func resourcePerformanceMonitor() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -62,6 +57,16 @@ func resourcePerformanceMonitor() *schema.Resource {
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+            },
+            "destination_target_list": &schema.Schema{
+                Type:     schema.TypeList,
+                Optional: true,
+                Elem:     &schema.Schema{Type: schema.TypeString},
+            },
+            "timeout": &schema.Schema{
+                Type:     schema.TypeInt,
+                Optional: true,
+                Default: 1000,
             },
             "interval": &schema.Schema{
                 Type:     schema.TypeInt,
@@ -118,6 +123,12 @@ func resourcePerformanceMonitorCreate(d *schema.ResourceData, m interface{}) err
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
     }
+    if attr, ok := d.GetOk("destination_target_list"); ok {
+        o.DestinationTargetList = attr.([]interface{})
+    }
+    if attr, ok := d.GetOk("timeout"); ok {
+        o.Timeout = attr.(int)
+    }
     if attr, ok := d.GetOk("hold_down_timer"); ok {
         o.HoldDownTimer = attr.(int)
     }
@@ -145,6 +156,9 @@ func resourcePerformanceMonitorCreate(d *schema.ResourceData, m interface{}) err
     
 
     d.SetId(o.Identifier())
+    if attr, ok := d.GetOk("nsgateways"); ok {
+        o.AssignNSGateways(attr.(vspk.NSGatewaysList))
+    }
     return resourcePerformanceMonitorRead(d, m)
 }
 
@@ -165,6 +179,8 @@ func resourcePerformanceMonitorRead(d *schema.ResourceData, m interface{}) error
     d.Set("read_only", o.ReadOnly)
     d.Set("service_class", o.ServiceClass)
     d.Set("description", o.Description)
+    d.Set("destination_target_list", o.DestinationTargetList)
+    d.Set("timeout", o.Timeout)
     d.Set("interval", o.Interval)
     d.Set("entity_scope", o.EntityScope)
     d.Set("hold_down_timer", o.HoldDownTimer)
@@ -205,6 +221,12 @@ func resourcePerformanceMonitorUpdate(d *schema.ResourceData, m interface{}) err
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
+    }
+    if attr, ok := d.GetOk("destination_target_list"); ok {
+        o.DestinationTargetList = attr.([]interface{})
+    }
+    if attr, ok := d.GetOk("timeout"); ok {
+        o.Timeout = attr.(int)
     }
     if attr, ok := d.GetOk("hold_down_timer"); ok {
         o.HoldDownTimer = attr.(int)

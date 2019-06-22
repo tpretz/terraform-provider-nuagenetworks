@@ -15,11 +15,6 @@ func resourceVPort() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -53,11 +48,6 @@ func resourceVPort() *schema.Resource {
                 Optional: true,
                 Default: "INHERITED",
             },
-            "backhaul_subnet_vnid": &schema.Schema{
-                Type:     schema.TypeInt,
-                Optional: true,
-                Computed: true,
-            },
             "name": &schema.Schema{
                 Type:     schema.TypeString,
                 Required: true,
@@ -78,11 +68,6 @@ func resourceVPort() *schema.Resource {
             "gateway_port_name": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-            },
-            "access_restriction_enabled": &schema.Schema{
-                Type:     schema.TypeBool,
-                Optional: true,
-                Default: false,
             },
             "active": &schema.Schema{
                 Type:     schema.TypeBool,
@@ -105,7 +90,7 @@ func resourceVPort() *schema.Resource {
                 Optional: true,
             },
             "service_id": &schema.Schema{
-                Type:     schema.TypeInt,
+                Type:     schema.TypeString,
                 Optional: true,
             },
             "description": &schema.Schema{
@@ -121,20 +106,6 @@ func resourceVPort() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "domain_name": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "domain_service_label": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
-            "domain_vlanid": &schema.Schema{
-                Type:     schema.TypeInt,
-                Optional: true,
-                Computed: true,
-            },
             "zone_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -146,7 +117,6 @@ func resourceVPort() *schema.Resource {
             "trunk_role": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                Computed: true,
             },
             "assoc_entity_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -198,12 +168,7 @@ func resourceVPort() *schema.Resource {
             "sub_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                Computed: true,
-            },
-            "subnet_vnid": &schema.Schema{
-                Type:     schema.TypeInt,
-                Optional: true,
-                Computed: true,
+                Default: "NONE",
             },
             "multi_nic_vport_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -270,9 +235,6 @@ func resourceVPortCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("gateway_port_name"); ok {
         o.GatewayPortName = attr.(string)
     }
-    if attr, ok := d.GetOk("access_restriction_enabled"); ok {
-        o.AccessRestrictionEnabled = attr.(bool)
-    }
     if attr, ok := d.GetOk("active"); ok {
         o.Active = attr.(bool)
     }
@@ -286,7 +248,7 @@ func resourceVPortCreate(d *schema.ResourceData, m interface{}) error {
         o.SegmentationType = attr.(string)
     }
     if attr, ok := d.GetOk("service_id"); ok {
-        o.ServiceID = attr.(int)
+        o.ServiceID = attr.(string)
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
@@ -294,14 +256,14 @@ func resourceVPortCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("domain_id"); ok {
         o.DomainID = attr.(string)
     }
-    if attr, ok := d.GetOk("domain_service_label"); ok {
-        o.DomainServiceLabel = attr.(string)
-    }
     if attr, ok := d.GetOk("zone_id"); ok {
         o.ZoneID = attr.(string)
     }
     if attr, ok := d.GetOk("operational_state"); ok {
         o.OperationalState = attr.(string)
+    }
+    if attr, ok := d.GetOk("trunk_role"); ok {
+        o.TrunkRole = attr.(string)
     }
     if attr, ok := d.GetOk("assoc_entity_id"); ok {
         o.AssocEntityID = attr.(string)
@@ -326,6 +288,9 @@ func resourceVPortCreate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("associated_trunk_id"); ok {
         o.AssociatedTrunkID = attr.(string)
+    }
+    if attr, ok := d.GetOk("sub_type"); ok {
+        o.SubType = attr.(string)
     }
     if attr, ok := d.GetOk("multi_nic_vport_id"); ok {
         o.MultiNICVPortID = attr.(string)
@@ -363,6 +328,9 @@ func resourceVPortCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("policygroups"); ok {
         o.AssignPolicyGroups(attr.(vspk.PolicyGroupsList))
     }
+    if attr, ok := d.GetOk("applicationperformancemanagements"); ok {
+        o.AssignApplicationperformancemanagements(attr.(vspk.ApplicationperformancemanagementsList))
+    }
     return resourceVPortRead(d, m)
 }
 
@@ -381,13 +349,11 @@ func resourceVPortRead(d *schema.ResourceData, m interface{}) error {
     d.Set("vlan", o.VLAN)
     d.Set("vlanid", o.VLANID)
     d.Set("dpi", o.DPI)
-    d.Set("backhaul_subnet_vnid", o.BackhaulSubnetVNID)
     d.Set("name", o.Name)
     d.Set("has_attached_interfaces", o.HasAttachedInterfaces)
     d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("gateway_mac_move_role", o.GatewayMACMoveRole)
     d.Set("gateway_port_name", o.GatewayPortName)
-    d.Set("access_restriction_enabled", o.AccessRestrictionEnabled)
     d.Set("active", o.Active)
     d.Set("address_spoofing", o.AddressSpoofing)
     d.Set("peer_operational_state", o.PeerOperationalState)
@@ -397,9 +363,6 @@ func resourceVPortRead(d *schema.ResourceData, m interface{}) error {
     d.Set("description", o.Description)
     d.Set("entity_scope", o.EntityScope)
     d.Set("domain_id", o.DomainID)
-    d.Set("domain_name", o.DomainName)
-    d.Set("domain_service_label", o.DomainServiceLabel)
-    d.Set("domain_vlanid", o.DomainVLANID)
     d.Set("zone_id", o.ZoneID)
     d.Set("operational_state", o.OperationalState)
     d.Set("trunk_role", o.TrunkRole)
@@ -415,7 +378,6 @@ func resourceVPortRead(d *schema.ResourceData, m interface{}) error {
     d.Set("associated_send_multicast_channel_map_id", o.AssociatedSendMulticastChannelMapID)
     d.Set("associated_trunk_id", o.AssociatedTrunkID)
     d.Set("sub_type", o.SubType)
-    d.Set("subnet_vnid", o.SubnetVNID)
     d.Set("multi_nic_vport_id", o.MultiNICVPortID)
     d.Set("multicast", o.Multicast)
     d.Set("gw_eligible", o.GwEligible)
@@ -463,9 +425,6 @@ func resourceVPortUpdate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("gateway_port_name"); ok {
         o.GatewayPortName = attr.(string)
     }
-    if attr, ok := d.GetOk("access_restriction_enabled"); ok {
-        o.AccessRestrictionEnabled = attr.(bool)
-    }
     if attr, ok := d.GetOk("active"); ok {
         o.Active = attr.(bool)
     }
@@ -479,7 +438,7 @@ func resourceVPortUpdate(d *schema.ResourceData, m interface{}) error {
         o.SegmentationType = attr.(string)
     }
     if attr, ok := d.GetOk("service_id"); ok {
-        o.ServiceID = attr.(int)
+        o.ServiceID = attr.(string)
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
@@ -487,14 +446,14 @@ func resourceVPortUpdate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("domain_id"); ok {
         o.DomainID = attr.(string)
     }
-    if attr, ok := d.GetOk("domain_service_label"); ok {
-        o.DomainServiceLabel = attr.(string)
-    }
     if attr, ok := d.GetOk("zone_id"); ok {
         o.ZoneID = attr.(string)
     }
     if attr, ok := d.GetOk("operational_state"); ok {
         o.OperationalState = attr.(string)
+    }
+    if attr, ok := d.GetOk("trunk_role"); ok {
+        o.TrunkRole = attr.(string)
     }
     if attr, ok := d.GetOk("assoc_entity_id"); ok {
         o.AssocEntityID = attr.(string)
@@ -519,6 +478,9 @@ func resourceVPortUpdate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("associated_trunk_id"); ok {
         o.AssociatedTrunkID = attr.(string)
+    }
+    if attr, ok := d.GetOk("sub_type"); ok {
+        o.SubType = attr.(string)
     }
     if attr, ok := d.GetOk("multi_nic_vport_id"); ok {
         o.MultiNICVPortID = attr.(string)

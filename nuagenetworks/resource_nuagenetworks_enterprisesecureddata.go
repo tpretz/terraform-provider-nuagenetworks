@@ -15,11 +15,6 @@ func resourceEnterpriseSecuredData() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -45,10 +40,6 @@ func resourceEnterpriseSecuredData() *schema.Resource {
                 Computed: true,
             },
             "data": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
-            "seed_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
@@ -92,9 +83,6 @@ func resourceEnterpriseSecuredDataCreate(d *schema.ResourceData, m interface{}) 
     if attr, ok := d.GetOk("data"); ok {
         o.Data = attr.(string)
     }
-    if attr, ok := d.GetOk("seed_type"); ok {
-        o.SeedType = attr.(string)
-    }
     if attr, ok := d.GetOk("sek_id"); ok {
         o.SekId = attr.(int)
     }
@@ -133,7 +121,6 @@ func resourceEnterpriseSecuredDataRead(d *schema.ResourceData, m interface{}) er
     d.Set("hash", o.Hash)
     d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("data", o.Data)
-    d.Set("seed_type", o.SeedType)
     d.Set("sek_id", o.SekId)
     d.Set("keyserver_cert_serial_number", o.KeyserverCertSerialNumber)
     d.Set("signed_hash", o.SignedHash)
@@ -164,9 +151,6 @@ func resourceEnterpriseSecuredDataUpdate(d *schema.ResourceData, m interface{}) 
     }
     if attr, ok := d.GetOk("data"); ok {
         o.Data = attr.(string)
-    }
-    if attr, ok := d.GetOk("seed_type"); ok {
-        o.SeedType = attr.(string)
     }
     if attr, ok := d.GetOk("sek_id"); ok {
         o.SekId = attr.(int)

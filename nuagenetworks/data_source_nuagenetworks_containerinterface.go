@@ -108,6 +108,10 @@ func dataSourceContainerInterface() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
+            "associated_floating_ip_address": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
             "attached_network_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -159,9 +163,8 @@ func dataSourceContainerInterface() *schema.Resource {
 }
 
 
-func dataSourceContainerInterfaceRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceContainerInterfaceRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredContainerInterfaces := vspk.ContainerInterfacesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -181,43 +184,43 @@ func dataSourceContainerInterfaceRead(d *schema.ResourceData, m interface{}) err
         parent := &vspk.Domain{ID: attr.(string)}
         filteredContainerInterfaces, err = parent.ContainerInterfaces(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredContainerInterfaces, err = parent.ContainerInterfaces(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_subnet"); ok {
         parent := &vspk.Subnet{ID: attr.(string)}
         filteredContainerInterfaces, err = parent.ContainerInterfaces(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_zone"); ok {
         parent := &vspk.Zone{ID: attr.(string)}
         filteredContainerInterfaces, err = parent.ContainerInterfaces(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredContainerInterfaces, err = parent.ContainerInterfaces(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_container"); ok {
         parent := &vspk.Container{ID: attr.(string)}
         filteredContainerInterfaces, err = parent.ContainerInterfaces(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredContainerInterfaces, err = parent.ContainerInterfaces(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -255,6 +258,7 @@ func dataSourceContainerInterfaceRead(d *schema.ResourceData, m interface{}) err
     d.Set("zone_id", ContainerInterface.ZoneID)
     d.Set("zone_name", ContainerInterface.ZoneName)
     d.Set("container_uuid", ContainerInterface.ContainerUUID)
+    d.Set("associated_floating_ip_address", ContainerInterface.AssociatedFloatingIPAddress)
     d.Set("attached_network_id", ContainerInterface.AttachedNetworkID)
     d.Set("attached_network_type", ContainerInterface.AttachedNetworkType)
     d.Set("multi_nic_vport_name", ContainerInterface.MultiNICVPortName)
@@ -267,5 +271,5 @@ func dataSourceContainerInterfaceRead(d *schema.ResourceData, m interface{}) err
 
     d.SetId(ContainerInterface.Identifier())
     
-    return nil
+    return
 }

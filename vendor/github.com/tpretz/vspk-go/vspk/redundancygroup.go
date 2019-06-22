@@ -122,6 +122,12 @@ func (o *RedundancyGroup) MACFilterProfiles(info *bambou.FetchingInfo) (MACFilte
 	return list, err
 }
 
+// CreateMACFilterProfile creates a new child MACFilterProfile under the RedundancyGroup
+func (o *RedundancyGroup) CreateMACFilterProfile(child *MACFilterProfile) *bambou.Error {
+
+	return bambou.CurrentSession().CreateChild(o, child)
+}
+
 // SAPEgressQoSProfiles retrieves the list of child SAPEgressQoSProfiles of the RedundancyGroup
 func (o *RedundancyGroup) SAPEgressQoSProfiles(info *bambou.FetchingInfo) (SAPEgressQoSProfilesList, *bambou.Error) {
 
@@ -130,12 +136,24 @@ func (o *RedundancyGroup) SAPEgressQoSProfiles(info *bambou.FetchingInfo) (SAPEg
 	return list, err
 }
 
+// CreateSAPEgressQoSProfile creates a new child SAPEgressQoSProfile under the RedundancyGroup
+func (o *RedundancyGroup) CreateSAPEgressQoSProfile(child *SAPEgressQoSProfile) *bambou.Error {
+
+	return bambou.CurrentSession().CreateChild(o, child)
+}
+
 // SAPIngressQoSProfiles retrieves the list of child SAPIngressQoSProfiles of the RedundancyGroup
 func (o *RedundancyGroup) SAPIngressQoSProfiles(info *bambou.FetchingInfo) (SAPIngressQoSProfilesList, *bambou.Error) {
 
 	var list SAPIngressQoSProfilesList
 	err := bambou.CurrentSession().FetchChildren(o, SAPIngressQoSProfileIdentity, &list, info)
 	return list, err
+}
+
+// CreateSAPIngressQoSProfile creates a new child SAPIngressQoSProfile under the RedundancyGroup
+func (o *RedundancyGroup) CreateSAPIngressQoSProfile(child *SAPIngressQoSProfile) *bambou.Error {
+
+	return bambou.CurrentSession().CreateChild(o, child)
 }
 
 // Gateways retrieves the list of child Gateways of the RedundancyGroup
@@ -310,12 +328,24 @@ func (o *RedundancyGroup) IPFilterProfiles(info *bambou.FetchingInfo) (IPFilterP
 	return list, err
 }
 
+// CreateIPFilterProfile creates a new child IPFilterProfile under the RedundancyGroup
+func (o *RedundancyGroup) CreateIPFilterProfile(child *IPFilterProfile) *bambou.Error {
+
+	return bambou.CurrentSession().CreateChild(o, child)
+}
+
 // IPv6FilterProfiles retrieves the list of child IPv6FilterProfiles of the RedundancyGroup
 func (o *RedundancyGroup) IPv6FilterProfiles(info *bambou.FetchingInfo) (IPv6FilterProfilesList, *bambou.Error) {
 
 	var list IPv6FilterProfilesList
 	err := bambou.CurrentSession().FetchChildren(o, IPv6FilterProfileIdentity, &list, info)
 	return list, err
+}
+
+// CreateIPv6FilterProfile creates a new child IPv6FilterProfile under the RedundancyGroup
+func (o *RedundancyGroup) CreateIPv6FilterProfile(child *IPv6FilterProfile) *bambou.Error {
+
+	return bambou.CurrentSession().CreateChild(o, child)
 }
 
 // VsgRedundantPorts retrieves the list of child VsgRedundantPorts of the RedundancyGroup

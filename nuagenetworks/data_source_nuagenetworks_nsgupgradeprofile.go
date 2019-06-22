@@ -48,10 +48,6 @@ func dataSourceNSGUpgradeProfile() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "download_rate_limit": &schema.Schema{
-                Type:     schema.TypeInt,
-                Computed: true,
-            },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -61,9 +57,8 @@ func dataSourceNSGUpgradeProfile() *schema.Resource {
 }
 
 
-func dataSourceNSGUpgradeProfileRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceNSGUpgradeProfileRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredNSGUpgradeProfiles := vspk.NSGUpgradeProfilesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -82,7 +77,7 @@ func dataSourceNSGUpgradeProfileRead(d *schema.ResourceData, m interface{}) erro
     parent := m.(*vspk.Me)
     filteredNSGUpgradeProfiles, err = parent.NSGUpgradeProfiles(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     NSGUpgradeProfile := &vspk.NSGUpgradeProfile{}
@@ -104,7 +99,6 @@ func dataSourceNSGUpgradeProfileRead(d *schema.ResourceData, m interface{}) erro
     d.Set("metadata_upgrade_path", NSGUpgradeProfile.MetadataUpgradePath)
     d.Set("enterprise_id", NSGUpgradeProfile.EnterpriseID)
     d.Set("entity_scope", NSGUpgradeProfile.EntityScope)
-    d.Set("download_rate_limit", NSGUpgradeProfile.DownloadRateLimit)
     d.Set("external_id", NSGUpgradeProfile.ExternalID)
     
     d.Set("id", NSGUpgradeProfile.Identifier())
@@ -114,5 +108,5 @@ func dataSourceNSGUpgradeProfileRead(d *schema.ResourceData, m interface{}) erro
 
     d.SetId(NSGUpgradeProfile.Identifier())
     
-    return nil
+    return
 }

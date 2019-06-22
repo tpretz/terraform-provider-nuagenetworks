@@ -48,6 +48,15 @@ func dataSourcePerformanceMonitor() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
+            "destination_target_list": &schema.Schema{
+                Type:     schema.TypeList,
+                Computed: true,
+                Elem:     &schema.Schema{Type: schema.TypeString},
+            },
+            "timeout": &schema.Schema{
+                Type:     schema.TypeInt,
+                Computed: true,
+            },
             "interval": &schema.Schema{
                 Type:     schema.TypeInt,
                 Computed: true,
@@ -87,9 +96,8 @@ func dataSourcePerformanceMonitor() *schema.Resource {
 }
 
 
-func dataSourcePerformanceMonitorRead(d *schema.ResourceData, m interface{}) error {
+func dataSourcePerformanceMonitorRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredPerformanceMonitors := vspk.PerformanceMonitorsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -109,19 +117,19 @@ func dataSourcePerformanceMonitorRead(d *schema.ResourceData, m interface{}) err
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredPerformanceMonitors, err = parent.PerformanceMonitors(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_ike_gateway_connection"); ok {
         parent := &vspk.IKEGatewayConnection{ID: attr.(string)}
         filteredPerformanceMonitors, err = parent.PerformanceMonitors(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredPerformanceMonitors, err = parent.PerformanceMonitors(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -144,6 +152,8 @@ func dataSourcePerformanceMonitorRead(d *schema.ResourceData, m interface{}) err
     d.Set("read_only", PerformanceMonitor.ReadOnly)
     d.Set("service_class", PerformanceMonitor.ServiceClass)
     d.Set("description", PerformanceMonitor.Description)
+    d.Set("destination_target_list", PerformanceMonitor.DestinationTargetList)
+    d.Set("timeout", PerformanceMonitor.Timeout)
     d.Set("interval", PerformanceMonitor.Interval)
     d.Set("entity_scope", PerformanceMonitor.EntityScope)
     d.Set("hold_down_timer", PerformanceMonitor.HoldDownTimer)
@@ -158,5 +168,5 @@ func dataSourcePerformanceMonitorRead(d *schema.ResourceData, m interface{}) err
 
     d.SetId(PerformanceMonitor.Identifier())
     
-    return nil
+    return
 }

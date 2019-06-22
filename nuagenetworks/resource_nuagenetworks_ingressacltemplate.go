@@ -15,11 +15,6 @@ func resourceIngressACLTemplate() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -78,6 +73,10 @@ func resourceIngressACLTemplate() *schema.Resource {
                 Optional: true,
             },
             "priority_type": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+            },
+            "assoc_acl_template_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
@@ -152,6 +151,9 @@ func resourceIngressACLTemplateCreate(d *schema.ResourceData, m interface{}) err
     if attr, ok := d.GetOk("priority_type"); ok {
         o.PriorityType = attr.(string)
     }
+    if attr, ok := d.GetOk("assoc_acl_template_id"); ok {
+        o.AssocAclTemplateId = attr.(string)
+    }
     if attr, ok := d.GetOk("associated_live_entity_id"); ok {
         o.AssociatedLiveEntityID = attr.(string)
     }
@@ -218,6 +220,7 @@ func resourceIngressACLTemplateRead(d *schema.ResourceData, m interface{}) error
     d.Set("policy_state", o.PolicyState)
     d.Set("priority", o.Priority)
     d.Set("priority_type", o.PriorityType)
+    d.Set("assoc_acl_template_id", o.AssocAclTemplateId)
     d.Set("associated_live_entity_id", o.AssociatedLiveEntityID)
     d.Set("associated_virtual_firewall_policy_id", o.AssociatedVirtualFirewallPolicyID)
     d.Set("auto_generate_priority", o.AutoGeneratePriority)
@@ -266,6 +269,9 @@ func resourceIngressACLTemplateUpdate(d *schema.ResourceData, m interface{}) err
     }
     if attr, ok := d.GetOk("priority_type"); ok {
         o.PriorityType = attr.(string)
+    }
+    if attr, ok := d.GetOk("assoc_acl_template_id"); ok {
+        o.AssocAclTemplateId = attr.(string)
     }
     if attr, ok := d.GetOk("associated_live_entity_id"); ok {
         o.AssociatedLiveEntityID = attr.(string)

@@ -15,11 +15,6 @@ func resourceNSGPatchProfile() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -37,7 +32,7 @@ func resourceNSGPatchProfile() *schema.Resource {
             },
             "name": &schema.Schema{
                 Type:     schema.TypeString,
-                Required: true,
+                Optional: true,
             },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
@@ -78,8 +73,10 @@ func resourceNSGPatchProfileCreate(d *schema.ResourceData, m interface{}) error 
 
     // Initialize NSGPatchProfile object
     o := &vspk.NSGPatchProfile{
-        Name: d.Get("name").(string),
         PatchURL: d.Get("patch_url").(string),
+    }
+    if attr, ok := d.GetOk("name"); ok {
+        o.Name = attr.(string)
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
@@ -140,9 +137,11 @@ func resourceNSGPatchProfileUpdate(d *schema.ResourceData, m interface{}) error 
         return err
     }
     
-    o.Name = d.Get("name").(string)
     o.PatchURL = d.Get("patch_url").(string)
     
+    if attr, ok := d.GetOk("name"); ok {
+        o.Name = attr.(string)
+    }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
     }

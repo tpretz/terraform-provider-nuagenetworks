@@ -32,7 +32,7 @@ func dataSourcePolicyGroupCategory() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "default_category": &schema.Schema{
+            "default_tag": &schema.Schema{
                 Type:     schema.TypeBool,
                 Computed: true,
             },
@@ -50,22 +50,15 @@ func dataSourcePolicyGroupCategory() *schema.Resource {
             },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_policy_group"},
-            },
-            "parent_policy_group": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_enterprise"},
+                Required: true,
             },
         },
     }
 }
 
 
-func dataSourcePolicyGroupCategoryRead(d *schema.ResourceData, m interface{}) error {
+func dataSourcePolicyGroupCategoryRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredPolicyGroupCategories := vspk.PolicyGroupCategoriesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -81,18 +74,10 @@ func dataSourcePolicyGroupCategoryRead(d *schema.ResourceData, m interface{}) er
            
         }
     }
-    if attr, ok := d.GetOk("parent_enterprise"); ok {
-        parent := &vspk.Enterprise{ID: attr.(string)}
-        filteredPolicyGroupCategories, err = parent.PolicyGroupCategories(fetchFilter)
-        if err != nil {
-            return err
-        }
-    } else if attr, ok := d.GetOk("parent_policy_group"); ok {
-        parent := &vspk.PolicyGroup{ID: attr.(string)}
-        filteredPolicyGroupCategories, err = parent.PolicyGroupCategories(fetchFilter)
-        if err != nil {
-            return err
-        }
+    parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
+    filteredPolicyGroupCategories, err = parent.PolicyGroupCategories(fetchFilter)
+    if err != nil {
+        return
     }
 
     PolicyGroupCategory := &vspk.PolicyGroupCategory{}
@@ -110,7 +95,7 @@ func dataSourcePolicyGroupCategoryRead(d *schema.ResourceData, m interface{}) er
 
     d.Set("name", PolicyGroupCategory.Name)
     d.Set("last_updated_by", PolicyGroupCategory.LastUpdatedBy)
-    d.Set("default_category", PolicyGroupCategory.DefaultCategory)
+    d.Set("default_tag", PolicyGroupCategory.DefaultTag)
     d.Set("description", PolicyGroupCategory.Description)
     d.Set("entity_scope", PolicyGroupCategory.EntityScope)
     d.Set("external_id", PolicyGroupCategory.ExternalID)
@@ -122,5 +107,5 @@ func dataSourcePolicyGroupCategoryRead(d *schema.ResourceData, m interface{}) er
 
     d.SetId(PolicyGroupCategory.Identifier())
     
-    return nil
+    return
 }

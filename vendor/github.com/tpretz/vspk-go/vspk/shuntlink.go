@@ -37,26 +37,34 @@ type ShuntLinksParent interface {
 
 // ShuntLink represents the model of a shuntlink
 type ShuntLink struct {
-	ID              string `json:"ID,omitempty"`
-	ParentID        string `json:"parentID,omitempty"`
-	ParentType      string `json:"parentType,omitempty"`
-	Owner           string `json:"owner,omitempty"`
-	VLANPeer1ID     string `json:"VLANPeer1ID,omitempty"`
-	VLANPeer2ID     string `json:"VLANPeer2ID,omitempty"`
-	Name            string `json:"name,omitempty"`
-	LastUpdatedBy   string `json:"lastUpdatedBy,omitempty"`
-	GatewayPeer1ID  string `json:"gatewayPeer1ID,omitempty"`
-	GatewayPeer2ID  string `json:"gatewayPeer2ID,omitempty"`
-	PermittedAction string `json:"permittedAction,omitempty"`
-	Description     string `json:"description,omitempty"`
-	EntityScope     string `json:"entityScope,omitempty"`
-	ExternalID      string `json:"externalID,omitempty"`
+	ID             string `json:"ID,omitempty"`
+	ParentID       string `json:"parentID,omitempty"`
+	ParentType     string `json:"parentType,omitempty"`
+	Owner          string `json:"owner,omitempty"`
+	VLANPeer1ID    string `json:"VLANPeer1ID,omitempty"`
+	VLANPeer2ID    string `json:"VLANPeer2ID,omitempty"`
+	Name           string `json:"name,omitempty"`
+	LastUpdatedBy  string `json:"lastUpdatedBy,omitempty"`
+	GatewayPeer1ID string `json:"gatewayPeer1ID,omitempty"`
+	GatewayPeer2ID string `json:"gatewayPeer2ID,omitempty"`
+	Peer1IPAddress string `json:"peer1IPAddress,omitempty"`
+	Peer1Subnet    string `json:"peer1Subnet,omitempty"`
+	Peer2IPAddress string `json:"peer2IPAddress,omitempty"`
+	Peer2Subnet    string `json:"peer2Subnet,omitempty"`
+	Description    string `json:"description,omitempty"`
+	EntityScope    string `json:"entityScope,omitempty"`
+	ExternalID     string `json:"externalID,omitempty"`
 }
 
 // NewShuntLink returns a new *ShuntLink
 func NewShuntLink() *ShuntLink {
 
-	return &ShuntLink{}
+	return &ShuntLink{
+		Name:           "null",
+		GatewayPeer1ID: "null",
+		GatewayPeer2ID: "null",
+		Description:    "null",
+	}
 }
 
 // Identity returns the Identity of the object.
@@ -115,6 +123,12 @@ func (o *ShuntLink) Alarms(info *bambou.FetchingInfo) (AlarmsList, *bambou.Error
 	var list AlarmsList
 	err := bambou.CurrentSession().FetchChildren(o, AlarmIdentity, &list, info)
 	return list, err
+}
+
+// CreateAlarm creates a new child Alarm under the ShuntLink
+func (o *ShuntLink) CreateAlarm(child *Alarm) *bambou.Error {
+
+	return bambou.CurrentSession().CreateChild(o, child)
 }
 
 // GlobalMetadatas retrieves the list of child GlobalMetadatas of the ShuntLink

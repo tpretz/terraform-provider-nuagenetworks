@@ -32,15 +32,7 @@ func dataSourceNetconfProfile() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "description": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -49,14 +41,6 @@ func dataSourceNetconfProfile() *schema.Resource {
                 Computed: true,
             },
             "user_name": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "assoc_entity_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -69,9 +53,8 @@ func dataSourceNetconfProfile() *schema.Resource {
 }
 
 
-func dataSourceNetconfProfileRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceNetconfProfileRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredNetconfProfiles := vspk.NetconfProfilesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -91,13 +74,13 @@ func dataSourceNetconfProfileRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredNetconfProfiles, err = parent.NetconfProfiles(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredNetconfProfiles, err = parent.NetconfProfiles(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -116,13 +99,9 @@ func dataSourceNetconfProfileRead(d *schema.ResourceData, m interface{}) error {
 
     d.Set("name", NetconfProfile.Name)
     d.Set("password", NetconfProfile.Password)
-    d.Set("last_updated_by", NetconfProfile.LastUpdatedBy)
     d.Set("description", NetconfProfile.Description)
-    d.Set("entity_scope", NetconfProfile.EntityScope)
     d.Set("port", NetconfProfile.Port)
     d.Set("user_name", NetconfProfile.UserName)
-    d.Set("assoc_entity_type", NetconfProfile.AssocEntityType)
-    d.Set("external_id", NetconfProfile.ExternalID)
     
     d.Set("id", NetconfProfile.Identifier())
     d.Set("parent_id", NetconfProfile.ParentID)
@@ -131,5 +110,5 @@ func dataSourceNetconfProfileRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(NetconfProfile.Identifier())
     
-    return nil
+    return
 }

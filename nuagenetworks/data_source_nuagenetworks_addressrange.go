@@ -82,9 +82,8 @@ func dataSourceAddressRange() *schema.Resource {
 }
 
 
-func dataSourceAddressRangeRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceAddressRangeRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredAddressRanges := vspk.AddressRangesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -104,31 +103,31 @@ func dataSourceAddressRangeRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.SharedNetworkResource{ID: attr.(string)}
         filteredAddressRanges, err = parent.AddressRanges(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredAddressRanges, err = parent.AddressRanges(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_l2_domain_template"); ok {
         parent := &vspk.L2DomainTemplate{ID: attr.(string)}
         filteredAddressRanges, err = parent.AddressRanges(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_subnet"); ok {
         parent := &vspk.Subnet{ID: attr.(string)}
         filteredAddressRanges, err = parent.AddressRanges(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_subnet_template"); ok {
         parent := &vspk.SubnetTemplate{ID: attr.(string)}
         filteredAddressRanges, err = parent.AddressRanges(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -160,5 +159,5 @@ func dataSourceAddressRangeRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(AddressRange.Identifier())
     
-    return nil
+    return
 }

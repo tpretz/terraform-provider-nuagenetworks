@@ -81,9 +81,8 @@ func dataSourceIKEPSK() *schema.Resource {
 }
 
 
-func dataSourceIKEPSKRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceIKEPSKRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredIKEPSKs := vspk.IKEPSKsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -102,7 +101,7 @@ func dataSourceIKEPSKRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     filteredIKEPSKs, err = parent.IKEPSKs(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     IKEPSK := &vspk.IKEPSK{}
@@ -138,5 +137,5 @@ func dataSourceIKEPSKRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(IKEPSK.Identifier())
     
-    return nil
+    return
 }

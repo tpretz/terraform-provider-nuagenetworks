@@ -15,11 +15,6 @@ func resourceOverlayAddressPool() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -35,18 +30,9 @@ func resourceOverlayAddressPool() *schema.Resource {
                 Optional: true,
                 Computed: true,
             },
-            "ip_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
             "name": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-            },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
             },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
@@ -56,20 +42,11 @@ func resourceOverlayAddressPool() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "associated_domain_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
             "start_address_range": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
@@ -86,9 +63,6 @@ func resourceOverlayAddressPoolCreate(d *schema.ResourceData, m interface{}) err
     // Initialize OverlayAddressPool object
     o := &vspk.OverlayAddressPool{
     }
-    if attr, ok := d.GetOk("ip_type"); ok {
-        o.IPType = attr.(string)
-    }
     if attr, ok := d.GetOk("name"); ok {
         o.Name = attr.(string)
     }
@@ -103,9 +77,6 @@ func resourceOverlayAddressPoolCreate(d *schema.ResourceData, m interface{}) err
     }
     if attr, ok := d.GetOk("start_address_range"); ok {
         o.StartAddressRange = attr.(string)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
     parent := &vspk.Link{ID: d.Get("parent_link").(string)}
     err := parent.CreateOverlayAddressPool(o)
@@ -130,15 +101,11 @@ func resourceOverlayAddressPoolRead(d *schema.ResourceData, m interface{}) error
         return nil
     }
 
-    d.Set("ip_type", o.IPType)
     d.Set("name", o.Name)
-    d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("description", o.Description)
     d.Set("end_address_range", o.EndAddressRange)
-    d.Set("entity_scope", o.EntityScope)
     d.Set("associated_domain_id", o.AssociatedDomainID)
     d.Set("start_address_range", o.StartAddressRange)
-    d.Set("external_id", o.ExternalID)
     
     d.Set("id", o.Identifier())
     d.Set("parent_id", o.ParentID)
@@ -159,9 +126,6 @@ func resourceOverlayAddressPoolUpdate(d *schema.ResourceData, m interface{}) err
     }
     
     
-    if attr, ok := d.GetOk("ip_type"); ok {
-        o.IPType = attr.(string)
-    }
     if attr, ok := d.GetOk("name"); ok {
         o.Name = attr.(string)
     }
@@ -176,9 +140,6 @@ func resourceOverlayAddressPoolUpdate(d *schema.ResourceData, m interface{}) err
     }
     if attr, ok := d.GetOk("start_address_range"); ok {
         o.StartAddressRange = attr.(string)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
 
     o.Save()

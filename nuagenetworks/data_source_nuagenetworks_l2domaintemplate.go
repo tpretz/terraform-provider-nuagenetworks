@@ -113,9 +113,8 @@ func dataSourceL2DomainTemplate() *schema.Resource {
 }
 
 
-func dataSourceL2DomainTemplateRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceL2DomainTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredL2DomainTemplates := vspk.L2DomainTemplatesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -134,7 +133,7 @@ func dataSourceL2DomainTemplateRead(d *schema.ResourceData, m interface{}) error
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     filteredL2DomainTemplates, err = parent.L2DomainTemplates(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     L2DomainTemplate := &vspk.L2DomainTemplate{}
@@ -178,5 +177,5 @@ func dataSourceL2DomainTemplateRead(d *schema.ResourceData, m interface{}) error
 
     d.SetId(L2DomainTemplate.Identifier())
     
-    return nil
+    return
 }

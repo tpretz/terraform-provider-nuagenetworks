@@ -52,6 +52,10 @@ func dataSourceEgressAdvFwdEntryTemplate() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
+            "name": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -61,14 +65,6 @@ func dataSourceEgressAdvFwdEntryTemplate() *schema.Resource {
                 Computed: true,
             },
             "address_override": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "web_filter_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "web_filter_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -144,18 +140,6 @@ func dataSourceEgressAdvFwdEntryTemplate() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "associated_live_template_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "associated_traffic_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "associated_traffic_type_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "stats_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -174,16 +158,15 @@ func dataSourceEgressAdvFwdEntryTemplate() *schema.Resource {
             },
             "parent_egress_adv_fwd_template": &schema.Schema{
                 Type:     schema.TypeString,
-                Optional: true,
+                Required: true,
             },
         },
     }
 }
 
 
-func dataSourceEgressAdvFwdEntryTemplateRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceEgressAdvFwdEntryTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredEgressAdvFwdEntryTemplates := vspk.EgressAdvFwdEntryTemplatesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -199,18 +182,10 @@ func dataSourceEgressAdvFwdEntryTemplateRead(d *schema.ResourceData, m interface
            
         }
     }
-    if attr, ok := d.GetOk("parent_egress_adv_fwd_template"); ok {
-        parent := &vspk.EgressAdvFwdTemplate{ID: attr.(string)}
-        filteredEgressAdvFwdEntryTemplates, err = parent.EgressAdvFwdEntryTemplates(fetchFilter)
-        if err != nil {
-            return err
-        }
-    } else {
-        parent := m.(*vspk.Me)
-        filteredEgressAdvFwdEntryTemplates, err = parent.EgressAdvFwdEntryTemplates(fetchFilter)
-        if err != nil {
-            return err
-        }
+    parent := &vspk.EgressAdvFwdTemplate{ID: d.Get("parent_egress_adv_fwd_template").(string)}
+    filteredEgressAdvFwdEntryTemplates, err = parent.EgressAdvFwdEntryTemplates(fetchFilter)
+    if err != nil {
+        return
     }
 
     EgressAdvFwdEntryTemplate := &vspk.EgressAdvFwdEntryTemplate{}
@@ -233,11 +208,10 @@ func dataSourceEgressAdvFwdEntryTemplateRead(d *schema.ResourceData, m interface
     d.Set("ipv6_address_override", EgressAdvFwdEntryTemplate.IPv6AddressOverride)
     d.Set("dscp", EgressAdvFwdEntryTemplate.DSCP)
     d.Set("failsafe_datapath", EgressAdvFwdEntryTemplate.FailsafeDatapath)
+    d.Set("name", EgressAdvFwdEntryTemplate.Name)
     d.Set("last_updated_by", EgressAdvFwdEntryTemplate.LastUpdatedBy)
     d.Set("action", EgressAdvFwdEntryTemplate.Action)
     d.Set("address_override", EgressAdvFwdEntryTemplate.AddressOverride)
-    d.Set("web_filter_id", EgressAdvFwdEntryTemplate.WebFilterID)
-    d.Set("web_filter_type", EgressAdvFwdEntryTemplate.WebFilterType)
     d.Set("redirect_vport_tag_id", EgressAdvFwdEntryTemplate.RedirectVPortTagID)
     d.Set("description", EgressAdvFwdEntryTemplate.Description)
     d.Set("destination_port", EgressAdvFwdEntryTemplate.DestinationPort)
@@ -256,9 +230,6 @@ func dataSourceEgressAdvFwdEntryTemplateRead(d *schema.ResourceData, m interface
     d.Set("priority", EgressAdvFwdEntryTemplate.Priority)
     d.Set("protocol", EgressAdvFwdEntryTemplate.Protocol)
     d.Set("associated_live_entity_id", EgressAdvFwdEntryTemplate.AssociatedLiveEntityID)
-    d.Set("associated_live_template_id", EgressAdvFwdEntryTemplate.AssociatedLiveTemplateID)
-    d.Set("associated_traffic_type", EgressAdvFwdEntryTemplate.AssociatedTrafficType)
-    d.Set("associated_traffic_type_id", EgressAdvFwdEntryTemplate.AssociatedTrafficTypeID)
     d.Set("stats_id", EgressAdvFwdEntryTemplate.StatsID)
     d.Set("stats_logging_enabled", EgressAdvFwdEntryTemplate.StatsLoggingEnabled)
     d.Set("ether_type", EgressAdvFwdEntryTemplate.EtherType)
@@ -271,5 +242,5 @@ func dataSourceEgressAdvFwdEntryTemplateRead(d *schema.ResourceData, m interface
 
     d.SetId(EgressAdvFwdEntryTemplate.Identifier())
     
-    return nil
+    return
 }

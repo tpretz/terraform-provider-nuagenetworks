@@ -56,6 +56,10 @@ func dataSourceIngressAdvFwdEntryTemplate() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
+            "name": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -65,18 +69,6 @@ func dataSourceIngressAdvFwdEntryTemplate() *schema.Resource {
                 Computed: true,
             },
             "address_override": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "address_override_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "web_filter_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "web_filter_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -184,10 +176,6 @@ func dataSourceIngressAdvFwdEntryTemplate() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "associated_live_template_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "associated_traffic_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -232,9 +220,8 @@ func dataSourceIngressAdvFwdEntryTemplate() *schema.Resource {
 }
 
 
-func dataSourceIngressAdvFwdEntryTemplateRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceIngressAdvFwdEntryTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredIngressAdvFwdEntryTemplates := vspk.IngressAdvFwdEntryTemplatesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -254,25 +241,25 @@ func dataSourceIngressAdvFwdEntryTemplateRead(d *schema.ResourceData, m interfac
         parent := &vspk.MirrorDestination{ID: attr.(string)}
         filteredIngressAdvFwdEntryTemplates, err = parent.IngressAdvFwdEntryTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredIngressAdvFwdEntryTemplates, err = parent.IngressAdvFwdEntryTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_ingress_adv_fwd_template"); ok {
         parent := &vspk.IngressAdvFwdTemplate{ID: attr.(string)}
         filteredIngressAdvFwdEntryTemplates, err = parent.IngressAdvFwdEntryTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredIngressAdvFwdEntryTemplates, err = parent.IngressAdvFwdEntryTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -297,12 +284,10 @@ func dataSourceIngressAdvFwdEntryTemplateRead(d *schema.ResourceData, m interfac
     d.Set("dscp", IngressAdvFwdEntryTemplate.DSCP)
     d.Set("dscp_remarking", IngressAdvFwdEntryTemplate.DSCPRemarking)
     d.Set("failsafe_datapath", IngressAdvFwdEntryTemplate.FailsafeDatapath)
+    d.Set("name", IngressAdvFwdEntryTemplate.Name)
     d.Set("last_updated_by", IngressAdvFwdEntryTemplate.LastUpdatedBy)
     d.Set("action", IngressAdvFwdEntryTemplate.Action)
     d.Set("address_override", IngressAdvFwdEntryTemplate.AddressOverride)
-    d.Set("address_override_type", IngressAdvFwdEntryTemplate.AddressOverrideType)
-    d.Set("web_filter_id", IngressAdvFwdEntryTemplate.WebFilterID)
-    d.Set("web_filter_type", IngressAdvFwdEntryTemplate.WebFilterType)
     d.Set("redirect_rewrite_type", IngressAdvFwdEntryTemplate.RedirectRewriteType)
     d.Set("redirect_rewrite_value", IngressAdvFwdEntryTemplate.RedirectRewriteValue)
     d.Set("redirect_vport_tag_id", IngressAdvFwdEntryTemplate.RedirectVPortTagID)
@@ -329,7 +314,6 @@ func dataSourceIngressAdvFwdEntryTemplateRead(d *schema.ResourceData, m interfac
     d.Set("associated_application_id", IngressAdvFwdEntryTemplate.AssociatedApplicationID)
     d.Set("associated_forwarding_path_list_id", IngressAdvFwdEntryTemplate.AssociatedForwardingPathListID)
     d.Set("associated_live_entity_id", IngressAdvFwdEntryTemplate.AssociatedLiveEntityID)
-    d.Set("associated_live_template_id", IngressAdvFwdEntryTemplate.AssociatedLiveTemplateID)
     d.Set("associated_traffic_type", IngressAdvFwdEntryTemplate.AssociatedTrafficType)
     d.Set("associated_traffic_type_id", IngressAdvFwdEntryTemplate.AssociatedTrafficTypeID)
     d.Set("stats_id", IngressAdvFwdEntryTemplate.StatsID)
@@ -344,5 +328,5 @@ func dataSourceIngressAdvFwdEntryTemplateRead(d *schema.ResourceData, m interfac
 
     d.SetId(IngressAdvFwdEntryTemplate.Identifier())
     
-    return nil
+    return
 }

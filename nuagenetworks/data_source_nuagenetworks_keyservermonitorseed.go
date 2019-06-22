@@ -73,9 +73,8 @@ func dataSourceKeyServerMonitorSeed() *schema.Resource {
 }
 
 
-func dataSourceKeyServerMonitorSeedRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceKeyServerMonitorSeedRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredKeyServerMonitorSeeds := vspk.KeyServerMonitorSeedsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -94,7 +93,7 @@ func dataSourceKeyServerMonitorSeedRead(d *schema.ResourceData, m interface{}) e
     parent := &vspk.KeyServerMonitor{ID: d.Get("parent_key_server_monitor").(string)}
     filteredKeyServerMonitorSeeds, err = parent.KeyServerMonitorSeeds(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     KeyServerMonitorSeed := &vspk.KeyServerMonitorSeed{}
@@ -128,5 +127,5 @@ func dataSourceKeyServerMonitorSeedRead(d *schema.ResourceData, m interface{}) e
 
     d.SetId(KeyServerMonitorSeed.Identifier())
     
-    return nil
+    return
 }

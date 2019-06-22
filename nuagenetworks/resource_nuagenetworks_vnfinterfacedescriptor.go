@@ -15,11 +15,6 @@ func resourceVNFInterfaceDescriptor() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -39,15 +34,6 @@ func resourceVNFInterfaceDescriptor() *schema.Resource {
                 Type:     schema.TypeString,
                 Required: true,
             },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
             "type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -66,9 +52,6 @@ func resourceVNFInterfaceDescriptorCreate(d *schema.ResourceData, m interface{})
     // Initialize VNFInterfaceDescriptor object
     o := &vspk.VNFInterfaceDescriptor{
         Name: d.Get("name").(string),
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
     if attr, ok := d.GetOk("type"); ok {
         o.Type = attr.(string)
@@ -97,8 +80,6 @@ func resourceVNFInterfaceDescriptorRead(d *schema.ResourceData, m interface{}) e
     }
 
     d.Set("name", o.Name)
-    d.Set("entity_scope", o.EntityScope)
-    d.Set("external_id", o.ExternalID)
     d.Set("type", o.Type)
     
     d.Set("id", o.Identifier())
@@ -121,9 +102,6 @@ func resourceVNFInterfaceDescriptorUpdate(d *schema.ResourceData, m interface{})
     
     o.Name = d.Get("name").(string)
     
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
-    }
     if attr, ok := d.GetOk("type"); ok {
         o.Type = attr.(string)
     }

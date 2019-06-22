@@ -109,9 +109,8 @@ func dataSourceEgressACLTemplate() *schema.Resource {
 }
 
 
-func dataSourceEgressACLTemplateRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceEgressACLTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredEgressACLTemplates := vspk.EgressACLTemplatesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -131,31 +130,31 @@ func dataSourceEgressACLTemplateRead(d *schema.ResourceData, m interface{}) erro
         parent := &vspk.Domain{ID: attr.(string)}
         filteredEgressACLTemplates, err = parent.EgressACLTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredEgressACLTemplates, err = parent.EgressACLTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_l2_domain_template"); ok {
         parent := &vspk.L2DomainTemplate{ID: attr.(string)}
         filteredEgressACLTemplates, err = parent.EgressACLTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_domain_template"); ok {
         parent := &vspk.DomainTemplate{ID: attr.(string)}
         filteredEgressACLTemplates, err = parent.EgressACLTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredEgressACLTemplates, err = parent.EgressACLTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -195,5 +194,5 @@ func dataSourceEgressACLTemplateRead(d *schema.ResourceData, m interface{}) erro
 
     d.SetId(EgressACLTemplate.Identifier())
     
-    return nil
+    return
 }

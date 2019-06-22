@@ -44,10 +44,6 @@ func dataSourceEnterpriseProfile() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "web_filter_enabled": &schema.Schema{
-                Type:     schema.TypeBool,
-                Computed: true,
-            },
             "receive_multi_cast_list_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -102,9 +98,8 @@ func dataSourceEnterpriseProfile() *schema.Resource {
 }
 
 
-func dataSourceEnterpriseProfileRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceEnterpriseProfileRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredEnterpriseProfiles := vspk.EnterpriseProfilesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -123,7 +118,7 @@ func dataSourceEnterpriseProfileRead(d *schema.ResourceData, m interface{}) erro
     parent := m.(*vspk.Me)
     filteredEnterpriseProfiles, err = parent.EnterpriseProfiles(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     EnterpriseProfile := &vspk.EnterpriseProfile{}
@@ -144,7 +139,6 @@ func dataSourceEnterpriseProfileRead(d *schema.ResourceData, m interface{}) erro
     d.Set("vnf_management_enabled", EnterpriseProfile.VNFManagementEnabled)
     d.Set("name", EnterpriseProfile.Name)
     d.Set("last_updated_by", EnterpriseProfile.LastUpdatedBy)
-    d.Set("web_filter_enabled", EnterpriseProfile.WebFilterEnabled)
     d.Set("receive_multi_cast_list_id", EnterpriseProfile.ReceiveMultiCastListID)
     d.Set("send_multi_cast_list_id", EnterpriseProfile.SendMultiCastListID)
     d.Set("description", EnterpriseProfile.Description)
@@ -165,5 +159,5 @@ func dataSourceEnterpriseProfileRead(d *schema.ResourceData, m interface{}) erro
 
     d.SetId(EnterpriseProfile.Identifier())
     
-    return nil
+    return
 }

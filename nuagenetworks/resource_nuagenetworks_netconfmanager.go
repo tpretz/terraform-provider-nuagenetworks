@@ -15,11 +15,6 @@ func resourceNetconfManager() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -40,22 +35,7 @@ func resourceNetconfManager() *schema.Resource {
                 Optional: true,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "release": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "assoc_entity_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
                 Computed: true,
@@ -64,10 +44,6 @@ func resourceNetconfManager() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
                 Computed: true,
-            },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
             },
             "parent_vsp": &schema.Schema{
                 Type:     schema.TypeString,
@@ -81,9 +57,6 @@ func resourceNetconfManagerCreate(d *schema.ResourceData, m interface{}) error {
 
     // Initialize NetconfManager object
     o := &vspk.NetconfManager{
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
     parent := &vspk.VSP{ID: d.Get("parent_vsp").(string)}
     err := parent.CreateNetconfManager(o)
@@ -109,12 +82,8 @@ func resourceNetconfManagerRead(d *schema.ResourceData, m interface{}) error {
     }
 
     d.Set("name", o.Name)
-    d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("release", o.Release)
-    d.Set("entity_scope", o.EntityScope)
-    d.Set("assoc_entity_type", o.AssocEntityType)
     d.Set("status", o.Status)
-    d.Set("external_id", o.ExternalID)
     
     d.Set("id", o.Identifier())
     d.Set("parent_id", o.ParentID)
@@ -135,9 +104,6 @@ func resourceNetconfManagerUpdate(d *schema.ResourceData, m interface{}) error {
     }
     
     
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
-    }
 
     o.Save()
 

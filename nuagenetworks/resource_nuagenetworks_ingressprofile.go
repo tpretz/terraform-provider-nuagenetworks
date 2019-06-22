@@ -15,11 +15,6 @@ func resourceIngressProfile() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -39,24 +34,9 @@ func resourceIngressProfile() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "assoc_entity_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
             },
             "associated_ip_filter_profile_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -93,10 +73,6 @@ func resourceIngressProfile() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
                 Computed: true,
-            },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
             },
             "parent_redundancy_group": &schema.Schema{
                 Type:     schema.TypeString,
@@ -135,9 +111,6 @@ func resourceIngressProfileCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("associated_sap_ingress_qo_s_profile_id"); ok {
         o.AssociatedSAPIngressQoSProfileID = attr.(string)
     }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
-    }
     if attr, ok := d.GetOk("parent_redundancy_group"); ok {
         parent := &vspk.RedundancyGroup{ID: attr.(string)}
         err := parent.CreateIngressProfile(o)
@@ -171,10 +144,7 @@ func resourceIngressProfileRead(d *schema.ResourceData, m interface{}) error {
     }
 
     d.Set("name", o.Name)
-    d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("description", o.Description)
-    d.Set("entity_scope", o.EntityScope)
-    d.Set("assoc_entity_type", o.AssocEntityType)
     d.Set("associated_ip_filter_profile_id", o.AssociatedIPFilterProfileID)
     d.Set("associated_ip_filter_profile_name", o.AssociatedIPFilterProfileName)
     d.Set("associated_ipv6_filter_profile_id", o.AssociatedIPv6FilterProfileID)
@@ -183,7 +153,6 @@ func resourceIngressProfileRead(d *schema.ResourceData, m interface{}) error {
     d.Set("associated_mac_filter_profile_name", o.AssociatedMACFilterProfileName)
     d.Set("associated_sap_ingress_qo_s_profile_id", o.AssociatedSAPIngressQoSProfileID)
     d.Set("associated_sap_ingress_qo_s_profile_name", o.AssociatedSAPIngressQoSProfileName)
-    d.Set("external_id", o.ExternalID)
     
     d.Set("id", o.Identifier())
     d.Set("parent_id", o.ParentID)
@@ -221,9 +190,6 @@ func resourceIngressProfileUpdate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("associated_sap_ingress_qo_s_profile_id"); ok {
         o.AssociatedSAPIngressQoSProfileID = attr.(string)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
 
     o.Save()

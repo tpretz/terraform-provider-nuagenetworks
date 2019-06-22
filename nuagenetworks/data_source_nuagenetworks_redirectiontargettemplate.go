@@ -40,10 +40,6 @@ func dataSourceRedirectionTargetTemplate() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "destination_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "end_point_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -75,9 +71,8 @@ func dataSourceRedirectionTargetTemplate() *schema.Resource {
 }
 
 
-func dataSourceRedirectionTargetTemplateRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceRedirectionTargetTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredRedirectionTargetTemplates := vspk.RedirectionTargetTemplatesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -97,13 +92,13 @@ func dataSourceRedirectionTargetTemplateRead(d *schema.ResourceData, m interface
         parent := &vspk.L2DomainTemplate{ID: attr.(string)}
         filteredRedirectionTargetTemplates, err = parent.RedirectionTargetTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_domain_template"); ok {
         parent := &vspk.DomainTemplate{ID: attr.(string)}
         filteredRedirectionTargetTemplates, err = parent.RedirectionTargetTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -124,7 +119,6 @@ func dataSourceRedirectionTargetTemplateRead(d *schema.ResourceData, m interface
     d.Set("last_updated_by", RedirectionTargetTemplate.LastUpdatedBy)
     d.Set("redundancy_enabled", RedirectionTargetTemplate.RedundancyEnabled)
     d.Set("description", RedirectionTargetTemplate.Description)
-    d.Set("destination_type", RedirectionTargetTemplate.DestinationType)
     d.Set("end_point_type", RedirectionTargetTemplate.EndPointType)
     d.Set("entity_scope", RedirectionTargetTemplate.EntityScope)
     d.Set("trigger_type", RedirectionTargetTemplate.TriggerType)
@@ -137,5 +131,5 @@ func dataSourceRedirectionTargetTemplateRead(d *schema.ResourceData, m interface
 
     d.SetId(RedirectionTargetTemplate.Identifier())
     
-    return nil
+    return
 }

@@ -28,23 +28,11 @@ func dataSourceDefaultGateway() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "gateway_ip_address": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
             "gateway_mac_address": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -57,9 +45,8 @@ func dataSourceDefaultGateway() *schema.Resource {
 }
 
 
-func dataSourceDefaultGatewayRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceDefaultGatewayRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredDefaultGateways := vspk.DefaultGatewaysList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -78,7 +65,7 @@ func dataSourceDefaultGatewayRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.Subnet{ID: d.Get("parent_subnet").(string)}
     filteredDefaultGateways, err = parent.DefaultGateways(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     DefaultGateway := &vspk.DefaultGateway{}
@@ -95,11 +82,8 @@ func dataSourceDefaultGatewayRead(d *schema.ResourceData, m interface{}) error {
     DefaultGateway = filteredDefaultGateways[0]
 
     d.Set("name", DefaultGateway.Name)
-    d.Set("last_updated_by", DefaultGateway.LastUpdatedBy)
     d.Set("gateway_ip_address", DefaultGateway.GatewayIPAddress)
     d.Set("gateway_mac_address", DefaultGateway.GatewayMACAddress)
-    d.Set("entity_scope", DefaultGateway.EntityScope)
-    d.Set("external_id", DefaultGateway.ExternalID)
     
     d.Set("id", DefaultGateway.Identifier())
     d.Set("parent_id", DefaultGateway.ParentID)
@@ -108,5 +92,5 @@ func dataSourceDefaultGatewayRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(DefaultGateway.Identifier())
     
-    return nil
+    return
 }

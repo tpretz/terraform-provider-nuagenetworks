@@ -128,9 +128,8 @@ func dataSourceWANService() *schema.Resource {
 }
 
 
-func dataSourceWANServiceRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceWANServiceRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredWANServices := vspk.WANServicesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -150,19 +149,19 @@ func dataSourceWANServiceRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.AutoDiscoveredGateway{ID: attr.(string)}
         filteredWANServices, err = parent.WANServices(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_redundancy_group"); ok {
         parent := &vspk.RedundancyGroup{ID: attr.(string)}
         filteredWANServices, err = parent.WANServices(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_gateway"); ok {
         parent := &vspk.Gateway{ID: attr.(string)}
         filteredWANServices, err = parent.WANServices(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -208,5 +207,5 @@ func dataSourceWANServiceRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(WANService.Identifier())
     
-    return nil
+    return
 }

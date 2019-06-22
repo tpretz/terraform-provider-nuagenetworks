@@ -53,9 +53,8 @@ func dataSourceSaaSApplicationGroup() *schema.Resource {
 }
 
 
-func dataSourceSaaSApplicationGroupRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceSaaSApplicationGroupRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredSaaSApplicationGroups := vspk.SaaSApplicationGroupsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -74,7 +73,7 @@ func dataSourceSaaSApplicationGroupRead(d *schema.ResourceData, m interface{}) e
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     filteredSaaSApplicationGroups, err = parent.SaaSApplicationGroups(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     SaaSApplicationGroup := &vspk.SaaSApplicationGroup{}
@@ -103,5 +102,5 @@ func dataSourceSaaSApplicationGroupRead(d *schema.ResourceData, m interface{}) e
 
     d.SetId(SaaSApplicationGroup.Identifier())
     
-    return nil
+    return
 }

@@ -48,10 +48,6 @@ func dataSourceApplication() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "certificate_common_name": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -62,10 +58,6 @@ func dataSourceApplication() *schema.Resource {
             },
             "destination_port": &schema.Schema{
                 Type:     schema.TypeString,
-                Computed: true,
-            },
-            "network_symmetry": &schema.Schema{
-                Type:     schema.TypeBool,
                 Computed: true,
             },
             "enable_pps": &schema.Schema{
@@ -132,34 +124,23 @@ func dataSourceApplication() *schema.Resource {
                 Type:     schema.TypeBool,
                 Computed: true,
             },
-            "parent_domain": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_l2_domain", "parent_enterprise", "parent_l7applicationsignature"},
-            },
-            "parent_l2_domain": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_enterprise", "parent_l7applicationsignature"},
-            },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_l2_domain", "parent_l7applicationsignature"},
+                ConflictsWith: []string{"parent_l7applicationsignature"},
             },
             "parent_l7applicationsignature": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_l2_domain", "parent_enterprise"},
+                ConflictsWith: []string{"parent_enterprise"},
             },
         },
     }
 }
 
 
-func dataSourceApplicationRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceApplicationRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredApplications := vspk.ApplicationsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -175,35 +156,17 @@ func dataSourceApplicationRead(d *schema.ResourceData, m interface{}) error {
            
         }
     }
-    if attr, ok := d.GetOk("parent_domain"); ok {
-        parent := &vspk.Domain{ID: attr.(string)}
-        filteredApplications, err = parent.Applications(fetchFilter)
-        if err != nil {
-            return err
-        }
-    } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
-        parent := &vspk.L2Domain{ID: attr.(string)}
-        filteredApplications, err = parent.Applications(fetchFilter)
-        if err != nil {
-            return err
-        }
-    } else if attr, ok := d.GetOk("parent_enterprise"); ok {
+    if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredApplications, err = parent.Applications(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_l7applicationsignature"); ok {
         parent := &vspk.L7applicationsignature{ID: attr.(string)}
         filteredApplications, err = parent.Applications(fetchFilter)
         if err != nil {
-            return err
-        }
-    } else {
-        parent := m.(*vspk.Me)
-        filteredApplications, err = parent.Applications(fetchFilter)
-        if err != nil {
-            return err
+            return
         }
     }
 
@@ -226,11 +189,9 @@ func dataSourceApplicationRead(d *schema.ResourceData, m interface{}) error {
     d.Set("last_updated_by", Application.LastUpdatedBy)
     d.Set("read_only", Application.ReadOnly)
     d.Set("performance_monitor_type", Application.PerformanceMonitorType)
-    d.Set("certificate_common_name", Application.CertificateCommonName)
     d.Set("description", Application.Description)
     d.Set("destination_ip", Application.DestinationIP)
     d.Set("destination_port", Application.DestinationPort)
-    d.Set("network_symmetry", Application.NetworkSymmetry)
     d.Set("enable_pps", Application.EnablePPS)
     d.Set("one_way_delay", Application.OneWayDelay)
     d.Set("one_way_jitter", Application.OneWayJitter)
@@ -255,5 +216,5 @@ func dataSourceApplicationRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(Application.Identifier())
     
-    return nil
+    return
 }

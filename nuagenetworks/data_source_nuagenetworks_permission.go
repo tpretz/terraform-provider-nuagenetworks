@@ -63,91 +63,75 @@ func dataSourcePermission() *schema.Resource {
             "parent_domain": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_l2_domain", "parent_l2_domain_template", "parent_ns_port", "parent_ns_redundant_gateway_group", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_redundant_port", "parent_zone", "parent_vlan", "parent_ns_gateway", "parent_domain_template", "parent_port", "parent_redundancy_group", "parent_gateway"},
+                ConflictsWith: []string{"parent_l2_domain", "parent_l2_domain_template", "parent_ns_port", "parent_wan_service", "parent_vsg_redundant_port", "parent_zone", "parent_vlan", "parent_ns_gateway", "parent_domain_template", "parent_port", "parent_redundancy_group", "parent_gateway"},
             },
             "parent_l2_domain": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_l2_domain_template", "parent_ns_port", "parent_ns_redundant_gateway_group", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_redundant_port", "parent_zone", "parent_vlan", "parent_ns_gateway", "parent_domain_template", "parent_port", "parent_redundancy_group", "parent_gateway"},
+                ConflictsWith: []string{"parent_domain", "parent_l2_domain_template", "parent_ns_port", "parent_wan_service", "parent_vsg_redundant_port", "parent_zone", "parent_vlan", "parent_ns_gateway", "parent_domain_template", "parent_port", "parent_redundancy_group", "parent_gateway"},
             },
             "parent_l2_domain_template": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_l2_domain", "parent_ns_port", "parent_ns_redundant_gateway_group", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_redundant_port", "parent_zone", "parent_vlan", "parent_ns_gateway", "parent_domain_template", "parent_port", "parent_redundancy_group", "parent_gateway"},
+                ConflictsWith: []string{"parent_domain", "parent_l2_domain", "parent_ns_port", "parent_wan_service", "parent_vsg_redundant_port", "parent_zone", "parent_vlan", "parent_ns_gateway", "parent_domain_template", "parent_port", "parent_redundancy_group", "parent_gateway"},
             },
             "parent_ns_port": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_l2_domain", "parent_l2_domain_template", "parent_ns_redundant_gateway_group", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_redundant_port", "parent_zone", "parent_vlan", "parent_ns_gateway", "parent_domain_template", "parent_port", "parent_redundancy_group", "parent_gateway"},
-            },
-            "parent_ns_redundant_gateway_group": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_l2_domain", "parent_l2_domain_template", "parent_ns_port", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_redundant_port", "parent_zone", "parent_vlan", "parent_ns_gateway", "parent_domain_template", "parent_port", "parent_redundancy_group", "parent_gateway"},
+                ConflictsWith: []string{"parent_domain", "parent_l2_domain", "parent_l2_domain_template", "parent_wan_service", "parent_vsg_redundant_port", "parent_zone", "parent_vlan", "parent_ns_gateway", "parent_domain_template", "parent_port", "parent_redundancy_group", "parent_gateway"},
             },
             "parent_wan_service": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_l2_domain", "parent_l2_domain_template", "parent_ns_port", "parent_ns_redundant_gateway_group", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_redundant_port", "parent_zone", "parent_vlan", "parent_ns_gateway", "parent_domain_template", "parent_port", "parent_redundancy_group", "parent_gateway"},
+                ConflictsWith: []string{"parent_domain", "parent_l2_domain", "parent_l2_domain_template", "parent_ns_port", "parent_vsg_redundant_port", "parent_zone", "parent_vlan", "parent_ns_gateway", "parent_domain_template", "parent_port", "parent_redundancy_group", "parent_gateway"},
             },
             "parent_vsg_redundant_port": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_l2_domain", "parent_l2_domain_template", "parent_ns_port", "parent_ns_redundant_gateway_group", "parent_wan_service", "parent_gateway_redundant_port", "parent_redundant_port", "parent_zone", "parent_vlan", "parent_ns_gateway", "parent_domain_template", "parent_port", "parent_redundancy_group", "parent_gateway"},
-            },
-            "parent_gateway_redundant_port": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_l2_domain", "parent_l2_domain_template", "parent_ns_port", "parent_ns_redundant_gateway_group", "parent_wan_service", "parent_vsg_redundant_port", "parent_redundant_port", "parent_zone", "parent_vlan", "parent_ns_gateway", "parent_domain_template", "parent_port", "parent_redundancy_group", "parent_gateway"},
-            },
-            "parent_redundant_port": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_l2_domain", "parent_l2_domain_template", "parent_ns_port", "parent_ns_redundant_gateway_group", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_zone", "parent_vlan", "parent_ns_gateway", "parent_domain_template", "parent_port", "parent_redundancy_group", "parent_gateway"},
+                ConflictsWith: []string{"parent_domain", "parent_l2_domain", "parent_l2_domain_template", "parent_ns_port", "parent_wan_service", "parent_zone", "parent_vlan", "parent_ns_gateway", "parent_domain_template", "parent_port", "parent_redundancy_group", "parent_gateway"},
             },
             "parent_zone": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_l2_domain", "parent_l2_domain_template", "parent_ns_port", "parent_ns_redundant_gateway_group", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_redundant_port", "parent_vlan", "parent_ns_gateway", "parent_domain_template", "parent_port", "parent_redundancy_group", "parent_gateway"},
+                ConflictsWith: []string{"parent_domain", "parent_l2_domain", "parent_l2_domain_template", "parent_ns_port", "parent_wan_service", "parent_vsg_redundant_port", "parent_vlan", "parent_ns_gateway", "parent_domain_template", "parent_port", "parent_redundancy_group", "parent_gateway"},
             },
             "parent_vlan": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_l2_domain", "parent_l2_domain_template", "parent_ns_port", "parent_ns_redundant_gateway_group", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_redundant_port", "parent_zone", "parent_ns_gateway", "parent_domain_template", "parent_port", "parent_redundancy_group", "parent_gateway"},
+                ConflictsWith: []string{"parent_domain", "parent_l2_domain", "parent_l2_domain_template", "parent_ns_port", "parent_wan_service", "parent_vsg_redundant_port", "parent_zone", "parent_ns_gateway", "parent_domain_template", "parent_port", "parent_redundancy_group", "parent_gateway"},
             },
             "parent_ns_gateway": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_l2_domain", "parent_l2_domain_template", "parent_ns_port", "parent_ns_redundant_gateway_group", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_redundant_port", "parent_zone", "parent_vlan", "parent_domain_template", "parent_port", "parent_redundancy_group", "parent_gateway"},
+                ConflictsWith: []string{"parent_domain", "parent_l2_domain", "parent_l2_domain_template", "parent_ns_port", "parent_wan_service", "parent_vsg_redundant_port", "parent_zone", "parent_vlan", "parent_domain_template", "parent_port", "parent_redundancy_group", "parent_gateway"},
             },
             "parent_domain_template": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_l2_domain", "parent_l2_domain_template", "parent_ns_port", "parent_ns_redundant_gateway_group", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_redundant_port", "parent_zone", "parent_vlan", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_gateway"},
+                ConflictsWith: []string{"parent_domain", "parent_l2_domain", "parent_l2_domain_template", "parent_ns_port", "parent_wan_service", "parent_vsg_redundant_port", "parent_zone", "parent_vlan", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_gateway"},
             },
             "parent_port": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_l2_domain", "parent_l2_domain_template", "parent_ns_port", "parent_ns_redundant_gateway_group", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_redundant_port", "parent_zone", "parent_vlan", "parent_ns_gateway", "parent_domain_template", "parent_redundancy_group", "parent_gateway"},
+                ConflictsWith: []string{"parent_domain", "parent_l2_domain", "parent_l2_domain_template", "parent_ns_port", "parent_wan_service", "parent_vsg_redundant_port", "parent_zone", "parent_vlan", "parent_ns_gateway", "parent_domain_template", "parent_redundancy_group", "parent_gateway"},
             },
             "parent_redundancy_group": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_l2_domain", "parent_l2_domain_template", "parent_ns_port", "parent_ns_redundant_gateway_group", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_redundant_port", "parent_zone", "parent_vlan", "parent_ns_gateway", "parent_domain_template", "parent_port", "parent_gateway"},
+                ConflictsWith: []string{"parent_domain", "parent_l2_domain", "parent_l2_domain_template", "parent_ns_port", "parent_wan_service", "parent_vsg_redundant_port", "parent_zone", "parent_vlan", "parent_ns_gateway", "parent_domain_template", "parent_port", "parent_gateway"},
             },
             "parent_gateway": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_l2_domain", "parent_l2_domain_template", "parent_ns_port", "parent_ns_redundant_gateway_group", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_redundant_port", "parent_zone", "parent_vlan", "parent_ns_gateway", "parent_domain_template", "parent_port", "parent_redundancy_group"},
+                ConflictsWith: []string{"parent_domain", "parent_l2_domain", "parent_l2_domain_template", "parent_ns_port", "parent_wan_service", "parent_vsg_redundant_port", "parent_zone", "parent_vlan", "parent_ns_gateway", "parent_domain_template", "parent_port", "parent_redundancy_group"},
             },
         },
     }
 }
 
 
-func dataSourcePermissionRead(d *schema.ResourceData, m interface{}) error {
+func dataSourcePermissionRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredPermissions := vspk.PermissionsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -167,97 +151,79 @@ func dataSourcePermissionRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.Domain{ID: attr.(string)}
         filteredPermissions, err = parent.Permissions(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredPermissions, err = parent.Permissions(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_l2_domain_template"); ok {
         parent := &vspk.L2DomainTemplate{ID: attr.(string)}
         filteredPermissions, err = parent.Permissions(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_ns_port"); ok {
         parent := &vspk.NSPort{ID: attr.(string)}
         filteredPermissions, err = parent.Permissions(fetchFilter)
         if err != nil {
-            return err
-        }
-    } else if attr, ok := d.GetOk("parent_ns_redundant_gateway_group"); ok {
-        parent := &vspk.NSRedundantGatewayGroup{ID: attr.(string)}
-        filteredPermissions, err = parent.Permissions(fetchFilter)
-        if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_wan_service"); ok {
         parent := &vspk.WANService{ID: attr.(string)}
         filteredPermissions, err = parent.Permissions(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vsg_redundant_port"); ok {
         parent := &vspk.VsgRedundantPort{ID: attr.(string)}
         filteredPermissions, err = parent.Permissions(fetchFilter)
         if err != nil {
-            return err
-        }
-    } else if attr, ok := d.GetOk("parent_gateway_redundant_port"); ok {
-        parent := &vspk.GatewayRedundantPort{ID: attr.(string)}
-        filteredPermissions, err = parent.Permissions(fetchFilter)
-        if err != nil {
-            return err
-        }
-    } else if attr, ok := d.GetOk("parent_redundant_port"); ok {
-        parent := &vspk.RedundantPort{ID: attr.(string)}
-        filteredPermissions, err = parent.Permissions(fetchFilter)
-        if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_zone"); ok {
         parent := &vspk.Zone{ID: attr.(string)}
         filteredPermissions, err = parent.Permissions(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vlan"); ok {
         parent := &vspk.VLAN{ID: attr.(string)}
         filteredPermissions, err = parent.Permissions(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_ns_gateway"); ok {
         parent := &vspk.NSGateway{ID: attr.(string)}
         filteredPermissions, err = parent.Permissions(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_domain_template"); ok {
         parent := &vspk.DomainTemplate{ID: attr.(string)}
         filteredPermissions, err = parent.Permissions(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_port"); ok {
         parent := &vspk.Port{ID: attr.(string)}
         filteredPermissions, err = parent.Permissions(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_redundancy_group"); ok {
         parent := &vspk.RedundancyGroup{ID: attr.(string)}
         filteredPermissions, err = parent.Permissions(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_gateway"); ok {
         parent := &vspk.Gateway{ID: attr.(string)}
         filteredPermissions, err = parent.Permissions(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -291,5 +257,5 @@ func dataSourcePermissionRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(Permission.Identifier())
     
-    return nil
+    return
 }

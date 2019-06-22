@@ -69,9 +69,8 @@ func dataSourceInfrastructureAccessProfile() *schema.Resource {
 }
 
 
-func dataSourceInfrastructureAccessProfileRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceInfrastructureAccessProfileRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredInfrastructureAccessProfiles := vspk.InfrastructureAccessProfilesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -90,7 +89,7 @@ func dataSourceInfrastructureAccessProfileRead(d *schema.ResourceData, m interfa
     parent := m.(*vspk.Me)
     filteredInfrastructureAccessProfiles, err = parent.InfrastructureAccessProfiles(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     InfrastructureAccessProfile := &vspk.InfrastructureAccessProfile{}
@@ -124,5 +123,5 @@ func dataSourceInfrastructureAccessProfileRead(d *schema.ResourceData, m interfa
 
     d.SetId(InfrastructureAccessProfile.Identifier())
     
-    return nil
+    return
 }

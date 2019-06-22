@@ -53,9 +53,8 @@ func dataSourceMirrorDestination() *schema.Resource {
 }
 
 
-func dataSourceMirrorDestinationRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceMirrorDestinationRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredMirrorDestinations := vspk.MirrorDestinationsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -74,7 +73,7 @@ func dataSourceMirrorDestinationRead(d *schema.ResourceData, m interface{}) erro
     parent := m.(*vspk.Me)
     filteredMirrorDestinations, err = parent.MirrorDestinations(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     MirrorDestination := &vspk.MirrorDestination{}
@@ -104,5 +103,5 @@ func dataSourceMirrorDestinationRead(d *schema.ResourceData, m interface{}) erro
 
     d.SetId(MirrorDestination.Identifier())
     
-    return nil
+    return
 }

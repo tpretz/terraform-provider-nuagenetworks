@@ -15,11 +15,6 @@ func resourceVCenterDataCenter() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -34,10 +29,6 @@ func resourceVCenterDataCenter() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
                 Computed: true,
-            },
-            "arp_reply": &schema.Schema{
-                Type:     schema.TypeBool,
-                Optional: true,
             },
             "vrs_configuration_time_limit": &schema.Schema{
                 Type:     schema.TypeInt,
@@ -489,9 +480,6 @@ func resourceVCenterDataCenterCreate(d *schema.ResourceData, m interface{}) erro
         RevertiveControllerEnabled: d.Get("revertive_controller_enabled").(bool),
         RevertiveTimer: d.Get("revertive_timer").(int),
     }
-    if attr, ok := d.GetOk("arp_reply"); ok {
-        o.ARPReply = attr.(bool)
-    }
     if attr, ok := d.GetOk("vrs_configuration_time_limit"); ok {
         o.VRSConfigurationTimeLimit = attr.(int)
     }
@@ -806,7 +794,6 @@ func resourceVCenterDataCenterRead(d *schema.ResourceData, m interface{}) error 
         return nil
     }
 
-    d.Set("arp_reply", o.ARPReply)
     d.Set("vrs_configuration_time_limit", o.VRSConfigurationTimeLimit)
     d.Set("v_require_nuage_metadata", o.VRequireNuageMetadata)
     d.Set("name", o.Name)
@@ -934,9 +921,6 @@ func resourceVCenterDataCenterUpdate(d *schema.ResourceData, m interface{}) erro
     o.RevertiveControllerEnabled = d.Get("revertive_controller_enabled").(bool)
     o.RevertiveTimer = d.Get("revertive_timer").(int)
     
-    if attr, ok := d.GetOk("arp_reply"); ok {
-        o.ARPReply = attr.(bool)
-    }
     if attr, ok := d.GetOk("vrs_configuration_time_limit"); ok {
         o.VRSConfigurationTimeLimit = attr.(int)
     }

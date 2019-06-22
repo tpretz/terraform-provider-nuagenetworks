@@ -141,14 +141,6 @@ func (o *InfrastructureAccessProfile) CreateConnectionendpoint(child *Connection
 	return bambou.CurrentSession().CreateChild(o, child)
 }
 
-// NSGatewayTemplates retrieves the list of child NSGatewayTemplates of the InfrastructureAccessProfile
-func (o *InfrastructureAccessProfile) NSGatewayTemplates(info *bambou.FetchingInfo) (NSGatewayTemplatesList, *bambou.Error) {
-
-	var list NSGatewayTemplatesList
-	err := bambou.CurrentSession().FetchChildren(o, NSGatewayTemplateIdentity, &list, info)
-	return list, err
-}
-
 // SSHKeys retrieves the list of child SSHKeys of the InfrastructureAccessProfile
 func (o *InfrastructureAccessProfile) SSHKeys(info *bambou.FetchingInfo) (SSHKeysList, *bambou.Error) {
 

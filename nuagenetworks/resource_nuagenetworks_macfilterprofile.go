@@ -5,21 +5,16 @@ import (
     "github.com/tpretz/vspk-go/vspk"
 )
 
-func resourceOverlayManagementProfile() *schema.Resource {
+func resourceMACFilterProfile() *schema.Resource {
     return &schema.Resource{
-        Create: resourceOverlayManagementProfileCreate,
-        Read:   resourceOverlayManagementProfileRead,
-        Update: resourceOverlayManagementProfileUpdate,
-        Delete: resourceOverlayManagementProfileDelete,
+        Create: resourceMACFilterProfileCreate,
+        Read:   resourceMACFilterProfileRead,
+        Update: resourceMACFilterProfileUpdate,
+        Delete: resourceMACFilterProfileDelete,
         Importer: &schema.ResourceImporter{
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -37,13 +32,13 @@ func resourceOverlayManagementProfile() *schema.Resource {
             },
             "name": &schema.Schema{
                 Type:     schema.TypeString,
-                Required: true,
+                Optional: true,
             },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "parent_enterprise": &schema.Schema{
+            "parent_redundancy_group": &schema.Schema{
                 Type:     schema.TypeString,
                 Required: true,
             },
@@ -51,17 +46,19 @@ func resourceOverlayManagementProfile() *schema.Resource {
     }
 }
 
-func resourceOverlayManagementProfileCreate(d *schema.ResourceData, m interface{}) error {
+func resourceMACFilterProfileCreate(d *schema.ResourceData, m interface{}) error {
 
-    // Initialize OverlayManagementProfile object
-    o := &vspk.OverlayManagementProfile{
-        Name: d.Get("name").(string),
+    // Initialize MACFilterProfile object
+    o := &vspk.MACFilterProfile{
+    }
+    if attr, ok := d.GetOk("name"); ok {
+        o.Name = attr.(string)
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
     }
-    parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
-    err := parent.CreateOverlayManagementProfile(o)
+    parent := &vspk.RedundancyGroup{ID: d.Get("parent_redundancy_group").(string)}
+    err := parent.CreateMACFilterProfile(o)
     if err != nil {
         return err
     }
@@ -69,11 +66,11 @@ func resourceOverlayManagementProfileCreate(d *schema.ResourceData, m interface{
     
 
     d.SetId(o.Identifier())
-    return resourceOverlayManagementProfileRead(d, m)
+    return resourceMACFilterProfileRead(d, m)
 }
 
-func resourceOverlayManagementProfileRead(d *schema.ResourceData, m interface{}) error {
-    o := &vspk.OverlayManagementProfile{
+func resourceMACFilterProfileRead(d *schema.ResourceData, m interface{}) error {
+    o := &vspk.MACFilterProfile{
         ID: d.Id(),
     }
 
@@ -94,8 +91,8 @@ func resourceOverlayManagementProfileRead(d *schema.ResourceData, m interface{})
     return nil
 }
 
-func resourceOverlayManagementProfileUpdate(d *schema.ResourceData, m interface{}) error {
-    o := &vspk.OverlayManagementProfile{
+func resourceMACFilterProfileUpdate(d *schema.ResourceData, m interface{}) error {
+    o := &vspk.MACFilterProfile{
         ID: d.Id(),
     }
     
@@ -104,8 +101,10 @@ func resourceOverlayManagementProfileUpdate(d *schema.ResourceData, m interface{
         return err
     }
     
-    o.Name = d.Get("name").(string)
     
+    if attr, ok := d.GetOk("name"); ok {
+        o.Name = attr.(string)
+    }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
     }
@@ -115,8 +114,8 @@ func resourceOverlayManagementProfileUpdate(d *schema.ResourceData, m interface{
     return nil
 }
 
-func resourceOverlayManagementProfileDelete(d *schema.ResourceData, m interface{}) error {
-    o := &vspk.OverlayManagementProfile{
+func resourceMACFilterProfileDelete(d *schema.ResourceData, m interface{}) error {
+    o := &vspk.MACFilterProfile{
         ID: d.Id(),
     }
 

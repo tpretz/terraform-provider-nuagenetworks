@@ -168,14 +168,6 @@ func dataSourceSystemConfig() *schema.Resource {
                 Type:     schema.TypeBool,
                 Computed: true,
             },
-            "vsdaar_application_version": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "vsdaar_application_version_publish_date": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "vsd_read_only_mode": &schema.Schema{
                 Type:     schema.TypeBool,
                 Computed: true,
@@ -240,18 +232,6 @@ func dataSourceSystemConfig() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "gateway_probe_interval": &schema.Schema{
-                Type:     schema.TypeInt,
-                Computed: true,
-            },
-            "gateway_probe_window": &schema.Schema{
-                Type:     schema.TypeInt,
-                Computed: true,
-            },
-            "gateway_rebalancing_interval": &schema.Schema{
-                Type:     schema.TypeInt,
-                Computed: true,
-            },
             "max_failed_logins": &schema.Schema{
                 Type:     schema.TypeInt,
                 Computed: true,
@@ -270,6 +250,10 @@ func dataSourceSystemConfig() *schema.Resource {
             },
             "per_domain_vlan_id_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
+                Computed: true,
+            },
+            "performance_path_selection_vnid": &schema.Schema{
+                Type:     schema.TypeInt,
                 Computed: true,
             },
             "service_id_upper_limit": &schema.Schema{
@@ -492,10 +476,6 @@ func dataSourceSystemConfig() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "stats_database_proxy": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "stats_max_data_points": &schema.Schema{
                 Type:     schema.TypeInt,
                 Computed: true,
@@ -621,9 +601,8 @@ func dataSourceSystemConfig() *schema.Resource {
 }
 
 
-func dataSourceSystemConfigRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceSystemConfigRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredSystemConfigs := vspk.SystemConfigsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -642,7 +621,7 @@ func dataSourceSystemConfigRead(d *schema.ResourceData, m interface{}) error {
     parent := m.(*vspk.Me)
     filteredSystemConfigs, err = parent.SystemConfigs(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     SystemConfig := &vspk.SystemConfig{}
@@ -694,8 +673,6 @@ func dataSourceSystemConfigRead(d *schema.ResourceData, m interface{}) error {
     d.Set("vport_init_stateful_timer", SystemConfig.VPortInitStatefulTimer)
     d.Set("lru_cache_size_per_subnet", SystemConfig.LRUCacheSizePerSubnet)
     d.Set("vsc_on_same_version_as_vsd", SystemConfig.VSCOnSameVersionAsVSD)
-    d.Set("vsdaar_application_version", SystemConfig.VSDAARApplicationVersion)
-    d.Set("vsdaar_application_version_publish_date", SystemConfig.VSDAARApplicationVersionPublishDate)
     d.Set("vsd_read_only_mode", SystemConfig.VSDReadOnlyMode)
     d.Set("vsd_upgrade_is_complete", SystemConfig.VSDUpgradeIsComplete)
     d.Set("nsg_uplink_hold_down_timer", SystemConfig.NSGUplinkHoldDownTimer)
@@ -712,14 +689,12 @@ func dataSourceSystemConfigRead(d *schema.ResourceData, m interface{}) error {
     d.Set("page_max_size", SystemConfig.PageMaxSize)
     d.Set("page_size", SystemConfig.PageSize)
     d.Set("last_updated_by", SystemConfig.LastUpdatedBy)
-    d.Set("gateway_probe_interval", SystemConfig.GatewayProbeInterval)
-    d.Set("gateway_probe_window", SystemConfig.GatewayProbeWindow)
-    d.Set("gateway_rebalancing_interval", SystemConfig.GatewayRebalancingInterval)
     d.Set("max_failed_logins", SystemConfig.MaxFailedLogins)
     d.Set("max_response", SystemConfig.MaxResponse)
     d.Set("accumulate_licenses_enabled", SystemConfig.AccumulateLicensesEnabled)
     d.Set("vcin_load_balancer_ip", SystemConfig.VcinLoadBalancerIP)
     d.Set("per_domain_vlan_id_enabled", SystemConfig.PerDomainVlanIdEnabled)
+    d.Set("performance_path_selection_vnid", SystemConfig.PerformancePathSelectionVNID)
     d.Set("service_id_upper_limit", SystemConfig.ServiceIDUpperLimit)
     d.Set("key_server_monitor_enabled", SystemConfig.KeyServerMonitorEnabled)
     d.Set("key_server_vsd_data_synchronization_interval", SystemConfig.KeyServerVSDDataSynchronizationInterval)
@@ -775,7 +750,6 @@ func dataSourceSystemConfigRead(d *schema.ResourceData, m interface{}) error {
     d.Set("stats_collector_address", SystemConfig.StatsCollectorAddress)
     d.Set("stats_collector_port", SystemConfig.StatsCollectorPort)
     d.Set("stats_collector_proto_buf_port", SystemConfig.StatsCollectorProtoBufPort)
-    d.Set("stats_database_proxy", SystemConfig.StatsDatabaseProxy)
     d.Set("stats_max_data_points", SystemConfig.StatsMaxDataPoints)
     d.Set("stats_min_duration", SystemConfig.StatsMinDuration)
     d.Set("stats_number_of_data_points", SystemConfig.StatsNumberOfDataPoints)
@@ -814,5 +788,5 @@ func dataSourceSystemConfigRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(SystemConfig.Identifier())
     
-    return nil
+    return
 }

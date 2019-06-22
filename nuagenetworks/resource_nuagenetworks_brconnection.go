@@ -15,11 +15,6 @@ func resourceBRConnection() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -42,11 +37,6 @@ func resourceBRConnection() *schema.Resource {
             "dns_address_v6": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-            },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
             },
             "gateway": &schema.Schema{
                 Type:     schema.TypeString,
@@ -72,7 +62,6 @@ func resourceBRConnection() *schema.Resource {
             "advertisement_criteria": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                Default: "OPERATIONAL_LINK",
             },
             "netmask": &schema.Schema{
                 Type:     schema.TypeString,
@@ -83,22 +72,12 @@ func resourceBRConnection() *schema.Resource {
                 Optional: true,
                 Computed: true,
             },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "mode": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
             "uplink_id": &schema.Schema{
                 Type:     schema.TypeInt,
-                Optional: true,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
                 Optional: true,
             },
             "parent_vlan_template": &schema.Schema{
@@ -150,8 +129,8 @@ func resourceBRConnectionCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("mode"); ok {
         o.Mode = attr.(string)
     }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
+    if attr, ok := d.GetOk("uplink_id"); ok {
+        o.UplinkID = attr.(int)
     }
     if attr, ok := d.GetOk("parent_vlan_template"); ok {
         parent := &vspk.VLANTemplate{ID: attr.(string)}
@@ -187,7 +166,6 @@ func resourceBRConnectionRead(d *schema.ResourceData, m interface{}) error {
 
     d.Set("dns_address", o.DNSAddress)
     d.Set("dns_address_v6", o.DNSAddressV6)
-    d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("gateway", o.Gateway)
     d.Set("gateway_v6", o.GatewayV6)
     d.Set("address", o.Address)
@@ -196,10 +174,8 @@ func resourceBRConnectionRead(d *schema.ResourceData, m interface{}) error {
     d.Set("advertisement_criteria", o.AdvertisementCriteria)
     d.Set("netmask", o.Netmask)
     d.Set("inherited", o.Inherited)
-    d.Set("entity_scope", o.EntityScope)
     d.Set("mode", o.Mode)
     d.Set("uplink_id", o.UplinkID)
-    d.Set("external_id", o.ExternalID)
     
     d.Set("id", o.Identifier())
     d.Set("parent_id", o.ParentID)
@@ -250,8 +226,8 @@ func resourceBRConnectionUpdate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("mode"); ok {
         o.Mode = attr.(string)
     }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
+    if attr, ok := d.GetOk("uplink_id"); ok {
+        o.UplinkID = attr.(int)
     }
 
     o.Save()

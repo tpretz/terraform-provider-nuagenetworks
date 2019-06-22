@@ -95,10 +95,6 @@ func dataSourceContainer() *schema.Resource {
                 Computed: true,
                 Elem:     &schema.Schema{Type: schema.TypeString},
             },
-            "compute_provisioned": &schema.Schema{
-                Type:     schema.TypeBool,
-                Computed: true,
-            },
             "zone_ids": &schema.Schema{
                 Type:     schema.TypeList,
                 Computed: true,
@@ -193,9 +189,8 @@ func dataSourceContainer() *schema.Resource {
 }
 
 
-func dataSourceContainerRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceContainerRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredContainers := vspk.ContainersList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -215,73 +210,73 @@ func dataSourceContainerRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.Domain{ID: attr.(string)}
         filteredContainers, err = parent.Containers(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_qos"); ok {
         parent := &vspk.QOS{ID: attr.(string)}
         filteredContainers, err = parent.Containers(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredContainers, err = parent.Containers(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_subnet"); ok {
         parent := &vspk.Subnet{ID: attr.(string)}
         filteredContainers, err = parent.Containers(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_user"); ok {
         parent := &vspk.User{ID: attr.(string)}
         filteredContainers, err = parent.Containers(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredContainers, err = parent.Containers(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_egress_acl_template"); ok {
         parent := &vspk.EgressACLTemplate{ID: attr.(string)}
         filteredContainers, err = parent.Containers(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_zone"); ok {
         parent := &vspk.Zone{ID: attr.(string)}
         filteredContainers, err = parent.Containers(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredContainers, err = parent.Containers(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vrs"); ok {
         parent := &vspk.VRS{ID: attr.(string)}
         filteredContainers, err = parent.Containers(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_ingress_acl_template"); ok {
         parent := &vspk.IngressACLTemplate{ID: attr.(string)}
         filteredContainers, err = parent.Containers(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredContainers, err = parent.Containers(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -315,7 +310,6 @@ func dataSourceContainerRead(d *schema.ResourceData, m interface{}) error {
     d.Set("enterprise_name", Container.EnterpriseName)
     d.Set("entity_scope", Container.EntityScope)
     d.Set("domain_ids", Container.DomainIDs)
-    d.Set("compute_provisioned", Container.ComputeProvisioned)
     d.Set("zone_ids", Container.ZoneIDs)
     d.Set("orchestration_id", Container.OrchestrationID)
     d.Set("user_id", Container.UserID)
@@ -332,5 +326,5 @@ func dataSourceContainerRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(Container.Identifier())
     
-    return nil
+    return
 }

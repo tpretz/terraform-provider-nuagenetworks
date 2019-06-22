@@ -77,9 +77,8 @@ func dataSourceInfrastructureVscProfile() *schema.Resource {
 }
 
 
-func dataSourceInfrastructureVscProfileRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceInfrastructureVscProfileRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredInfrastructureVscProfiles := vspk.InfrastructureVscProfilesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -98,7 +97,7 @@ func dataSourceInfrastructureVscProfileRead(d *schema.ResourceData, m interface{
     parent := m.(*vspk.Me)
     filteredInfrastructureVscProfiles, err = parent.InfrastructureVscProfiles(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     InfrastructureVscProfile := &vspk.InfrastructureVscProfile{}
@@ -134,5 +133,5 @@ func dataSourceInfrastructureVscProfileRead(d *schema.ResourceData, m interface{
 
     d.SetId(InfrastructureVscProfile.Identifier())
     
-    return nil
+    return
 }

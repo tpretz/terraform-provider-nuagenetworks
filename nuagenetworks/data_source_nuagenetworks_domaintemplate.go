@@ -87,9 +87,8 @@ func dataSourceDomainTemplate() *schema.Resource {
 }
 
 
-func dataSourceDomainTemplateRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceDomainTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredDomainTemplates := vspk.DomainTemplatesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -109,13 +108,13 @@ func dataSourceDomainTemplateRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.Domain{ID: attr.(string)}
         filteredDomainTemplates, err = parent.DomainTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredDomainTemplates, err = parent.DomainTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -152,5 +151,5 @@ func dataSourceDomainTemplateRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(DomainTemplate.Identifier())
     
-    return nil
+    return
 }

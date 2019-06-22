@@ -41,7 +41,6 @@ type VCenterDataCenter struct {
 	ParentID                               string `json:"parentID,omitempty"`
 	ParentType                             string `json:"parentType,omitempty"`
 	Owner                                  string `json:"owner,omitempty"`
-	ARPReply                               bool   `json:"ARPReply"`
 	VRSConfigurationTimeLimit              int    `json:"VRSConfigurationTimeLimit,omitempty"`
 	VRequireNuageMetadata                  bool   `json:"vRequireNuageMetadata"`
 	Name                                   string `json:"name,omitempty"`

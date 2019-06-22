@@ -24,16 +24,8 @@ func dataSourceDUCGroupBinding() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "one_way_delay": &schema.Schema{
                 Type:     schema.TypeInt,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
                 Computed: true,
             },
             "priority": &schema.Schema{
@@ -41,18 +33,6 @@ func dataSourceDUCGroupBinding() *schema.Resource {
                 Computed: true,
             },
             "associated_duc_group_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "associated_ubr_group_function": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "associated_ubr_group_name": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -65,9 +45,8 @@ func dataSourceDUCGroupBinding() *schema.Resource {
 }
 
 
-func dataSourceDUCGroupBindingRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceDUCGroupBindingRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredDUCGroupBindings := vspk.DUCGroupBindingsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -86,7 +65,7 @@ func dataSourceDUCGroupBindingRead(d *schema.ResourceData, m interface{}) error 
     parent := &vspk.NSGGroup{ID: d.Get("parent_nsg_group").(string)}
     filteredDUCGroupBindings, err = parent.DUCGroupBindings(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     DUCGroupBinding := &vspk.DUCGroupBinding{}
@@ -102,14 +81,9 @@ func dataSourceDUCGroupBindingRead(d *schema.ResourceData, m interface{}) error 
     
     DUCGroupBinding = filteredDUCGroupBindings[0]
 
-    d.Set("last_updated_by", DUCGroupBinding.LastUpdatedBy)
     d.Set("one_way_delay", DUCGroupBinding.OneWayDelay)
-    d.Set("entity_scope", DUCGroupBinding.EntityScope)
     d.Set("priority", DUCGroupBinding.Priority)
     d.Set("associated_duc_group_id", DUCGroupBinding.AssociatedDUCGroupID)
-    d.Set("associated_ubr_group_function", DUCGroupBinding.AssociatedUBRGroupFunction)
-    d.Set("associated_ubr_group_name", DUCGroupBinding.AssociatedUBRGroupName)
-    d.Set("external_id", DUCGroupBinding.ExternalID)
     
     d.Set("id", DUCGroupBinding.Identifier())
     d.Set("parent_id", DUCGroupBinding.ParentID)
@@ -118,5 +92,5 @@ func dataSourceDUCGroupBindingRead(d *schema.ResourceData, m interface{}) error 
 
     d.SetId(DUCGroupBinding.Identifier())
     
-    return nil
+    return
 }

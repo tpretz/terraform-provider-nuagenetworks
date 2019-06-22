@@ -63,9 +63,8 @@ func dataSourceSaaSApplicationType() *schema.Resource {
 }
 
 
-func dataSourceSaaSApplicationTypeRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceSaaSApplicationTypeRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredSaaSApplicationTypes := vspk.SaaSApplicationTypesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -85,19 +84,13 @@ func dataSourceSaaSApplicationTypeRead(d *schema.ResourceData, m interface{}) er
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredSaaSApplicationTypes, err = parent.SaaSApplicationTypes(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_saa_s_application_group"); ok {
         parent := &vspk.SaaSApplicationGroup{ID: attr.(string)}
         filteredSaaSApplicationTypes, err = parent.SaaSApplicationTypes(fetchFilter)
         if err != nil {
-            return err
-        }
-    } else {
-        parent := m.(*vspk.Me)
-        filteredSaaSApplicationTypes, err = parent.SaaSApplicationTypes(fetchFilter)
-        if err != nil {
-            return err
+            return
         }
     }
 
@@ -128,5 +121,5 @@ func dataSourceSaaSApplicationTypeRead(d *schema.ResourceData, m interface{}) er
 
     d.SetId(SaaSApplicationType.Identifier())
     
-    return nil
+    return
 }

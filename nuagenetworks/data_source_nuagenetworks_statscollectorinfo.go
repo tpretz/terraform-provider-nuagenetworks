@@ -57,9 +57,8 @@ func dataSourceStatsCollectorInfo() *schema.Resource {
 }
 
 
-func dataSourceStatsCollectorInfoRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceStatsCollectorInfoRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredStatsCollectorInfos := vspk.StatsCollectorInfosList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -78,7 +77,7 @@ func dataSourceStatsCollectorInfoRead(d *schema.ResourceData, m interface{}) err
     parent := m.(*vspk.Me)
     filteredStatsCollectorInfos, err = parent.StatsCollectorInfos(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     StatsCollectorInfo := &vspk.StatsCollectorInfo{}
@@ -109,5 +108,5 @@ func dataSourceStatsCollectorInfoRead(d *schema.ResourceData, m interface{}) err
 
     d.SetId(StatsCollectorInfo.Identifier())
     
-    return nil
+    return
 }

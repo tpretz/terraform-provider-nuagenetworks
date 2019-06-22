@@ -15,11 +15,6 @@ func resourcePolicyEntry() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -39,11 +34,6 @@ func resourcePolicyEntry() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "match_criteria": &schema.Schema{
                 Type:     schema.TypeMap,
                 Optional: true,
@@ -53,6 +43,16 @@ func resourcePolicyEntry() *schema.Resource {
 				Optional: true,
 				Computed: true,
 			},
+            "match_overlay_address_pool_id": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+                Computed: true,
+            },
+            "match_policy_object_group_id": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+                Computed: true,
+            },
             "actions": &schema.Schema{
                 Type:     schema.TypeMap,
                 Optional: true,
@@ -63,15 +63,6 @@ func resourcePolicyEntry() *schema.Resource {
 				Computed: true,
 			},
             "description": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
@@ -100,9 +91,6 @@ func resourcePolicyEntryCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
     }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
-    }
     parent := &vspk.PolicyStatement{ID: d.Get("parent_policy_statement").(string)}
     err := parent.CreatePolicyEntry(o)
     if err != nil {
@@ -127,7 +115,6 @@ func resourcePolicyEntryRead(d *schema.ResourceData, m interface{}) error {
     }
 
     d.Set("name", o.Name)
-    d.Set("last_updated_by", o.LastUpdatedBy)
     if v, ok := o.MatchCriteria.(string); ok {
 		raw := make(map[string]string)
 		raw["raw"] = v
@@ -135,6 +122,8 @@ func resourcePolicyEntryRead(d *schema.ResourceData, m interface{}) error {
 	} else {
 		d.Set("match_criteria", o.MatchCriteria)
 	}
+    d.Set("match_overlay_address_pool_id", o.MatchOverlayAddressPoolID)
+    d.Set("match_policy_object_group_id", o.MatchPolicyObjectGroupID)
     if v, ok := o.Actions.(string); ok {
 		raw := make(map[string]string)
 		raw["raw"] = v
@@ -143,8 +132,6 @@ func resourcePolicyEntryRead(d *schema.ResourceData, m interface{}) error {
 		d.Set("actions", o.Actions)
 	}
     d.Set("description", o.Description)
-    d.Set("entity_scope", o.EntityScope)
-    d.Set("external_id", o.ExternalID)
     
     d.Set("id", o.Identifier())
     d.Set("parent_id", o.ParentID)
@@ -176,9 +163,6 @@ func resourcePolicyEntryUpdate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
 
     o.Save()

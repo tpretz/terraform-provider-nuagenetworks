@@ -56,14 +56,6 @@ func dataSourceEgressACLEntryTemplate() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "web_filter_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "web_filter_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -132,19 +124,11 @@ func dataSourceEgressACLEntryTemplate() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "associated_live_template_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "associated_traffic_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
             "associated_traffic_type_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "associated_virtual_firewall_rule_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -198,9 +182,8 @@ func dataSourceEgressACLEntryTemplate() *schema.Resource {
 }
 
 
-func dataSourceEgressACLEntryTemplateRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceEgressACLEntryTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredEgressACLEntryTemplates := vspk.EgressACLEntryTemplatesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -220,37 +203,37 @@ func dataSourceEgressACLEntryTemplateRead(d *schema.ResourceData, m interface{})
         parent := &vspk.Domain{ID: attr.(string)}
         filteredEgressACLEntryTemplates, err = parent.EgressACLEntryTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_mirror_destination"); ok {
         parent := &vspk.MirrorDestination{ID: attr.(string)}
         filteredEgressACLEntryTemplates, err = parent.EgressACLEntryTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredEgressACLEntryTemplates, err = parent.EgressACLEntryTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_egress_acl_template"); ok {
         parent := &vspk.EgressACLTemplate{ID: attr.(string)}
         filteredEgressACLEntryTemplates, err = parent.EgressACLEntryTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredEgressACLEntryTemplates, err = parent.EgressACLEntryTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredEgressACLEntryTemplates, err = parent.EgressACLEntryTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -275,8 +258,6 @@ func dataSourceEgressACLEntryTemplateRead(d *schema.ResourceData, m interface{})
     d.Set("last_updated_by", EgressACLEntryTemplate.LastUpdatedBy)
     d.Set("action", EgressACLEntryTemplate.Action)
     d.Set("address_override", EgressACLEntryTemplate.AddressOverride)
-    d.Set("web_filter_id", EgressACLEntryTemplate.WebFilterID)
-    d.Set("web_filter_type", EgressACLEntryTemplate.WebFilterType)
     d.Set("description", EgressACLEntryTemplate.Description)
     d.Set("destination_port", EgressACLEntryTemplate.DestinationPort)
     d.Set("network_id", EgressACLEntryTemplate.NetworkID)
@@ -294,10 +275,8 @@ func dataSourceEgressACLEntryTemplateRead(d *schema.ResourceData, m interface{})
     d.Set("protocol", EgressACLEntryTemplate.Protocol)
     d.Set("associated_l7_application_signature_id", EgressACLEntryTemplate.AssociatedL7ApplicationSignatureID)
     d.Set("associated_live_entity_id", EgressACLEntryTemplate.AssociatedLiveEntityID)
-    d.Set("associated_live_template_id", EgressACLEntryTemplate.AssociatedLiveTemplateID)
     d.Set("associated_traffic_type", EgressACLEntryTemplate.AssociatedTrafficType)
     d.Set("associated_traffic_type_id", EgressACLEntryTemplate.AssociatedTrafficTypeID)
-    d.Set("associated_virtual_firewall_rule_id", EgressACLEntryTemplate.AssociatedVirtualFirewallRuleID)
     d.Set("stateful", EgressACLEntryTemplate.Stateful)
     d.Set("stats_id", EgressACLEntryTemplate.StatsID)
     d.Set("stats_logging_enabled", EgressACLEntryTemplate.StatsLoggingEnabled)
@@ -311,5 +290,5 @@ func dataSourceEgressACLEntryTemplateRead(d *schema.ResourceData, m interface{})
 
     d.SetId(EgressACLEntryTemplate.Identifier())
     
-    return nil
+    return
 }

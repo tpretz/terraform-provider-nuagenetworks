@@ -15,11 +15,6 @@ func resourceVMInterface() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -113,6 +108,10 @@ func resourceVMInterface() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
+            "associated_floating_ip_address": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+            },
             "attached_network_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -199,6 +198,9 @@ func resourceVMInterfaceCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("zone_name"); ok {
         o.ZoneName = attr.(string)
     }
+    if attr, ok := d.GetOk("associated_floating_ip_address"); ok {
+        o.AssociatedFloatingIPAddress = attr.(string)
+    }
     if attr, ok := d.GetOk("attached_network_id"); ok {
         o.AttachedNetworkID = attr.(string)
     }
@@ -262,6 +264,7 @@ func resourceVMInterfaceRead(d *schema.ResourceData, m interface{}) error {
     d.Set("domain_name", o.DomainName)
     d.Set("zone_id", o.ZoneID)
     d.Set("zone_name", o.ZoneName)
+    d.Set("associated_floating_ip_address", o.AssociatedFloatingIPAddress)
     d.Set("attached_network_id", o.AttachedNetworkID)
     d.Set("attached_network_type", o.AttachedNetworkType)
     d.Set("multi_nic_vport_name", o.MultiNICVPortName)
@@ -336,6 +339,9 @@ func resourceVMInterfaceUpdate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("zone_name"); ok {
         o.ZoneName = attr.(string)
+    }
+    if attr, ok := d.GetOk("associated_floating_ip_address"); ok {
+        o.AssociatedFloatingIPAddress = attr.(string)
     }
     if attr, ok := d.GetOk("attached_network_id"); ok {
         o.AttachedNetworkID = attr.(string)

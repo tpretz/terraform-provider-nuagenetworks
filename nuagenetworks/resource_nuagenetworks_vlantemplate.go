@@ -15,11 +15,6 @@ func resourceVLANTemplate() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -68,19 +63,9 @@ func resourceVLANTemplate() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "associated_ingress_overlay_qo_s_policer_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "associated_ingress_qos_policy_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-            },
-            "associated_ingress_underlay_qo_s_policer_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
             },
             "associated_uplink_connection_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -183,9 +168,7 @@ func resourceVLANTemplateRead(d *schema.ResourceData, m interface{}) error {
     d.Set("is_uplink", o.IsUplink)
     d.Set("associated_connection_type", o.AssociatedConnectionType)
     d.Set("associated_egress_qos_policy_id", o.AssociatedEgressQOSPolicyID)
-    d.Set("associated_ingress_overlay_qo_s_policer_id", o.AssociatedIngressOverlayQoSPolicerID)
     d.Set("associated_ingress_qos_policy_id", o.AssociatedIngressQOSPolicyID)
-    d.Set("associated_ingress_underlay_qo_s_policer_id", o.AssociatedIngressUnderlayQoSPolicerID)
     d.Set("associated_uplink_connection_id", o.AssociatedUplinkConnectionID)
     d.Set("associated_vsc_profile_id", o.AssociatedVSCProfileID)
     d.Set("duc_vlan", o.DucVlan)

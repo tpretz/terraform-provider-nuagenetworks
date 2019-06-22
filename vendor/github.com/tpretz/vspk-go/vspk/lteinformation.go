@@ -42,9 +42,6 @@ type LTEInformation struct {
 	ParentType        string `json:"parentType,omitempty"`
 	Owner             string `json:"owner,omitempty"`
 	LTEConnectionInfo string `json:"LTEConnectionInfo,omitempty"`
-	LastUpdatedBy     string `json:"lastUpdatedBy,omitempty"`
-	EntityScope       string `json:"entityScope,omitempty"`
-	ExternalID        string `json:"externalID,omitempty"`
 }
 
 // NewLTEInformation returns a new *LTEInformation
@@ -87,32 +84,4 @@ func (o *LTEInformation) Save() *bambou.Error {
 func (o *LTEInformation) Delete() *bambou.Error {
 
 	return bambou.CurrentSession().DeleteEntity(o)
-}
-
-// Metadatas retrieves the list of child Metadatas of the LTEInformation
-func (o *LTEInformation) Metadatas(info *bambou.FetchingInfo) (MetadatasList, *bambou.Error) {
-
-	var list MetadatasList
-	err := bambou.CurrentSession().FetchChildren(o, MetadataIdentity, &list, info)
-	return list, err
-}
-
-// CreateMetadata creates a new child Metadata under the LTEInformation
-func (o *LTEInformation) CreateMetadata(child *Metadata) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
-}
-
-// GlobalMetadatas retrieves the list of child GlobalMetadatas of the LTEInformation
-func (o *LTEInformation) GlobalMetadatas(info *bambou.FetchingInfo) (GlobalMetadatasList, *bambou.Error) {
-
-	var list GlobalMetadatasList
-	err := bambou.CurrentSession().FetchChildren(o, GlobalMetadataIdentity, &list, info)
-	return list, err
-}
-
-// CreateGlobalMetadata creates a new child GlobalMetadata under the LTEInformation
-func (o *LTEInformation) CreateGlobalMetadata(child *GlobalMetadata) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
 }

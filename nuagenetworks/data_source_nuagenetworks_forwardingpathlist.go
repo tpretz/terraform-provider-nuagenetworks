@@ -40,10 +40,6 @@ func dataSourceForwardingPathList() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "forwarding_path_list_id": &schema.Schema{
-                Type:     schema.TypeInt,
-                Computed: true,
-            },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -57,9 +53,8 @@ func dataSourceForwardingPathList() *schema.Resource {
 }
 
 
-func dataSourceForwardingPathListRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceForwardingPathListRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredForwardingPathLists := vspk.ForwardingPathListsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -78,7 +73,7 @@ func dataSourceForwardingPathListRead(d *schema.ResourceData, m interface{}) err
     parent := &vspk.Domain{ID: d.Get("parent_domain").(string)}
     filteredForwardingPathLists, err = parent.ForwardingPathLists(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     ForwardingPathList := &vspk.ForwardingPathList{}
@@ -98,7 +93,6 @@ func dataSourceForwardingPathListRead(d *schema.ResourceData, m interface{}) err
     d.Set("last_updated_by", ForwardingPathList.LastUpdatedBy)
     d.Set("description", ForwardingPathList.Description)
     d.Set("entity_scope", ForwardingPathList.EntityScope)
-    d.Set("forwarding_path_list_id", ForwardingPathList.ForwardingPathListID)
     d.Set("external_id", ForwardingPathList.ExternalID)
     
     d.Set("id", ForwardingPathList.Identifier())
@@ -108,5 +102,5 @@ func dataSourceForwardingPathListRead(d *schema.ResourceData, m interface{}) err
 
     d.SetId(ForwardingPathList.Identifier())
     
-    return nil
+    return
 }

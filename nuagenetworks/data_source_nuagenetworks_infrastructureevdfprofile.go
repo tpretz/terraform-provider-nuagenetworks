@@ -52,10 +52,6 @@ func dataSourceInfrastructureEVDFProfile() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "enterprise_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -85,9 +81,8 @@ func dataSourceInfrastructureEVDFProfile() *schema.Resource {
 }
 
 
-func dataSourceInfrastructureEVDFProfileRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceInfrastructureEVDFProfileRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredInfrastructureEVDFProfiles := vspk.InfrastructureEVDFProfilesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -106,7 +101,7 @@ func dataSourceInfrastructureEVDFProfileRead(d *schema.ResourceData, m interface
     parent := m.(*vspk.Me)
     filteredInfrastructureEVDFProfiles, err = parent.InfrastructureEVDFProfiles(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     InfrastructureEVDFProfile := &vspk.InfrastructureEVDFProfile{}
@@ -129,7 +124,6 @@ func dataSourceInfrastructureEVDFProfileRead(d *schema.ResourceData, m interface
     d.Set("active_controller", InfrastructureEVDFProfile.ActiveController)
     d.Set("service_ipv4_subnet", InfrastructureEVDFProfile.ServiceIPv4Subnet)
     d.Set("description", InfrastructureEVDFProfile.Description)
-    d.Set("enterprise_id", InfrastructureEVDFProfile.EnterpriseID)
     d.Set("entity_scope", InfrastructureEVDFProfile.EntityScope)
     d.Set("proxy_dns_name", InfrastructureEVDFProfile.ProxyDNSName)
     d.Set("use_two_factor", InfrastructureEVDFProfile.UseTwoFactor)
@@ -144,5 +138,5 @@ func dataSourceInfrastructureEVDFProfileRead(d *schema.ResourceData, m interface
 
     d.SetId(InfrastructureEVDFProfile.Identifier())
     
-    return nil
+    return
 }

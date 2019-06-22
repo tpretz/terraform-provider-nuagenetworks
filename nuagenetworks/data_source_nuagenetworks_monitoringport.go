@@ -52,10 +52,6 @@ func dataSourceMonitoringPort() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "dpdk_enabled": &schema.Schema{
-                Type:     schema.TypeBool,
-                Computed: true,
-            },
             "uplink": &schema.Schema{
                 Type:     schema.TypeBool,
                 Computed: true,
@@ -88,9 +84,8 @@ func dataSourceMonitoringPort() *schema.Resource {
 }
 
 
-func dataSourceMonitoringPortRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceMonitoringPortRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredMonitoringPorts := vspk.MonitoringPortsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -110,19 +105,19 @@ func dataSourceMonitoringPortRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.VSC{ID: attr.(string)}
         filteredMonitoringPorts, err = parent.MonitoringPorts(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_hsc"); ok {
         parent := &vspk.HSC{ID: attr.(string)}
         filteredMonitoringPorts, err = parent.MonitoringPorts(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vrs"); ok {
         parent := &vspk.VRS{ID: attr.(string)}
         filteredMonitoringPorts, err = parent.MonitoringPorts(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -146,7 +141,6 @@ func dataSourceMonitoringPortRead(d *schema.ResourceData, m interface{}) error {
     d.Set("resiliency_state", MonitoringPort.ResiliencyState)
     d.Set("resilient", MonitoringPort.Resilient)
     d.Set("entity_scope", MonitoringPort.EntityScope)
-    d.Set("dpdk_enabled", MonitoringPort.DpdkEnabled)
     d.Set("uplink", MonitoringPort.Uplink)
     d.Set("state", MonitoringPort.State)
     d.Set("external_id", MonitoringPort.ExternalID)
@@ -158,5 +152,5 @@ func dataSourceMonitoringPortRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(MonitoringPort.Identifier())
     
-    return nil
+    return
 }

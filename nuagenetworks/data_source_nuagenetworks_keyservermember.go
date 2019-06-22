@@ -65,9 +65,8 @@ func dataSourceKeyServerMember() *schema.Resource {
 }
 
 
-func dataSourceKeyServerMemberRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceKeyServerMemberRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredKeyServerMembers := vspk.KeyServerMembersList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -86,7 +85,7 @@ func dataSourceKeyServerMemberRead(d *schema.ResourceData, m interface{}) error 
     parent := m.(*vspk.Me)
     filteredKeyServerMembers, err = parent.KeyServerMembers(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     KeyServerMember := &vspk.KeyServerMember{}
@@ -119,5 +118,5 @@ func dataSourceKeyServerMemberRead(d *schema.ResourceData, m interface{}) error 
 
     d.SetId(KeyServerMember.Identifier())
     
-    return nil
+    return
 }

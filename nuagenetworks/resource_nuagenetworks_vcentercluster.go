@@ -15,11 +15,6 @@ func resourceVCenterCluster() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -34,10 +29,6 @@ func resourceVCenterCluster() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
                 Computed: true,
-            },
-            "arp_reply": &schema.Schema{
-                Type:     schema.TypeBool,
-                Optional: true,
             },
             "vrs_configuration_time_limit": &schema.Schema{
                 Type:     schema.TypeInt,
@@ -221,11 +212,6 @@ func resourceVCenterCluster() *schema.Resource {
             "nfs_mount_path": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-            },
-            "agency_moid": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
             },
             "mgmt_dns1": &schema.Schema{
                 Type:     schema.TypeString,
@@ -501,9 +487,6 @@ func resourceVCenterClusterCreate(d *schema.ResourceData, m interface{}) error {
         SecondaryDataUplinkEnabled: d.Get("secondary_data_uplink_enabled").(bool),
         RevertiveControllerEnabled: d.Get("revertive_controller_enabled").(bool),
         RevertiveTimer: d.Get("revertive_timer").(int),
-    }
-    if attr, ok := d.GetOk("arp_reply"); ok {
-        o.ARPReply = attr.(bool)
     }
     if attr, ok := d.GetOk("vrs_configuration_time_limit"); ok {
         o.VRSConfigurationTimeLimit = attr.(int)
@@ -825,7 +808,6 @@ func resourceVCenterClusterRead(d *schema.ResourceData, m interface{}) error {
         return nil
     }
 
-    d.Set("arp_reply", o.ARPReply)
     d.Set("vrs_configuration_time_limit", o.VRSConfigurationTimeLimit)
     d.Set("v_require_nuage_metadata", o.VRequireNuageMetadata)
     d.Set("name", o.Name)
@@ -869,7 +851,6 @@ func resourceVCenterClusterRead(d *schema.ResourceData, m interface{}) error {
     d.Set("revertive_timer", o.RevertiveTimer)
     d.Set("nfs_log_server", o.NfsLogServer)
     d.Set("nfs_mount_path", o.NfsMountPath)
-    d.Set("agency_moid", o.AgencyMoid)
     d.Set("mgmt_dns1", o.MgmtDNS1)
     d.Set("mgmt_dns2", o.MgmtDNS2)
     d.Set("mgmt_gateway", o.MgmtGateway)
@@ -956,9 +937,6 @@ func resourceVCenterClusterUpdate(d *schema.ResourceData, m interface{}) error {
     o.RevertiveControllerEnabled = d.Get("revertive_controller_enabled").(bool)
     o.RevertiveTimer = d.Get("revertive_timer").(int)
     
-    if attr, ok := d.GetOk("arp_reply"); ok {
-        o.ARPReply = attr.(bool)
-    }
     if attr, ok := d.GetOk("vrs_configuration_time_limit"); ok {
         o.VRSConfigurationTimeLimit = attr.(int)
     }

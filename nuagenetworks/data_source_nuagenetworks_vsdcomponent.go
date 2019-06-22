@@ -73,9 +73,8 @@ func dataSourceVSDComponent() *schema.Resource {
 }
 
 
-func dataSourceVSDComponentRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceVSDComponentRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredVSDComponents := vspk.VSDComponentsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -94,7 +93,7 @@ func dataSourceVSDComponentRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.VSD{ID: d.Get("parent_vsd").(string)}
     filteredVSDComponents, err = parent.VSDComponents(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     VSDComponent := &vspk.VSDComponent{}
@@ -128,5 +127,5 @@ func dataSourceVSDComponentRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(VSDComponent.Identifier())
     
-    return nil
+    return
 }

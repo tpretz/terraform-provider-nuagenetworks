@@ -93,9 +93,8 @@ func dataSourceOSPFArea() *schema.Resource {
 }
 
 
-func dataSourceOSPFAreaRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceOSPFAreaRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredOSPFAreas := vspk.OSPFAreasList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -114,7 +113,7 @@ func dataSourceOSPFAreaRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.OSPFInstance{ID: d.Get("parent_ospf_instance").(string)}
     filteredOSPFAreas, err = parent.OSPFAreas(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     OSPFArea := &vspk.OSPFArea{}
@@ -152,5 +151,5 @@ func dataSourceOSPFAreaRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(OSPFArea.Identifier())
     
-    return nil
+    return
 }

@@ -59,9 +59,8 @@ func dataSourceBGPPeer() *schema.Resource {
 }
 
 
-func dataSourceBGPPeerRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceBGPPeerRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredBGPPeers := vspk.BGPPeersList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -81,13 +80,13 @@ func dataSourceBGPPeerRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.VSC{ID: attr.(string)}
         filteredBGPPeers, err = parent.BGPPeers(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_hsc"); ok {
         parent := &vspk.HSC{ID: attr.(string)}
         filteredBGPPeers, err = parent.BGPPeers(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -117,5 +116,5 @@ func dataSourceBGPPeerRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(BGPPeer.Identifier())
     
-    return nil
+    return
 }

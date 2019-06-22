@@ -53,9 +53,8 @@ func dataSourceCOSRemarkingPolicyTable() *schema.Resource {
 }
 
 
-func dataSourceCOSRemarkingPolicyTableRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceCOSRemarkingPolicyTableRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredCOSRemarkingPolicyTables := vspk.COSRemarkingPolicyTablesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -75,13 +74,13 @@ func dataSourceCOSRemarkingPolicyTableRead(d *schema.ResourceData, m interface{}
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredCOSRemarkingPolicyTables, err = parent.COSRemarkingPolicyTables(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredCOSRemarkingPolicyTables, err = parent.COSRemarkingPolicyTables(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -111,5 +110,5 @@ func dataSourceCOSRemarkingPolicyTableRead(d *schema.ResourceData, m interface{}
 
     d.SetId(COSRemarkingPolicyTable.Identifier())
     
-    return nil
+    return
 }

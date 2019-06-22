@@ -15,11 +15,6 @@ func resourceContainer() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -113,10 +108,6 @@ func resourceContainer() *schema.Resource {
                 Optional: true,
                 Elem:     &schema.Schema{Type: schema.TypeString},
             },
-            "compute_provisioned": &schema.Schema{
-                Type:     schema.TypeBool,
-                Optional: true,
-            },
             "zone_ids": &schema.Schema{
                 Type:     schema.TypeList,
                 Optional: true,
@@ -202,9 +193,6 @@ func resourceContainerCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("domain_ids"); ok {
         o.DomainIDs = attr.([]interface{})
     }
-    if attr, ok := d.GetOk("compute_provisioned"); ok {
-        o.ComputeProvisioned = attr.(bool)
-    }
     if attr, ok := d.GetOk("zone_ids"); ok {
         o.ZoneIDs = attr.([]interface{})
     }
@@ -272,7 +260,6 @@ func resourceContainerRead(d *schema.ResourceData, m interface{}) error {
     d.Set("enterprise_name", o.EnterpriseName)
     d.Set("entity_scope", o.EntityScope)
     d.Set("domain_ids", o.DomainIDs)
-    d.Set("compute_provisioned", o.ComputeProvisioned)
     d.Set("zone_ids", o.ZoneIDs)
     d.Set("orchestration_id", o.OrchestrationID)
     d.Set("user_id", o.UserID)
@@ -342,9 +329,6 @@ func resourceContainerUpdate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("domain_ids"); ok {
         o.DomainIDs = attr.([]interface{})
-    }
-    if attr, ok := d.GetOk("compute_provisioned"); ok {
-        o.ComputeProvisioned = attr.(bool)
     }
     if attr, ok := d.GetOk("zone_ids"); ok {
         o.ZoneIDs = attr.([]interface{})

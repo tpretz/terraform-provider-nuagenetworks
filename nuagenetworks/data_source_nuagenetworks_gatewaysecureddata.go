@@ -48,10 +48,6 @@ func dataSourceGatewaySecuredData() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "associated_enterprise_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -65,9 +61,8 @@ func dataSourceGatewaySecuredData() *schema.Resource {
 }
 
 
-func dataSourceGatewaySecuredDataRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceGatewaySecuredDataRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredGatewaySecuredDatas := vspk.GatewaySecuredDatasList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -86,7 +81,7 @@ func dataSourceGatewaySecuredDataRead(d *schema.ResourceData, m interface{}) err
     parent := &vspk.GatewaySecurity{ID: d.Get("parent_gateway_security").(string)}
     filteredGatewaySecuredDatas, err = parent.GatewaySecuredDatas(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     GatewaySecuredData := &vspk.GatewaySecuredData{}
@@ -108,7 +103,6 @@ func dataSourceGatewaySecuredDataRead(d *schema.ResourceData, m interface{}) err
     d.Set("keyserver_cert_serial_number", GatewaySecuredData.KeyserverCertSerialNumber)
     d.Set("signed_data", GatewaySecuredData.SignedData)
     d.Set("entity_scope", GatewaySecuredData.EntityScope)
-    d.Set("associated_enterprise_id", GatewaySecuredData.AssociatedEnterpriseID)
     d.Set("external_id", GatewaySecuredData.ExternalID)
     
     d.Set("id", GatewaySecuredData.Identifier())
@@ -118,5 +112,5 @@ func dataSourceGatewaySecuredDataRead(d *schema.ResourceData, m interface{}) err
 
     d.SetId(GatewaySecuredData.Identifier())
     
-    return nil
+    return
 }

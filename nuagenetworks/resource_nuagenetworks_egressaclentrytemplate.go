@@ -15,11 +15,6 @@ func resourceEgressACLEntryTemplate() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -65,14 +60,6 @@ func resourceEgressACLEntryTemplate() *schema.Resource {
                 Required: true,
             },
             "address_override": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
-            "web_filter_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
-            "web_filter_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
@@ -147,11 +134,6 @@ func resourceEgressACLEntryTemplate() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "associated_live_template_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "associated_traffic_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -159,11 +141,6 @@ func resourceEgressACLEntryTemplate() *schema.Resource {
             "associated_traffic_type_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-            },
-            "associated_virtual_firewall_rule_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
             },
             "stateful": &schema.Schema{
                 Type:     schema.TypeBool,
@@ -217,12 +194,6 @@ func resourceEgressACLEntryTemplateCreate(d *schema.ResourceData, m interface{})
     }
     if attr, ok := d.GetOk("address_override"); ok {
         o.AddressOverride = attr.(string)
-    }
-    if attr, ok := d.GetOk("web_filter_id"); ok {
-        o.WebFilterID = attr.(string)
-    }
-    if attr, ok := d.GetOk("web_filter_type"); ok {
-        o.WebFilterType = attr.(string)
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
@@ -309,8 +280,6 @@ func resourceEgressACLEntryTemplateRead(d *schema.ResourceData, m interface{}) e
     d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("action", o.Action)
     d.Set("address_override", o.AddressOverride)
-    d.Set("web_filter_id", o.WebFilterID)
-    d.Set("web_filter_type", o.WebFilterType)
     d.Set("description", o.Description)
     d.Set("destination_port", o.DestinationPort)
     d.Set("network_id", o.NetworkID)
@@ -328,10 +297,8 @@ func resourceEgressACLEntryTemplateRead(d *schema.ResourceData, m interface{}) e
     d.Set("protocol", o.Protocol)
     d.Set("associated_l7_application_signature_id", o.AssociatedL7ApplicationSignatureID)
     d.Set("associated_live_entity_id", o.AssociatedLiveEntityID)
-    d.Set("associated_live_template_id", o.AssociatedLiveTemplateID)
     d.Set("associated_traffic_type", o.AssociatedTrafficType)
     d.Set("associated_traffic_type_id", o.AssociatedTrafficTypeID)
-    d.Set("associated_virtual_firewall_rule_id", o.AssociatedVirtualFirewallRuleID)
     d.Set("stateful", o.Stateful)
     d.Set("stats_id", o.StatsID)
     d.Set("stats_logging_enabled", o.StatsLoggingEnabled)
@@ -375,12 +342,6 @@ func resourceEgressACLEntryTemplateUpdate(d *schema.ResourceData, m interface{})
     }
     if attr, ok := d.GetOk("address_override"); ok {
         o.AddressOverride = attr.(string)
-    }
-    if attr, ok := d.GetOk("web_filter_id"); ok {
-        o.WebFilterID = attr.(string)
-    }
-    if attr, ok := d.GetOk("web_filter_type"); ok {
-        o.WebFilterType = attr.(string)
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)

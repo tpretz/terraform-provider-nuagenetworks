@@ -15,11 +15,6 @@ func resourceZone() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -77,10 +72,14 @@ func resourceZone() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "encryption": &schema.Schema{
+            "flow_collection_enabled": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
                 Default: "INHERITED",
+            },
+            "encryption": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -153,6 +152,9 @@ func resourceZoneCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("netmask"); ok {
         o.Netmask = attr.(string)
     }
+    if attr, ok := d.GetOk("flow_collection_enabled"); ok {
+        o.FlowCollectionEnabled = attr.(string)
+    }
     if attr, ok := d.GetOk("encryption"); ok {
         o.Encryption = attr.(string)
     }
@@ -210,6 +212,7 @@ func resourceZoneRead(d *schema.ResourceData, m interface{}) error {
     d.Set("template_id", o.TemplateID)
     d.Set("description", o.Description)
     d.Set("netmask", o.Netmask)
+    d.Set("flow_collection_enabled", o.FlowCollectionEnabled)
     d.Set("encryption", o.Encryption)
     d.Set("entity_scope", o.EntityScope)
     d.Set("policy_group_id", o.PolicyGroupID)
@@ -263,6 +266,9 @@ func resourceZoneUpdate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("netmask"); ok {
         o.Netmask = attr.(string)
+    }
+    if attr, ok := d.GetOk("flow_collection_enabled"); ok {
+        o.FlowCollectionEnabled = attr.(string)
     }
     if attr, ok := d.GetOk("encryption"); ok {
         o.Encryption = attr.(string)

@@ -49,7 +49,6 @@ type Alarm struct {
 	Description        string `json:"description,omitempty"`
 	Severity           string `json:"severity,omitempty"`
 	Timestamp          int    `json:"timestamp,omitempty"`
-	AlarmedObjectID    string `json:"alarmedObjectID,omitempty"`
 	EnterpriseID       string `json:"enterpriseID,omitempty"`
 	EntityScope        string `json:"entityScope,omitempty"`
 	ErrorCondition     int    `json:"errorCondition,omitempty"`

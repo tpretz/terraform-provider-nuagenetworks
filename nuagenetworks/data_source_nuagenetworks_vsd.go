@@ -122,12 +122,16 @@ func dataSourceVSD() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
+            "parent_vsp": &schema.Schema{
+                Type:     schema.TypeString,
+                Required: true,
+            },
         },
     }
 }
 
 
-func dataSourceVSDRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceVSDRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredVSDs := vspk.VSDsList{}
     fetchFilter := &bambou.FetchingInfo{}
     
@@ -143,6 +147,11 @@ func dataSourceVSDRead(d *schema.ResourceData, m interface{}) error {
             }
            
         }
+    }
+    parent := &vspk.VSP{ID: d.Get("parent_vsp").(string)}
+    filteredVSDs, err = parent.VSDs(fetchFilter)
+    if err != nil {
+        return
     }
 
     VSD := &vspk.VSD{}
@@ -190,5 +199,5 @@ func dataSourceVSDRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(VSD.Identifier())
     
-    return nil
+    return
 }

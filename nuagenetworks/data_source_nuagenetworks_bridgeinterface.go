@@ -32,6 +32,10 @@ func dataSourceBridgeInterface() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
+            "ipv6_address": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
             "ipv6_gateway": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -120,9 +124,8 @@ func dataSourceBridgeInterface() *schema.Resource {
 }
 
 
-func dataSourceBridgeInterfaceRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceBridgeInterfaceRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredBridgeInterfaces := vspk.BridgeInterfacesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -142,19 +145,19 @@ func dataSourceBridgeInterfaceRead(d *schema.ResourceData, m interface{}) error 
         parent := &vspk.Domain{ID: attr.(string)}
         filteredBridgeInterfaces, err = parent.BridgeInterfaces(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredBridgeInterfaces, err = parent.BridgeInterfaces(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredBridgeInterfaces, err = parent.BridgeInterfaces(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -173,6 +176,7 @@ func dataSourceBridgeInterfaceRead(d *schema.ResourceData, m interface{}) error 
 
     d.Set("vport_id", BridgeInterface.VPortID)
     d.Set("vport_name", BridgeInterface.VPortName)
+    d.Set("ipv6_address", BridgeInterface.IPv6Address)
     d.Set("ipv6_gateway", BridgeInterface.IPv6Gateway)
     d.Set("name", BridgeInterface.Name)
     d.Set("last_updated_by", BridgeInterface.LastUpdatedBy)
@@ -198,5 +202,5 @@ func dataSourceBridgeInterfaceRead(d *schema.ResourceData, m interface{}) error 
 
     d.SetId(BridgeInterface.Identifier())
     
-    return nil
+    return
 }

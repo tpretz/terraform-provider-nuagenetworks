@@ -47,7 +47,6 @@ type GroupKeyEncryptionProfile struct {
 	SEKPayloadEncryptionBCAlgorithm      string `json:"SEKPayloadEncryptionBCAlgorithm,omitempty"`
 	SEKPayloadEncryptionKeyLength        int    `json:"SEKPayloadEncryptionKeyLength,omitempty"`
 	SEKPayloadSigningAlgorithm           string `json:"SEKPayloadSigningAlgorithm,omitempty"`
-	DRSeedLifetime                       int    `json:"DRSeedLifetime,omitempty"`
 	Name                                 string `json:"name,omitempty"`
 	LastUpdatedBy                        string `json:"lastUpdatedBy,omitempty"`
 	SeedGenerationInterval               int    `json:"seedGenerationInterval,omitempty"`

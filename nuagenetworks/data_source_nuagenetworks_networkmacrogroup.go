@@ -36,6 +36,11 @@ func dataSourceNetworkMacroGroup() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
+            "network_macros": &schema.Schema{
+                Type:     schema.TypeList,
+                Computed: true,
+                Elem:     &schema.Schema{Type: schema.TypeString},
+            },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -63,9 +68,8 @@ func dataSourceNetworkMacroGroup() *schema.Resource {
 }
 
 
-func dataSourceNetworkMacroGroupRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceNetworkMacroGroupRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredNetworkMacroGroups := vspk.NetworkMacroGroupsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -85,13 +89,13 @@ func dataSourceNetworkMacroGroupRead(d *schema.ResourceData, m interface{}) erro
         parent := &vspk.EnterpriseNetwork{ID: attr.(string)}
         filteredNetworkMacroGroups, err = parent.NetworkMacroGroups(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredNetworkMacroGroups, err = parent.NetworkMacroGroups(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -111,6 +115,7 @@ func dataSourceNetworkMacroGroupRead(d *schema.ResourceData, m interface{}) erro
     d.Set("name", NetworkMacroGroup.Name)
     d.Set("last_updated_by", NetworkMacroGroup.LastUpdatedBy)
     d.Set("description", NetworkMacroGroup.Description)
+    d.Set("network_macros", NetworkMacroGroup.NetworkMacros)
     d.Set("entity_scope", NetworkMacroGroup.EntityScope)
     d.Set("is_saa_s_type", NetworkMacroGroup.IsSaaSType)
     d.Set("external_id", NetworkMacroGroup.ExternalID)
@@ -122,5 +127,5 @@ func dataSourceNetworkMacroGroupRead(d *schema.ResourceData, m interface{}) erro
 
     d.SetId(NetworkMacroGroup.Identifier())
     
-    return nil
+    return
 }

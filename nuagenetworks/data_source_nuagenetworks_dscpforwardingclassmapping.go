@@ -53,9 +53,8 @@ func dataSourceDSCPForwardingClassMapping() *schema.Resource {
 }
 
 
-func dataSourceDSCPForwardingClassMappingRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceDSCPForwardingClassMappingRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredDSCPForwardingClassMappings := vspk.DSCPForwardingClassMappingsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -74,7 +73,7 @@ func dataSourceDSCPForwardingClassMappingRead(d *schema.ResourceData, m interfac
     parent := &vspk.DSCPForwardingClassTable{ID: d.Get("parent_dscp_forwarding_class_table").(string)}
     filteredDSCPForwardingClassMappings, err = parent.DSCPForwardingClassMappings(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     DSCPForwardingClassMapping := &vspk.DSCPForwardingClassMapping{}
@@ -103,5 +102,5 @@ func dataSourceDSCPForwardingClassMappingRead(d *schema.ResourceData, m interfac
 
     d.SetId(DSCPForwardingClassMapping.Identifier())
     
-    return nil
+    return
 }

@@ -108,9 +108,8 @@ func dataSourcePort() *schema.Resource {
 }
 
 
-func dataSourcePortRead(d *schema.ResourceData, m interface{}) error {
+func dataSourcePortRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredPorts := vspk.PortsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -130,19 +129,19 @@ func dataSourcePortRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.AutoDiscoveredGateway{ID: attr.(string)}
         filteredPorts, err = parent.Ports(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_redundancy_group"); ok {
         parent := &vspk.RedundancyGroup{ID: attr.(string)}
         filteredPorts, err = parent.Ports(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_gateway"); ok {
         parent := &vspk.Gateway{ID: attr.(string)}
         filteredPorts, err = parent.Ports(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -183,5 +182,5 @@ func dataSourcePortRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(Port.Identifier())
     
-    return nil
+    return
 }

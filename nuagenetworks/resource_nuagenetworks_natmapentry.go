@@ -15,11 +15,6 @@ func resourceNATMapEntry() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -49,11 +44,6 @@ func resourceNATMapEntry() *schema.Resource {
                 Type:     schema.TypeString,
                 Required: true,
             },
-            "private_port": &schema.Schema{
-                Type:     schema.TypeInt,
-                Optional: true,
-                Computed: true,
-            },
             "associated_patnat_pool_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -61,11 +51,6 @@ func resourceNATMapEntry() *schema.Resource {
             "public_ip": &schema.Schema{
                 Type:     schema.TypeString,
                 Required: true,
-            },
-            "public_port": &schema.Schema{
-                Type:     schema.TypeInt,
-                Optional: true,
-                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -123,10 +108,8 @@ func resourceNATMapEntryRead(d *schema.ResourceData, m interface{}) error {
     d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("entity_scope", o.EntityScope)
     d.Set("private_ip", o.PrivateIP)
-    d.Set("private_port", o.PrivatePort)
     d.Set("associated_patnat_pool_id", o.AssociatedPATNATPoolID)
     d.Set("public_ip", o.PublicIP)
-    d.Set("public_port", o.PublicPort)
     d.Set("external_id", o.ExternalID)
     d.Set("type", o.Type)
     

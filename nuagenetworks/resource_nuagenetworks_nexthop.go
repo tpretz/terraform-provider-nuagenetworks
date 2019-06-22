@@ -15,11 +15,6 @@ func resourceNextHop() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -34,10 +29,6 @@ func resourceNextHop() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
                 Computed: true,
-            },
-            "ip_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
             },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
@@ -61,10 +52,6 @@ func resourceNextHop() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "type": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
             "parent_link": &schema.Schema{
                 Type:     schema.TypeString,
                 Required: true,
@@ -78,9 +65,6 @@ func resourceNextHopCreate(d *schema.ResourceData, m interface{}) error {
     // Initialize NextHop object
     o := &vspk.NextHop{
     }
-    if attr, ok := d.GetOk("ip_type"); ok {
-        o.IPType = attr.(string)
-    }
     if attr, ok := d.GetOk("route_distinguisher"); ok {
         o.RouteDistinguisher = attr.(string)
     }
@@ -89,9 +73,6 @@ func resourceNextHopCreate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)
-    }
-    if attr, ok := d.GetOk("type"); ok {
-        o.Type = attr.(string)
     }
     parent := &vspk.Link{ID: d.Get("parent_link").(string)}
     err := parent.CreateNextHop(o)
@@ -116,13 +97,11 @@ func resourceNextHopRead(d *schema.ResourceData, m interface{}) error {
         return nil
     }
 
-    d.Set("ip_type", o.IPType)
     d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("entity_scope", o.EntityScope)
     d.Set("route_distinguisher", o.RouteDistinguisher)
     d.Set("ip", o.Ip)
     d.Set("external_id", o.ExternalID)
-    d.Set("type", o.Type)
     
     d.Set("id", o.Identifier())
     d.Set("parent_id", o.ParentID)
@@ -143,9 +122,6 @@ func resourceNextHopUpdate(d *schema.ResourceData, m interface{}) error {
     }
     
     
-    if attr, ok := d.GetOk("ip_type"); ok {
-        o.IPType = attr.(string)
-    }
     if attr, ok := d.GetOk("route_distinguisher"); ok {
         o.RouteDistinguisher = attr.(string)
     }
@@ -154,9 +130,6 @@ func resourceNextHopUpdate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)
-    }
-    if attr, ok := d.GetOk("type"); ok {
-        o.Type = attr.(string)
     }
 
     o.Save()

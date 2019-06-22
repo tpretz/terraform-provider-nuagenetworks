@@ -15,11 +15,6 @@ func resourceBGPNeighbor() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -61,10 +56,6 @@ func resourceBGPNeighbor() *schema.Resource {
                 Type:     schema.TypeInt,
                 Required: true,
             },
-            "peer_configuration": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
             "peer_ip": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -81,10 +72,6 @@ func resourceBGPNeighbor() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
                 Computed: true,
-            },
-            "domain_service_label": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
             },
             "associated_export_routing_policy_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -136,9 +123,6 @@ func resourceBGPNeighborCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("dampening_enabled"); ok {
         o.DampeningEnabled = attr.(bool)
     }
-    if attr, ok := d.GetOk("peer_configuration"); ok {
-        o.PeerConfiguration = attr.(string)
-    }
     if attr, ok := d.GetOk("peer_ip"); ok {
         o.PeerIP = attr.(string)
     }
@@ -147,9 +131,6 @@ func resourceBGPNeighborCreate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("session"); ok {
         o.Session = attr.(string)
-    }
-    if attr, ok := d.GetOk("domain_service_label"); ok {
-        o.DomainServiceLabel = attr.(string)
     }
     if attr, ok := d.GetOk("associated_export_routing_policy_id"); ok {
         o.AssociatedExportRoutingPolicyID = attr.(string)
@@ -205,12 +186,10 @@ func resourceBGPNeighborRead(d *schema.ResourceData, m interface{}) error {
     d.Set("name", o.Name)
     d.Set("dampening_enabled", o.DampeningEnabled)
     d.Set("peer_as", o.PeerAS)
-    d.Set("peer_configuration", o.PeerConfiguration)
     d.Set("peer_ip", o.PeerIP)
     d.Set("description", o.Description)
     d.Set("session", o.Session)
     d.Set("entity_scope", o.EntityScope)
-    d.Set("domain_service_label", o.DomainServiceLabel)
     d.Set("associated_export_routing_policy_id", o.AssociatedExportRoutingPolicyID)
     d.Set("associated_import_routing_policy_id", o.AssociatedImportRoutingPolicyID)
     d.Set("external_id", o.ExternalID)
@@ -248,9 +227,6 @@ func resourceBGPNeighborUpdate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("dampening_enabled"); ok {
         o.DampeningEnabled = attr.(bool)
     }
-    if attr, ok := d.GetOk("peer_configuration"); ok {
-        o.PeerConfiguration = attr.(string)
-    }
     if attr, ok := d.GetOk("peer_ip"); ok {
         o.PeerIP = attr.(string)
     }
@@ -259,9 +235,6 @@ func resourceBGPNeighborUpdate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("session"); ok {
         o.Session = attr.(string)
-    }
-    if attr, ok := d.GetOk("domain_service_label"); ok {
-        o.DomainServiceLabel = attr.(string)
     }
     if attr, ok := d.GetOk("associated_export_routing_policy_id"); ok {
         o.AssociatedExportRoutingPolicyID = attr.(string)

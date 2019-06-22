@@ -28,14 +28,6 @@ func dataSourceBFDSession() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "bfd_destination_ip_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "bfd_destination_ipv6": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "bfd_multiplier": &schema.Schema{
                 Type:     schema.TypeInt,
                 Computed: true,
@@ -75,9 +67,8 @@ func dataSourceBFDSession() *schema.Resource {
 }
 
 
-func dataSourceBFDSessionRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceBFDSessionRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredBFDSessions := vspk.BFDSessionsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -97,13 +88,13 @@ func dataSourceBFDSessionRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.BRConnection{ID: attr.(string)}
         filteredBFDSessions, err = parent.BFDSessions(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_uplink_connection"); ok {
         parent := &vspk.UplinkConnection{ID: attr.(string)}
         filteredBFDSessions, err = parent.BFDSessions(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -121,8 +112,6 @@ func dataSourceBFDSessionRead(d *schema.ResourceData, m interface{}) error {
     BFDSession = filteredBFDSessions[0]
 
     d.Set("bfd_destination_ip", BFDSession.BFDDestinationIP)
-    d.Set("bfd_destination_ip_type", BFDSession.BFDDestinationIPType)
-    d.Set("bfd_destination_ipv6", BFDSession.BFDDestinationIPv6)
     d.Set("bfd_multiplier", BFDSession.BFDMultiplier)
     d.Set("bfd_timer", BFDSession.BFDTimer)
     d.Set("last_updated_by", BFDSession.LastUpdatedBy)
@@ -137,5 +126,5 @@ func dataSourceBFDSessionRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(BFDSession.Identifier())
     
-    return nil
+    return
 }

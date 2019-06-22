@@ -58,7 +58,6 @@ type SharedNetworkResource struct {
 	SharedResourceParentID      string `json:"sharedResourceParentID,omitempty"`
 	VnID                        int    `json:"vnID,omitempty"`
 	Underlay                    bool   `json:"underlay"`
-	EnterpriseID                string `json:"enterpriseID,omitempty"`
 	EntityScope                 string `json:"entityScope,omitempty"`
 	DomainRouteDistinguisher    string `json:"domainRouteDistinguisher,omitempty"`
 	DomainRouteTarget           string `json:"domainRouteTarget,omitempty"`
@@ -68,8 +67,6 @@ type SharedNetworkResource struct {
 	UplinkVPortName             string `json:"uplinkVPortName,omitempty"`
 	UseGlobalMAC                string `json:"useGlobalMAC,omitempty"`
 	AssociatedPATMapperID       string `json:"associatedPATMapperID,omitempty"`
-	SubnetRouteDistinguisher    string `json:"subnetRouteDistinguisher,omitempty"`
-	SubnetRouteTarget           string `json:"subnetRouteTarget,omitempty"`
 	ExternalID                  string `json:"externalID,omitempty"`
 	DynamicPATAllocationEnabled bool   `json:"dynamicPATAllocationEnabled"`
 	Type                        string `json:"type,omitempty"`

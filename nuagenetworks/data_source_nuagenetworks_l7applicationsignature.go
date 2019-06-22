@@ -28,10 +28,6 @@ func dataSourceL7applicationsignature() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "category": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -64,19 +60,11 @@ func dataSourceL7applicationsignature() *schema.Resource {
                 Type:     schema.TypeInt,
                 Computed: true,
             },
-            "signature_version": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "risk": &schema.Schema{
                 Type:     schema.TypeInt,
                 Computed: true,
             },
             "plugin_name": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -92,22 +80,17 @@ func dataSourceL7applicationsignature() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,
-                Optional: true,
+                Required: true,
             },
         },
     }
 }
 
 
-func dataSourceL7applicationsignatureRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceL7applicationsignatureRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredL7applicationsignatures := vspk.L7applicationsignaturesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -123,18 +106,10 @@ func dataSourceL7applicationsignatureRead(d *schema.ResourceData, m interface{})
            
         }
     }
-    if attr, ok := d.GetOk("parent_enterprise"); ok {
-        parent := &vspk.Enterprise{ID: attr.(string)}
-        filteredL7applicationsignatures, err = parent.L7applicationsignatures(fetchFilter)
-        if err != nil {
-            return err
-        }
-    } else {
-        parent := m.(*vspk.Me)
-        filteredL7applicationsignatures, err = parent.L7applicationsignatures(fetchFilter)
-        if err != nil {
-            return err
-        }
+    parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
+    filteredL7applicationsignatures, err = parent.L7applicationsignatures(fetchFilter)
+    if err != nil {
+        return
     }
 
     L7applicationsignature := &vspk.L7applicationsignature{}
@@ -151,7 +126,6 @@ func dataSourceL7applicationsignatureRead(d *schema.ResourceData, m interface{})
     L7applicationsignature = filteredL7applicationsignatures[0]
 
     d.Set("name", L7applicationsignature.Name)
-    d.Set("last_updated_by", L7applicationsignature.LastUpdatedBy)
     d.Set("category", L7applicationsignature.Category)
     d.Set("readonly", L7applicationsignature.Readonly)
     d.Set("reference", L7applicationsignature.Reference)
@@ -160,14 +134,11 @@ func dataSourceL7applicationsignatureRead(d *schema.ResourceData, m interface{})
     d.Set("description", L7applicationsignature.Description)
     d.Set("dictionary_version", L7applicationsignature.DictionaryVersion)
     d.Set("signature_index", L7applicationsignature.SignatureIndex)
-    d.Set("signature_version", L7applicationsignature.SignatureVersion)
     d.Set("risk", L7applicationsignature.Risk)
     d.Set("plugin_name", L7applicationsignature.PluginName)
-    d.Set("entity_scope", L7applicationsignature.EntityScope)
     d.Set("software_flags", L7applicationsignature.SoftwareFlags)
     d.Set("productivity", L7applicationsignature.Productivity)
     d.Set("guidstring", L7applicationsignature.Guidstring)
-    d.Set("external_id", L7applicationsignature.ExternalID)
     
     d.Set("id", L7applicationsignature.Identifier())
     d.Set("parent_id", L7applicationsignature.ParentID)
@@ -176,5 +147,5 @@ func dataSourceL7applicationsignatureRead(d *schema.ResourceData, m interface{})
 
     d.SetId(L7applicationsignature.Identifier())
     
-    return nil
+    return
 }

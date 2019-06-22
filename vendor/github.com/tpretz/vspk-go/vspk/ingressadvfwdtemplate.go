@@ -44,8 +44,6 @@ type IngressAdvFwdTemplate struct {
 	Name                   string `json:"name,omitempty"`
 	LastUpdatedBy          string `json:"lastUpdatedBy,omitempty"`
 	Active                 bool   `json:"active"`
-	DefaultAllowIP         bool   `json:"defaultAllowIP"`
-	DefaultAllowNonIP      bool   `json:"defaultAllowNonIP"`
 	Description            string `json:"description,omitempty"`
 	EntityScope            string `json:"entityScope,omitempty"`
 	PolicyState            string `json:"policyState,omitempty"`

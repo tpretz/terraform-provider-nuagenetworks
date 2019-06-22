@@ -53,9 +53,8 @@ func dataSourcePortMapping() *schema.Resource {
 }
 
 
-func dataSourcePortMappingRead(d *schema.ResourceData, m interface{}) error {
+func dataSourcePortMappingRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredPortMappings := vspk.PortMappingsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -74,7 +73,7 @@ func dataSourcePortMappingRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.VPort{ID: d.Get("parent_vport").(string)}
     filteredPortMappings, err = parent.PortMappings(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     PortMapping := &vspk.PortMapping{}
@@ -103,5 +102,5 @@ func dataSourcePortMappingRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(PortMapping.Identifier())
     
-    return nil
+    return
 }

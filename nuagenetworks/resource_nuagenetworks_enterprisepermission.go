@@ -15,11 +15,6 @@ func resourceEnterprisePermission() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -76,72 +71,52 @@ func resourceEnterprisePermission() *schema.Resource {
             "parent_shared_network_resource": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_subnet", "parent_ns_port", "parent_ns_redundant_gateway_group", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_redundant_port", "parent_vlan", "parent_patnat_pool", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_gateway"},
+                ConflictsWith: []string{"parent_subnet", "parent_ns_port", "parent_wan_service", "parent_vsg_redundant_port", "parent_vlan", "parent_patnat_pool", "parent_port", "parent_redundancy_group", "parent_gateway"},
             },
             "parent_subnet": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_shared_network_resource", "parent_ns_port", "parent_ns_redundant_gateway_group", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_redundant_port", "parent_vlan", "parent_patnat_pool", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_gateway"},
+                ConflictsWith: []string{"parent_shared_network_resource", "parent_ns_port", "parent_wan_service", "parent_vsg_redundant_port", "parent_vlan", "parent_patnat_pool", "parent_port", "parent_redundancy_group", "parent_gateway"},
             },
             "parent_ns_port": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_shared_network_resource", "parent_subnet", "parent_ns_redundant_gateway_group", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_redundant_port", "parent_vlan", "parent_patnat_pool", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_gateway"},
-            },
-            "parent_ns_redundant_gateway_group": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_shared_network_resource", "parent_subnet", "parent_ns_port", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_redundant_port", "parent_vlan", "parent_patnat_pool", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_gateway"},
+                ConflictsWith: []string{"parent_shared_network_resource", "parent_subnet", "parent_wan_service", "parent_vsg_redundant_port", "parent_vlan", "parent_patnat_pool", "parent_port", "parent_redundancy_group", "parent_gateway"},
             },
             "parent_wan_service": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_shared_network_resource", "parent_subnet", "parent_ns_port", "parent_ns_redundant_gateway_group", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_redundant_port", "parent_vlan", "parent_patnat_pool", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_gateway"},
+                ConflictsWith: []string{"parent_shared_network_resource", "parent_subnet", "parent_ns_port", "parent_vsg_redundant_port", "parent_vlan", "parent_patnat_pool", "parent_port", "parent_redundancy_group", "parent_gateway"},
             },
             "parent_vsg_redundant_port": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_shared_network_resource", "parent_subnet", "parent_ns_port", "parent_ns_redundant_gateway_group", "parent_wan_service", "parent_gateway_redundant_port", "parent_redundant_port", "parent_vlan", "parent_patnat_pool", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_gateway"},
-            },
-            "parent_gateway_redundant_port": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_shared_network_resource", "parent_subnet", "parent_ns_port", "parent_ns_redundant_gateway_group", "parent_wan_service", "parent_vsg_redundant_port", "parent_redundant_port", "parent_vlan", "parent_patnat_pool", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_gateway"},
-            },
-            "parent_redundant_port": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_shared_network_resource", "parent_subnet", "parent_ns_port", "parent_ns_redundant_gateway_group", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_vlan", "parent_patnat_pool", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_gateway"},
+                ConflictsWith: []string{"parent_shared_network_resource", "parent_subnet", "parent_ns_port", "parent_wan_service", "parent_vlan", "parent_patnat_pool", "parent_port", "parent_redundancy_group", "parent_gateway"},
             },
             "parent_vlan": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_shared_network_resource", "parent_subnet", "parent_ns_port", "parent_ns_redundant_gateway_group", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_redundant_port", "parent_patnat_pool", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_gateway"},
+                ConflictsWith: []string{"parent_shared_network_resource", "parent_subnet", "parent_ns_port", "parent_wan_service", "parent_vsg_redundant_port", "parent_patnat_pool", "parent_port", "parent_redundancy_group", "parent_gateway"},
             },
             "parent_patnat_pool": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_shared_network_resource", "parent_subnet", "parent_ns_port", "parent_ns_redundant_gateway_group", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_redundant_port", "parent_vlan", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_gateway"},
-            },
-            "parent_ns_gateway": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_shared_network_resource", "parent_subnet", "parent_ns_port", "parent_ns_redundant_gateway_group", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_redundant_port", "parent_vlan", "parent_patnat_pool", "parent_port", "parent_redundancy_group", "parent_gateway"},
+                ConflictsWith: []string{"parent_shared_network_resource", "parent_subnet", "parent_ns_port", "parent_wan_service", "parent_vsg_redundant_port", "parent_vlan", "parent_port", "parent_redundancy_group", "parent_gateway"},
             },
             "parent_port": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_shared_network_resource", "parent_subnet", "parent_ns_port", "parent_ns_redundant_gateway_group", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_redundant_port", "parent_vlan", "parent_patnat_pool", "parent_ns_gateway", "parent_redundancy_group", "parent_gateway"},
+                ConflictsWith: []string{"parent_shared_network_resource", "parent_subnet", "parent_ns_port", "parent_wan_service", "parent_vsg_redundant_port", "parent_vlan", "parent_patnat_pool", "parent_redundancy_group", "parent_gateway"},
             },
             "parent_redundancy_group": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_shared_network_resource", "parent_subnet", "parent_ns_port", "parent_ns_redundant_gateway_group", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_redundant_port", "parent_vlan", "parent_patnat_pool", "parent_ns_gateway", "parent_port", "parent_gateway"},
+                ConflictsWith: []string{"parent_shared_network_resource", "parent_subnet", "parent_ns_port", "parent_wan_service", "parent_vsg_redundant_port", "parent_vlan", "parent_patnat_pool", "parent_port", "parent_gateway"},
             },
             "parent_gateway": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_shared_network_resource", "parent_subnet", "parent_ns_port", "parent_ns_redundant_gateway_group", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_redundant_port", "parent_vlan", "parent_patnat_pool", "parent_ns_gateway", "parent_port", "parent_redundancy_group"},
+                ConflictsWith: []string{"parent_shared_network_resource", "parent_subnet", "parent_ns_port", "parent_wan_service", "parent_vsg_redundant_port", "parent_vlan", "parent_patnat_pool", "parent_port", "parent_redundancy_group"},
             },
         },
     }
@@ -192,13 +167,6 @@ func resourceEnterprisePermissionCreate(d *schema.ResourceData, m interface{}) e
             return err
         }
     }
-    if attr, ok := d.GetOk("parent_ns_redundant_gateway_group"); ok {
-        parent := &vspk.NSRedundantGatewayGroup{ID: attr.(string)}
-        err := parent.CreateEnterprisePermission(o)
-        if err != nil {
-            return err
-        }
-    }
     if attr, ok := d.GetOk("parent_wan_service"); ok {
         parent := &vspk.WANService{ID: attr.(string)}
         err := parent.CreateEnterprisePermission(o)
@@ -213,20 +181,6 @@ func resourceEnterprisePermissionCreate(d *schema.ResourceData, m interface{}) e
             return err
         }
     }
-    if attr, ok := d.GetOk("parent_gateway_redundant_port"); ok {
-        parent := &vspk.GatewayRedundantPort{ID: attr.(string)}
-        err := parent.CreateEnterprisePermission(o)
-        if err != nil {
-            return err
-        }
-    }
-    if attr, ok := d.GetOk("parent_redundant_port"); ok {
-        parent := &vspk.RedundantPort{ID: attr.(string)}
-        err := parent.CreateEnterprisePermission(o)
-        if err != nil {
-            return err
-        }
-    }
     if attr, ok := d.GetOk("parent_vlan"); ok {
         parent := &vspk.VLAN{ID: attr.(string)}
         err := parent.CreateEnterprisePermission(o)
@@ -236,13 +190,6 @@ func resourceEnterprisePermissionCreate(d *schema.ResourceData, m interface{}) e
     }
     if attr, ok := d.GetOk("parent_patnat_pool"); ok {
         parent := &vspk.PATNATPool{ID: attr.(string)}
-        err := parent.CreateEnterprisePermission(o)
-        if err != nil {
-            return err
-        }
-    }
-    if attr, ok := d.GetOk("parent_ns_gateway"); ok {
-        parent := &vspk.NSGateway{ID: attr.(string)}
         err := parent.CreateEnterprisePermission(o)
         if err != nil {
             return err

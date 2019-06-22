@@ -97,9 +97,8 @@ func dataSourceZoneTemplate() *schema.Resource {
 }
 
 
-func dataSourceZoneTemplateRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceZoneTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredZoneTemplates := vspk.ZoneTemplatesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -118,7 +117,7 @@ func dataSourceZoneTemplateRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.DomainTemplate{ID: d.Get("parent_domain_template").(string)}
     filteredZoneTemplates, err = parent.ZoneTemplates(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     ZoneTemplate := &vspk.ZoneTemplate{}
@@ -158,5 +157,5 @@ func dataSourceZoneTemplateRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(ZoneTemplate.Identifier())
     
-    return nil
+    return
 }

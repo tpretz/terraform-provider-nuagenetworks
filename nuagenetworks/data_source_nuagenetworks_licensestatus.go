@@ -28,10 +28,6 @@ func dataSourceLicenseStatus() *schema.Resource {
                 Type:     schema.TypeBool,
                 Computed: true,
             },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "total_licensed_avrsgs_count": &schema.Schema{
                 Type:     schema.TypeInt,
                 Computed: true,
@@ -112,18 +108,13 @@ func dataSourceLicenseStatus() *schema.Resource {
                 Type:     schema.TypeInt,
                 Computed: true,
             },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
         },
     }
 }
 
 
-func dataSourceLicenseStatusRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceLicenseStatusRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredLicenseStatus := vspk.LicenseStatusList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -142,7 +133,7 @@ func dataSourceLicenseStatusRead(d *schema.ResourceData, m interface{}) error {
     parent := m.(*vspk.Me)
     filteredLicenseStatus, err = parent.LicenseStatus(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     LicenseStatus := &vspk.LicenseStatus{}
@@ -159,7 +150,6 @@ func dataSourceLicenseStatusRead(d *schema.ResourceData, m interface{}) error {
     LicenseStatus = filteredLicenseStatus[0]
 
     d.Set("accumulate_licenses_enabled", LicenseStatus.AccumulateLicensesEnabled)
-    d.Set("entity_scope", LicenseStatus.EntityScope)
     d.Set("total_licensed_avrsgs_count", LicenseStatus.TotalLicensedAVRSGsCount)
     d.Set("total_licensed_avrss_count", LicenseStatus.TotalLicensedAVRSsCount)
     d.Set("total_licensed_gateways_count", LicenseStatus.TotalLicensedGatewaysCount)
@@ -180,7 +170,6 @@ func dataSourceLicenseStatusRead(d *schema.ResourceData, m interface{}) error {
     d.Set("total_licensed_vrsgs_count", LicenseStatus.TotalLicensedVRSGsCount)
     d.Set("total_licensed_vrss_count", LicenseStatus.TotalLicensedVRSsCount)
     d.Set("total_used_gateways_count", LicenseStatus.TotalUsedGatewaysCount)
-    d.Set("external_id", LicenseStatus.ExternalID)
     
     d.Set("id", LicenseStatus.Identifier())
     d.Set("parent_id", LicenseStatus.ParentID)
@@ -189,5 +178,5 @@ func dataSourceLicenseStatusRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(LicenseStatus.Identifier())
     
-    return nil
+    return
 }

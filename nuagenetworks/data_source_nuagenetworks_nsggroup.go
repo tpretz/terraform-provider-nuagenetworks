@@ -28,19 +28,7 @@ func dataSourceNSGGroup() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "description": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -53,9 +41,8 @@ func dataSourceNSGGroup() *schema.Resource {
 }
 
 
-func dataSourceNSGGroupRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceNSGGroupRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredNSGGroups := vspk.NSGGroupsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -75,13 +62,13 @@ func dataSourceNSGGroupRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredNSGGroups, err = parent.NSGGroups(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredNSGGroups, err = parent.NSGGroups(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -99,10 +86,7 @@ func dataSourceNSGGroupRead(d *schema.ResourceData, m interface{}) error {
     NSGGroup = filteredNSGGroups[0]
 
     d.Set("name", NSGGroup.Name)
-    d.Set("last_updated_by", NSGGroup.LastUpdatedBy)
     d.Set("description", NSGGroup.Description)
-    d.Set("entity_scope", NSGGroup.EntityScope)
-    d.Set("external_id", NSGGroup.ExternalID)
     
     d.Set("id", NSGGroup.Identifier())
     d.Set("parent_id", NSGGroup.ParentID)
@@ -111,5 +95,5 @@ func dataSourceNSGGroupRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(NSGGroup.Identifier())
     
-    return nil
+    return
 }

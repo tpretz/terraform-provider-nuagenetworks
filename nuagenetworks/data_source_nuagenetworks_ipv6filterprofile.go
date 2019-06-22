@@ -28,23 +28,7 @@ func dataSourceIPv6FilterProfile() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "description": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "assoc_entity_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -63,9 +47,8 @@ func dataSourceIPv6FilterProfile() *schema.Resource {
 }
 
 
-func dataSourceIPv6FilterProfileRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceIPv6FilterProfileRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredIPv6FilterProfiles := vspk.IPv6FilterProfilesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -85,13 +68,13 @@ func dataSourceIPv6FilterProfileRead(d *schema.ResourceData, m interface{}) erro
         parent := &vspk.RedundancyGroup{ID: attr.(string)}
         filteredIPv6FilterProfiles, err = parent.IPv6FilterProfiles(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_gateway"); ok {
         parent := &vspk.Gateway{ID: attr.(string)}
         filteredIPv6FilterProfiles, err = parent.IPv6FilterProfiles(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -109,11 +92,7 @@ func dataSourceIPv6FilterProfileRead(d *schema.ResourceData, m interface{}) erro
     IPv6FilterProfile = filteredIPv6FilterProfiles[0]
 
     d.Set("name", IPv6FilterProfile.Name)
-    d.Set("last_updated_by", IPv6FilterProfile.LastUpdatedBy)
     d.Set("description", IPv6FilterProfile.Description)
-    d.Set("entity_scope", IPv6FilterProfile.EntityScope)
-    d.Set("assoc_entity_type", IPv6FilterProfile.AssocEntityType)
-    d.Set("external_id", IPv6FilterProfile.ExternalID)
     
     d.Set("id", IPv6FilterProfile.Identifier())
     d.Set("parent_id", IPv6FilterProfile.ParentID)
@@ -122,5 +101,5 @@ func dataSourceIPv6FilterProfileRead(d *schema.ResourceData, m interface{}) erro
 
     d.SetId(IPv6FilterProfile.Identifier())
     
-    return nil
+    return
 }

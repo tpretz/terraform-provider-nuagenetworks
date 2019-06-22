@@ -15,11 +15,6 @@ func resourceDomainFIPAclTemplate() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -86,10 +81,6 @@ func resourceDomainFIPAclTemplate() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "auto_generate_priority": &schema.Schema{
-                Type:     schema.TypeBool,
-                Optional: true,
-            },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -142,9 +133,6 @@ func resourceDomainFIPAclTemplateCreate(d *schema.ResourceData, m interface{}) e
     }
     if attr, ok := d.GetOk("associated_live_entity_id"); ok {
         o.AssociatedLiveEntityID = attr.(string)
-    }
-    if attr, ok := d.GetOk("auto_generate_priority"); ok {
-        o.AutoGeneratePriority = attr.(bool)
     }
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)
@@ -200,7 +188,6 @@ func resourceDomainFIPAclTemplateRead(d *schema.ResourceData, m interface{}) err
     d.Set("priority", o.Priority)
     d.Set("priority_type", o.PriorityType)
     d.Set("associated_live_entity_id", o.AssociatedLiveEntityID)
-    d.Set("auto_generate_priority", o.AutoGeneratePriority)
     d.Set("external_id", o.ExternalID)
     
     d.Set("id", o.Identifier())
@@ -251,9 +238,6 @@ func resourceDomainFIPAclTemplateUpdate(d *schema.ResourceData, m interface{}) e
     }
     if attr, ok := d.GetOk("associated_live_entity_id"); ok {
         o.AssociatedLiveEntityID = attr.(string)
-    }
-    if attr, ok := d.GetOk("auto_generate_priority"); ok {
-        o.AutoGeneratePriority = attr.(bool)
     }
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)

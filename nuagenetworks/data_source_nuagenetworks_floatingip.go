@@ -65,9 +65,8 @@ func dataSourceFloatingIp() *schema.Resource {
 }
 
 
-func dataSourceFloatingIpRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceFloatingIpRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredFloatingIps := vspk.FloatingIpsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -87,13 +86,13 @@ func dataSourceFloatingIpRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.Domain{ID: attr.(string)}
         filteredFloatingIps, err = parent.FloatingIps(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredFloatingIps, err = parent.FloatingIps(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -126,5 +125,5 @@ func dataSourceFloatingIpRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(FloatingIp.Identifier())
     
-    return nil
+    return
 }

@@ -28,27 +28,11 @@ func dataSourceNetconfManager() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "release": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "assoc_entity_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "status": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -61,9 +45,8 @@ func dataSourceNetconfManager() *schema.Resource {
 }
 
 
-func dataSourceNetconfManagerRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceNetconfManagerRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredNetconfManagers := vspk.NetconfManagersList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -82,7 +65,7 @@ func dataSourceNetconfManagerRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.VSP{ID: d.Get("parent_vsp").(string)}
     filteredNetconfManagers, err = parent.NetconfManagers(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     NetconfManager := &vspk.NetconfManager{}
@@ -99,12 +82,8 @@ func dataSourceNetconfManagerRead(d *schema.ResourceData, m interface{}) error {
     NetconfManager = filteredNetconfManagers[0]
 
     d.Set("name", NetconfManager.Name)
-    d.Set("last_updated_by", NetconfManager.LastUpdatedBy)
     d.Set("release", NetconfManager.Release)
-    d.Set("entity_scope", NetconfManager.EntityScope)
-    d.Set("assoc_entity_type", NetconfManager.AssocEntityType)
     d.Set("status", NetconfManager.Status)
-    d.Set("external_id", NetconfManager.ExternalID)
     
     d.Set("id", NetconfManager.Identifier())
     d.Set("parent_id", NetconfManager.ParentID)
@@ -113,5 +92,5 @@ func dataSourceNetconfManagerRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(NetconfManager.Identifier())
     
-    return nil
+    return
 }

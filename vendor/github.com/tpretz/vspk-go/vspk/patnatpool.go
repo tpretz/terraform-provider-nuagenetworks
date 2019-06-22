@@ -41,7 +41,6 @@ type PATNATPool struct {
 	ParentID              string `json:"parentID,omitempty"`
 	ParentType            string `json:"parentType,omitempty"`
 	Owner                 string `json:"owner,omitempty"`
-	IPType                string `json:"IPType,omitempty"`
 	Name                  string `json:"name,omitempty"`
 	LastUpdatedBy         string `json:"lastUpdatedBy,omitempty"`
 	AddressRange          string `json:"addressRange,omitempty"`

@@ -100,6 +100,10 @@ func dataSourceVMInterface() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
+            "associated_floating_ip_address": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
             "attached_network_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -151,9 +155,8 @@ func dataSourceVMInterface() *schema.Resource {
 }
 
 
-func dataSourceVMInterfaceRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceVMInterfaceRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredVMInterfaces := vspk.VMInterfacesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -173,43 +176,43 @@ func dataSourceVMInterfaceRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.Domain{ID: attr.(string)}
         filteredVMInterfaces, err = parent.VMInterfaces(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredVMInterfaces, err = parent.VMInterfaces(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_subnet"); ok {
         parent := &vspk.Subnet{ID: attr.(string)}
         filteredVMInterfaces, err = parent.VMInterfaces(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_zone"); ok {
         parent := &vspk.Zone{ID: attr.(string)}
         filteredVMInterfaces, err = parent.VMInterfaces(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredVMInterfaces, err = parent.VMInterfaces(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vm"); ok {
         parent := &vspk.VM{ID: attr.(string)}
         filteredVMInterfaces, err = parent.VMInterfaces(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredVMInterfaces, err = parent.VMInterfaces(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -245,6 +248,7 @@ func dataSourceVMInterfaceRead(d *schema.ResourceData, m interface{}) error {
     d.Set("domain_name", VMInterface.DomainName)
     d.Set("zone_id", VMInterface.ZoneID)
     d.Set("zone_name", VMInterface.ZoneName)
+    d.Set("associated_floating_ip_address", VMInterface.AssociatedFloatingIPAddress)
     d.Set("attached_network_id", VMInterface.AttachedNetworkID)
     d.Set("attached_network_type", VMInterface.AttachedNetworkType)
     d.Set("multi_nic_vport_name", VMInterface.MultiNICVPortName)
@@ -257,5 +261,5 @@ func dataSourceVMInterfaceRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(VMInterface.Identifier())
     
-    return nil
+    return
 }

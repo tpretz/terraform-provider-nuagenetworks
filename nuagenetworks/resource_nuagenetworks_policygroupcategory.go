@@ -15,11 +15,6 @@ func resourcePolicyGroupCategory() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -44,7 +39,7 @@ func resourcePolicyGroupCategory() *schema.Resource {
                 Optional: true,
                 Computed: true,
             },
-            "default_category": &schema.Schema{
+            "default_tag": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
                 Computed: true,
@@ -107,7 +102,7 @@ func resourcePolicyGroupCategoryRead(d *schema.ResourceData, m interface{}) erro
 
     d.Set("name", o.Name)
     d.Set("last_updated_by", o.LastUpdatedBy)
-    d.Set("default_category", o.DefaultCategory)
+    d.Set("default_tag", o.DefaultTag)
     d.Set("description", o.Description)
     d.Set("entity_scope", o.EntityScope)
     d.Set("external_id", o.ExternalID)

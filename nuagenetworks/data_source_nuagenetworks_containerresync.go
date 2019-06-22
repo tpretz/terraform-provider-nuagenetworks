@@ -63,9 +63,8 @@ func dataSourceContainerResync() *schema.Resource {
 }
 
 
-func dataSourceContainerResyncRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceContainerResyncRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredContainerResyncs := vspk.ContainerResyncsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -85,13 +84,13 @@ func dataSourceContainerResyncRead(d *schema.ResourceData, m interface{}) error 
         parent := &vspk.Subnet{ID: attr.(string)}
         filteredContainerResyncs, err = parent.ContainerResyncs(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_container"); ok {
         parent := &vspk.Container{ID: attr.(string)}
         filteredContainerResyncs, err = parent.ContainerResyncs(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -122,5 +121,5 @@ func dataSourceContainerResyncRead(d *schema.ResourceData, m interface{}) error 
 
     d.SetId(ContainerResync.Identifier())
     
-    return nil
+    return
 }

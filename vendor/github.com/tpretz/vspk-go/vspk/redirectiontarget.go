@@ -47,7 +47,6 @@ type RedirectionTarget struct {
 	RedundancyEnabled bool   `json:"redundancyEnabled"`
 	TemplateID        string `json:"templateID,omitempty"`
 	Description       string `json:"description,omitempty"`
-	DestinationType   string `json:"destinationType,omitempty"`
 	VirtualNetworkID  string `json:"virtualNetworkID,omitempty"`
 	EndPointType      string `json:"endPointType,omitempty"`
 	EntityScope       string `json:"entityScope,omitempty"`

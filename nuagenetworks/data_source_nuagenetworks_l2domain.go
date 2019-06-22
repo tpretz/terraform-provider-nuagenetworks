@@ -44,10 +44,6 @@ func dataSourceL2Domain() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "vxlanecmp_enabled": &schema.Schema{
-                Type:     schema.TypeBool,
-                Computed: true,
-            },
             "maintenance_mode": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -98,10 +94,6 @@ func dataSourceL2Domain() *schema.Resource {
             },
             "encryption": &schema.Schema{
                 Type:     schema.TypeString,
-                Computed: true,
-            },
-            "ingress_replication_enabled": &schema.Schema{
-                Type:     schema.TypeBool,
                 Computed: true,
             },
             "entity_scope": &schema.Schema{
@@ -156,10 +148,6 @@ func dataSourceL2Domain() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "customer_id": &schema.Schema{
-                Type:     schema.TypeInt,
-                Computed: true,
-            },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -171,31 +159,25 @@ func dataSourceL2Domain() *schema.Resource {
             "parent_l2_domain_template": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_enterprise", "parent_redundancy_group", "parent_gateway"},
+                ConflictsWith: []string{"parent_enterprise", "parent_redundancy_group"},
             },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_l2_domain_template", "parent_redundancy_group", "parent_gateway"},
+                ConflictsWith: []string{"parent_l2_domain_template", "parent_redundancy_group"},
             },
             "parent_redundancy_group": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_l2_domain_template", "parent_enterprise", "parent_gateway"},
-            },
-            "parent_gateway": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_l2_domain_template", "parent_enterprise", "parent_redundancy_group"},
+                ConflictsWith: []string{"parent_l2_domain_template", "parent_enterprise"},
             },
         },
     }
 }
 
 
-func dataSourceL2DomainRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceL2DomainRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredL2Domains := vspk.L2DomainsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -215,31 +197,25 @@ func dataSourceL2DomainRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.L2DomainTemplate{ID: attr.(string)}
         filteredL2Domains, err = parent.L2Domains(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredL2Domains, err = parent.L2Domains(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_redundancy_group"); ok {
         parent := &vspk.RedundancyGroup{ID: attr.(string)}
         filteredL2Domains, err = parent.L2Domains(fetchFilter)
         if err != nil {
-            return err
-        }
-    } else if attr, ok := d.GetOk("parent_gateway"); ok {
-        parent := &vspk.Gateway{ID: attr.(string)}
-        filteredL2Domains, err = parent.L2Domains(fetchFilter)
-        if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredL2Domains, err = parent.L2Domains(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -261,7 +237,6 @@ func dataSourceL2DomainRead(d *schema.ResourceData, m interface{}) error {
     d.Set("ip_type", L2Domain.IPType)
     d.Set("ipv6_address", L2Domain.IPv6Address)
     d.Set("ipv6_gateway", L2Domain.IPv6Gateway)
-    d.Set("vxlanecmp_enabled", L2Domain.VXLANECMPEnabled)
     d.Set("maintenance_mode", L2Domain.MaintenanceMode)
     d.Set("name", L2Domain.Name)
     d.Set("last_updated_by", L2Domain.LastUpdatedBy)
@@ -275,7 +250,6 @@ func dataSourceL2DomainRead(d *schema.ResourceData, m interface{}) error {
     d.Set("flow_collection_enabled", L2Domain.FlowCollectionEnabled)
     d.Set("vn_id", L2Domain.VnId)
     d.Set("encryption", L2Domain.Encryption)
-    d.Set("ingress_replication_enabled", L2Domain.IngressReplicationEnabled)
     d.Set("entity_scope", L2Domain.EntityScope)
     d.Set("entity_state", L2Domain.EntityState)
     d.Set("policy_change_status", L2Domain.PolicyChangeStatus)
@@ -289,7 +263,6 @@ func dataSourceL2DomainRead(d *schema.ResourceData, m interface{}) error {
     d.Set("associated_underlay_id", L2Domain.AssociatedUnderlayID)
     d.Set("stretched", L2Domain.Stretched)
     d.Set("multicast", L2Domain.Multicast)
-    d.Set("customer_id", L2Domain.CustomerID)
     d.Set("external_id", L2Domain.ExternalID)
     d.Set("dynamic_ipv6_address", L2Domain.DynamicIpv6Address)
     
@@ -300,5 +273,5 @@ func dataSourceL2DomainRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(L2Domain.Identifier())
     
-    return nil
+    return
 }

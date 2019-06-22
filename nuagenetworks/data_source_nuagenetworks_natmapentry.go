@@ -36,20 +36,12 @@ func dataSourceNATMapEntry() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "private_port": &schema.Schema{
-                Type:     schema.TypeInt,
-                Computed: true,
-            },
             "associated_patnat_pool_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
             "public_ip": &schema.Schema{
                 Type:     schema.TypeString,
-                Computed: true,
-            },
-            "public_port": &schema.Schema{
-                Type:     schema.TypeInt,
                 Computed: true,
             },
             "external_id": &schema.Schema{
@@ -69,9 +61,8 @@ func dataSourceNATMapEntry() *schema.Resource {
 }
 
 
-func dataSourceNATMapEntryRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceNATMapEntryRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredNATMapEntries := vspk.NATMapEntriesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -90,7 +81,7 @@ func dataSourceNATMapEntryRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.PATNATPool{ID: d.Get("parent_patnat_pool").(string)}
     filteredNATMapEntries, err = parent.NATMapEntries(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     NATMapEntry := &vspk.NATMapEntry{}
@@ -109,10 +100,8 @@ func dataSourceNATMapEntryRead(d *schema.ResourceData, m interface{}) error {
     d.Set("last_updated_by", NATMapEntry.LastUpdatedBy)
     d.Set("entity_scope", NATMapEntry.EntityScope)
     d.Set("private_ip", NATMapEntry.PrivateIP)
-    d.Set("private_port", NATMapEntry.PrivatePort)
     d.Set("associated_patnat_pool_id", NATMapEntry.AssociatedPATNATPoolID)
     d.Set("public_ip", NATMapEntry.PublicIP)
-    d.Set("public_port", NATMapEntry.PublicPort)
     d.Set("external_id", NATMapEntry.ExternalID)
     d.Set("type", NATMapEntry.Type)
     
@@ -123,5 +112,5 @@ func dataSourceNATMapEntryRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(NATMapEntry.Identifier())
     
-    return nil
+    return
 }

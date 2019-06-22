@@ -15,11 +15,6 @@ func resourceRateLimiter() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -46,11 +41,11 @@ func resourceRateLimiter() *schema.Resource {
             },
             "peak_burst_size": &schema.Schema{
                 Type:     schema.TypeString,
-                Required: true,
+                Optional: true,
             },
             "peak_information_rate": &schema.Schema{
                 Type:     schema.TypeString,
-                Required: true,
+                Optional: true,
             },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
@@ -82,8 +77,12 @@ func resourceRateLimiterCreate(d *schema.ResourceData, m interface{}) error {
     // Initialize RateLimiter object
     o := &vspk.RateLimiter{
         Name: d.Get("name").(string),
-        PeakBurstSize: d.Get("peak_burst_size").(string),
-        PeakInformationRate: d.Get("peak_information_rate").(string),
+    }
+    if attr, ok := d.GetOk("peak_burst_size"); ok {
+        o.PeakBurstSize = attr.(string)
+    }
+    if attr, ok := d.GetOk("peak_information_rate"); ok {
+        o.PeakInformationRate = attr.(string)
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
@@ -154,9 +153,13 @@ func resourceRateLimiterUpdate(d *schema.ResourceData, m interface{}) error {
     }
     
     o.Name = d.Get("name").(string)
-    o.PeakBurstSize = d.Get("peak_burst_size").(string)
-    o.PeakInformationRate = d.Get("peak_information_rate").(string)
     
+    if attr, ok := d.GetOk("peak_burst_size"); ok {
+        o.PeakBurstSize = attr.(string)
+    }
+    if attr, ok := d.GetOk("peak_information_rate"); ok {
+        o.PeakInformationRate = attr.(string)
+    }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
     }

@@ -28,19 +28,7 @@ func dataSourceVNFCatalog() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "description": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -49,9 +37,8 @@ func dataSourceVNFCatalog() *schema.Resource {
 }
 
 
-func dataSourceVNFCatalogRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceVNFCatalogRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredVNFCatalogs := vspk.VNFCatalogsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -70,7 +57,7 @@ func dataSourceVNFCatalogRead(d *schema.ResourceData, m interface{}) error {
     parent := m.(*vspk.Me)
     filteredVNFCatalogs, err = parent.VNFCatalogs(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     VNFCatalog := &vspk.VNFCatalog{}
@@ -87,10 +74,7 @@ func dataSourceVNFCatalogRead(d *schema.ResourceData, m interface{}) error {
     VNFCatalog = filteredVNFCatalogs[0]
 
     d.Set("name", VNFCatalog.Name)
-    d.Set("last_updated_by", VNFCatalog.LastUpdatedBy)
     d.Set("description", VNFCatalog.Description)
-    d.Set("entity_scope", VNFCatalog.EntityScope)
-    d.Set("external_id", VNFCatalog.ExternalID)
     
     d.Set("id", VNFCatalog.Identifier())
     d.Set("parent_id", VNFCatalog.ParentID)
@@ -99,5 +83,5 @@ func dataSourceVNFCatalogRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(VNFCatalog.Identifier())
     
-    return nil
+    return
 }

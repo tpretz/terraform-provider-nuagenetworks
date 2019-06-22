@@ -59,9 +59,8 @@ func dataSourceUplinkRD() *schema.Resource {
 }
 
 
-func dataSourceUplinkRDRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceUplinkRDRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredUplinkRDs := vspk.UplinkRDsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -81,19 +80,19 @@ func dataSourceUplinkRDRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.Domain{ID: attr.(string)}
         filteredUplinkRDs, err = parent.UplinkRDs(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredUplinkRDs, err = parent.UplinkRDs(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredUplinkRDs, err = parent.UplinkRDs(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -123,5 +122,5 @@ func dataSourceUplinkRDRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(UplinkRD.Identifier())
     
-    return nil
+    return
 }

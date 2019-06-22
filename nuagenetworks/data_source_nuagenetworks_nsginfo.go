@@ -28,14 +28,6 @@ func dataSourceNSGInfo() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "aar_application_release_date": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "aar_application_version": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "bios_release_date": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -49,7 +41,7 @@ func dataSourceNSGInfo() *schema.Resource {
                 Computed: true,
             },
             "tpm_status": &schema.Schema{
-                Type:     schema.TypeInt,
+                Type:     schema.TypeString,
                 Computed: true,
             },
             "tpm_version": &schema.Schema{
@@ -68,15 +60,11 @@ func dataSourceNSGInfo() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "name": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "family": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "patches_detail": &schema.Schema{
+            "patches": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -84,47 +72,7 @@ func dataSourceNSGInfo() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "personality": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "libraries": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "cmd_detailed_status": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "cmd_detailed_status_code": &schema.Schema{
-                Type:     schema.TypeInt,
-                Computed: true,
-            },
-            "cmd_download_progress": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "cmd_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "cmd_last_updated_date": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "cmd_status": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "cmd_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "enterprise_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "enterprise_name": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -132,15 +80,7 @@ func dataSourceNSGInfo() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "bootstrap_status": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "product_name": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "associated_entity_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -152,22 +92,23 @@ func dataSourceNSGInfo() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "system_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "parent_ns_gateway": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                ConflictsWith: []string{"parent_gateway"},
+            },
+            "parent_gateway": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+                ConflictsWith: []string{"parent_ns_gateway"},
             },
         },
     }
 }
 
 
-func dataSourceNSGInfoRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceNSGInfoRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredNSGInfos := vspk.NSGInfosList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -187,13 +128,13 @@ func dataSourceNSGInfoRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.NSGateway{ID: attr.(string)}
         filteredNSGInfos, err = parent.NSGInfos(fetchFilter)
         if err != nil {
-            return err
+            return
         }
-    } else {
-        parent := m.(*vspk.Me)
+    } else if attr, ok := d.GetOk("parent_gateway"); ok {
+        parent := &vspk.Gateway{ID: attr.(string)}
         filteredNSGInfos, err = parent.NSGInfos(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -211,8 +152,6 @@ func dataSourceNSGInfoRead(d *schema.ResourceData, m interface{}) error {
     NSGInfo = filteredNSGInfos[0]
 
     d.Set("mac_address", NSGInfo.MACAddress)
-    d.Set("aar_application_release_date", NSGInfo.AARApplicationReleaseDate)
-    d.Set("aar_application_version", NSGInfo.AARApplicationVersion)
     d.Set("bios_release_date", NSGInfo.BIOSReleaseDate)
     d.Set("bios_version", NSGInfo.BIOSVersion)
     d.Set("sku", NSGInfo.SKU)
@@ -221,28 +160,14 @@ func dataSourceNSGInfoRead(d *schema.ResourceData, m interface{}) error {
     d.Set("cpu_type", NSGInfo.CPUType)
     d.Set("nsg_version", NSGInfo.NSGVersion)
     d.Set("uuid", NSGInfo.UUID)
-    d.Set("name", NSGInfo.Name)
     d.Set("family", NSGInfo.Family)
-    d.Set("patches_detail", NSGInfo.PatchesDetail)
+    d.Set("patches", NSGInfo.Patches)
     d.Set("serial_number", NSGInfo.SerialNumber)
-    d.Set("personality", NSGInfo.Personality)
     d.Set("libraries", NSGInfo.Libraries)
-    d.Set("cmd_detailed_status", NSGInfo.CmdDetailedStatus)
-    d.Set("cmd_detailed_status_code", NSGInfo.CmdDetailedStatusCode)
-    d.Set("cmd_download_progress", NSGInfo.CmdDownloadProgress)
-    d.Set("cmd_id", NSGInfo.CmdID)
-    d.Set("cmd_last_updated_date", NSGInfo.CmdLastUpdatedDate)
-    d.Set("cmd_status", NSGInfo.CmdStatus)
-    d.Set("cmd_type", NSGInfo.CmdType)
-    d.Set("enterprise_id", NSGInfo.EnterpriseID)
-    d.Set("enterprise_name", NSGInfo.EnterpriseName)
     d.Set("entity_scope", NSGInfo.EntityScope)
-    d.Set("bootstrap_status", NSGInfo.BootstrapStatus)
     d.Set("product_name", NSGInfo.ProductName)
-    d.Set("associated_entity_type", NSGInfo.AssociatedEntityType)
     d.Set("associated_ns_gateway_id", NSGInfo.AssociatedNSGatewayID)
     d.Set("external_id", NSGInfo.ExternalID)
-    d.Set("system_id", NSGInfo.SystemID)
     
     d.Set("id", NSGInfo.Identifier())
     d.Set("parent_id", NSGInfo.ParentID)
@@ -251,5 +176,5 @@ func dataSourceNSGInfoRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(NSGInfo.Identifier())
     
-    return nil
+    return
 }

@@ -24,14 +24,6 @@ func dataSourceDemarcationService() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "route_distinguisher": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -48,10 +40,6 @@ func dataSourceDemarcationService() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "type": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -65,9 +53,8 @@ func dataSourceDemarcationService() *schema.Resource {
 }
 
 
-func dataSourceDemarcationServiceRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceDemarcationServiceRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredDemarcationServices := vspk.DemarcationServicesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -86,7 +73,7 @@ func dataSourceDemarcationServiceRead(d *schema.ResourceData, m interface{}) err
     parent := &vspk.Link{ID: d.Get("parent_link").(string)}
     filteredDemarcationServices, err = parent.DemarcationServices(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     DemarcationService := &vspk.DemarcationService{}
@@ -102,13 +89,10 @@ func dataSourceDemarcationServiceRead(d *schema.ResourceData, m interface{}) err
     
     DemarcationService = filteredDemarcationServices[0]
 
-    d.Set("last_updated_by", DemarcationService.LastUpdatedBy)
-    d.Set("entity_scope", DemarcationService.EntityScope)
     d.Set("route_distinguisher", DemarcationService.RouteDistinguisher)
     d.Set("priority", DemarcationService.Priority)
     d.Set("associated_gateway_id", DemarcationService.AssociatedGatewayID)
     d.Set("associated_vlanid", DemarcationService.AssociatedVLANID)
-    d.Set("external_id", DemarcationService.ExternalID)
     d.Set("type", DemarcationService.Type)
     
     d.Set("id", DemarcationService.Identifier())
@@ -118,5 +102,5 @@ func dataSourceDemarcationServiceRead(d *schema.ResourceData, m interface{}) err
 
     d.SetId(DemarcationService.Identifier())
     
-    return nil
+    return
 }

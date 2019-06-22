@@ -73,9 +73,8 @@ func dataSourceDestinationurl() *schema.Resource {
 }
 
 
-func dataSourceDestinationurlRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceDestinationurlRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredDestinationurls := vspk.DestinationurlsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -94,7 +93,7 @@ func dataSourceDestinationurlRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.Tier{ID: d.Get("parent_tier").(string)}
     filteredDestinationurls, err = parent.Destinationurls(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     Destinationurl := &vspk.Destinationurl{}
@@ -128,5 +127,5 @@ func dataSourceDestinationurlRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(Destinationurl.Identifier())
     
-    return nil
+    return
 }

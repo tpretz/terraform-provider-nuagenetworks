@@ -45,9 +45,8 @@ func dataSourceCloudMgmtSystem() *schema.Resource {
 }
 
 
-func dataSourceCloudMgmtSystemRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceCloudMgmtSystemRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredCloudMgmtSystems := vspk.CloudMgmtSystemsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -66,7 +65,7 @@ func dataSourceCloudMgmtSystemRead(d *schema.ResourceData, m interface{}) error 
     parent := m.(*vspk.Me)
     filteredCloudMgmtSystems, err = parent.CloudMgmtSystems(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     CloudMgmtSystem := &vspk.CloudMgmtSystem{}
@@ -94,5 +93,5 @@ func dataSourceCloudMgmtSystemRead(d *schema.ResourceData, m interface{}) error 
 
     d.SetId(CloudMgmtSystem.Identifier())
     
-    return nil
+    return
 }

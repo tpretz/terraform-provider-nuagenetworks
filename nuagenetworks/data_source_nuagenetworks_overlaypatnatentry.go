@@ -25,14 +25,6 @@ func dataSourceOverlayPATNATEntry() *schema.Resource {
                 Computed: true,
             },
             "nat_enabled": &schema.Schema{
-                Type:     schema.TypeBool,
-                Computed: true,
-            },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -52,10 +44,6 @@ func dataSourceOverlayPATNATEntry() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "parent_overlay_address_pool": &schema.Schema{
                 Type:     schema.TypeString,
                 Required: true,
@@ -65,9 +53,8 @@ func dataSourceOverlayPATNATEntry() *schema.Resource {
 }
 
 
-func dataSourceOverlayPATNATEntryRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceOverlayPATNATEntryRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredOverlayPATNATEntries := vspk.OverlayPATNATEntriesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -86,7 +73,7 @@ func dataSourceOverlayPATNATEntryRead(d *schema.ResourceData, m interface{}) err
     parent := &vspk.OverlayAddressPool{ID: d.Get("parent_overlay_address_pool").(string)}
     filteredOverlayPATNATEntries, err = parent.OverlayPATNATEntries(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     OverlayPATNATEntry := &vspk.OverlayPATNATEntry{}
@@ -103,13 +90,10 @@ func dataSourceOverlayPATNATEntryRead(d *schema.ResourceData, m interface{}) err
     OverlayPATNATEntry = filteredOverlayPATNATEntries[0]
 
     d.Set("nat_enabled", OverlayPATNATEntry.NATEnabled)
-    d.Set("last_updated_by", OverlayPATNATEntry.LastUpdatedBy)
-    d.Set("entity_scope", OverlayPATNATEntry.EntityScope)
     d.Set("private_ip", OverlayPATNATEntry.PrivateIP)
     d.Set("associated_domain_id", OverlayPATNATEntry.AssociatedDomainID)
     d.Set("associated_link_id", OverlayPATNATEntry.AssociatedLinkID)
     d.Set("public_ip", OverlayPATNATEntry.PublicIP)
-    d.Set("external_id", OverlayPATNATEntry.ExternalID)
     
     d.Set("id", OverlayPATNATEntry.Identifier())
     d.Set("parent_id", OverlayPATNATEntry.ParentID)
@@ -118,5 +102,5 @@ func dataSourceOverlayPATNATEntryRead(d *schema.ResourceData, m interface{}) err
 
     d.SetId(OverlayPATNATEntry.Identifier())
     
-    return nil
+    return
 }

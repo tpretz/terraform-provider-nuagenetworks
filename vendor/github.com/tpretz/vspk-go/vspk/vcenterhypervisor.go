@@ -44,7 +44,6 @@ type VCenterHypervisor struct {
 	VCenterIP                                 string        `json:"vCenterIP,omitempty"`
 	VCenterPassword                           string        `json:"vCenterPassword,omitempty"`
 	VCenterUser                               string        `json:"vCenterUser,omitempty"`
-	ARPReply                                  bool          `json:"ARPReply"`
 	VRSAgentMOID                              string        `json:"VRSAgentMOID,omitempty"`
 	VRSAgentName                              string        `json:"VRSAgentName,omitempty"`
 	VRSConfigurationTimeLimit                 int           `json:"VRSConfigurationTimeLimit,omitempty"`
@@ -99,7 +98,6 @@ type VCenterHypervisor struct {
 	RevertiveTimer                            int           `json:"revertiveTimer,omitempty"`
 	NfsLogServer                              string        `json:"nfsLogServer,omitempty"`
 	NfsMountPath                              string        `json:"nfsMountPath,omitempty"`
-	AgencyMoid                                string        `json:"agencyMoid,omitempty"`
 	MgmtDNS1                                  string        `json:"mgmtDNS1,omitempty"`
 	MgmtDNS2                                  string        `json:"mgmtDNS2,omitempty"`
 	MgmtGateway                               string        `json:"mgmtGateway,omitempty"`

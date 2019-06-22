@@ -49,8 +49,6 @@ type IngressACLEntryTemplate struct {
 	LastUpdatedBy                      string `json:"lastUpdatedBy,omitempty"`
 	Action                             string `json:"action,omitempty"`
 	AddressOverride                    string `json:"addressOverride,omitempty"`
-	WebFilterID                        string `json:"webFilterID,omitempty"`
-	WebFilterType                      string `json:"webFilterType,omitempty"`
 	Description                        string `json:"description,omitempty"`
 	DestinationPort                    string `json:"destinationPort,omitempty"`
 	NetworkID                          string `json:"networkID,omitempty"`
@@ -68,10 +66,8 @@ type IngressACLEntryTemplate struct {
 	Protocol                           string `json:"protocol,omitempty"`
 	AssociatedL7ApplicationSignatureID string `json:"associatedL7ApplicationSignatureID,omitempty"`
 	AssociatedLiveEntityID             string `json:"associatedLiveEntityID,omitempty"`
-	AssociatedLiveTemplateID           string `json:"associatedLiveTemplateID,omitempty"`
 	AssociatedTrafficType              string `json:"associatedTrafficType,omitempty"`
 	AssociatedTrafficTypeID            string `json:"associatedTrafficTypeID,omitempty"`
-	AssociatedVirtualFirewallRuleID    string `json:"associatedVirtualFirewallRuleID,omitempty"`
 	Stateful                           bool   `json:"stateful"`
 	StatsID                            string `json:"statsID,omitempty"`
 	StatsLoggingEnabled                bool   `json:"statsLoggingEnabled"`

@@ -115,9 +115,8 @@ func dataSourceSubnetTemplate() *schema.Resource {
 }
 
 
-func dataSourceSubnetTemplateRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceSubnetTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredSubnetTemplates := vspk.SubnetTemplatesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -137,13 +136,13 @@ func dataSourceSubnetTemplateRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.ZoneTemplate{ID: attr.(string)}
         filteredSubnetTemplates, err = parent.SubnetTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_domain_template"); ok {
         parent := &vspk.DomainTemplate{ID: attr.(string)}
         filteredSubnetTemplates, err = parent.SubnetTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -187,5 +186,5 @@ func dataSourceSubnetTemplateRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(SubnetTemplate.Identifier())
     
-    return nil
+    return
 }

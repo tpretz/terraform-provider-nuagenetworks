@@ -47,101 +47,120 @@ func dataSourceStatistics() *schema.Resource {
             "parent_domain": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_vm_interface", "parent_host_interface", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
+                ConflictsWith: []string{"parent_vm_interface", "parent_host_interface", "parent_ingress_external_service_template_entry", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_virtual_firewall_rule", "parent_egress_adv_fwd_entry_template", "parent_wireless_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
             },
             "parent_vm_interface": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_host_interface", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
+                ConflictsWith: []string{"parent_domain", "parent_host_interface", "parent_ingress_external_service_template_entry", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_virtual_firewall_rule", "parent_egress_adv_fwd_entry_template", "parent_wireless_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
             },
             "parent_host_interface": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
+                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_ingress_external_service_template_entry", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_virtual_firewall_rule", "parent_egress_adv_fwd_entry_template", "parent_wireless_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
+            },
+            "parent_ingress_external_service_template_entry": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_virtual_firewall_rule", "parent_egress_adv_fwd_entry_template", "parent_wireless_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
             },
             "parent_container_interface": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
+                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_ingress_external_service_template_entry", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_virtual_firewall_rule", "parent_egress_adv_fwd_entry_template", "parent_wireless_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
             },
             "parent_l2_domain": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_container_interface", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
+                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_ingress_external_service_template_entry", "parent_container_interface", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_virtual_firewall_rule", "parent_egress_adv_fwd_entry_template", "parent_wireless_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
             },
             "parent_bridge_interface": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_container_interface", "parent_l2_domain", "parent_subnet", "parent_ns_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
+                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_ingress_external_service_template_entry", "parent_container_interface", "parent_l2_domain", "parent_subnet", "parent_ns_port", "parent_virtual_firewall_rule", "parent_egress_adv_fwd_entry_template", "parent_wireless_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
             },
             "parent_subnet": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_ns_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
+                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_ingress_external_service_template_entry", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_ns_port", "parent_virtual_firewall_rule", "parent_egress_adv_fwd_entry_template", "parent_wireless_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
             },
             "parent_ns_port": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
+                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_ingress_external_service_template_entry", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_virtual_firewall_rule", "parent_egress_adv_fwd_entry_template", "parent_wireless_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
+            },
+            "parent_virtual_firewall_rule": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_ingress_external_service_template_entry", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_egress_adv_fwd_entry_template", "parent_wireless_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
+            },
+            "parent_egress_adv_fwd_entry_template": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_ingress_external_service_template_entry", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_virtual_firewall_rule", "parent_wireless_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
+            },
+            "parent_wireless_port": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_ingress_external_service_template_entry", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_virtual_firewall_rule", "parent_egress_adv_fwd_entry_template", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
             },
             "parent_ingress_adv_fwd_entry_template": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
+                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_ingress_external_service_template_entry", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_virtual_firewall_rule", "parent_egress_adv_fwd_entry_template", "parent_wireless_port", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
             },
             "parent_ingress_acl_entry_template": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_ingress_adv_fwd_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
+                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_ingress_external_service_template_entry", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_virtual_firewall_rule", "parent_egress_adv_fwd_entry_template", "parent_wireless_port", "parent_ingress_adv_fwd_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
             },
             "parent_zone": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
+                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_ingress_external_service_template_entry", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_virtual_firewall_rule", "parent_egress_adv_fwd_entry_template", "parent_wireless_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
             },
             "parent_vlan": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
+                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_ingress_external_service_template_entry", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_virtual_firewall_rule", "parent_egress_adv_fwd_entry_template", "parent_wireless_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
             },
             "parent_patnat_pool": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_vport", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
+                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_ingress_external_service_template_entry", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_virtual_firewall_rule", "parent_egress_adv_fwd_entry_template", "parent_wireless_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_vport", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
             },
             "parent_vport": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
+                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_ingress_external_service_template_entry", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_virtual_firewall_rule", "parent_egress_adv_fwd_entry_template", "parent_wireless_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
             },
             "parent_vsc": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
+                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_ingress_external_service_template_entry", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_virtual_firewall_rule", "parent_egress_adv_fwd_entry_template", "parent_wireless_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vrs", "parent_egress_acl_entry_template", "parent_address_map"},
             },
             "parent_vrs": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_egress_acl_entry_template", "parent_address_map"},
+                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_ingress_external_service_template_entry", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_virtual_firewall_rule", "parent_egress_adv_fwd_entry_template", "parent_wireless_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_egress_acl_entry_template", "parent_address_map"},
             },
             "parent_egress_acl_entry_template": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_vrs", "parent_address_map"},
+                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_ingress_external_service_template_entry", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_virtual_firewall_rule", "parent_egress_adv_fwd_entry_template", "parent_wireless_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_vrs", "parent_address_map"},
             },
             "parent_address_map": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template"},
+                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_ingress_external_service_template_entry", "parent_container_interface", "parent_l2_domain", "parent_bridge_interface", "parent_subnet", "parent_ns_port", "parent_virtual_firewall_rule", "parent_egress_adv_fwd_entry_template", "parent_wireless_port", "parent_ingress_adv_fwd_entry_template", "parent_ingress_acl_entry_template", "parent_zone", "parent_vlan", "parent_patnat_pool", "parent_vport", "parent_vsc", "parent_vrs", "parent_egress_acl_entry_template"},
             },
         },
     }
 }
 
 
-func dataSourceStatisticsRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceStatisticsRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredStatistics := vspk.StatisticsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -161,109 +180,133 @@ func dataSourceStatisticsRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.Domain{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vm_interface"); ok {
         parent := &vspk.VMInterface{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_host_interface"); ok {
         parent := &vspk.HostInterface{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return err
+            return
+        }
+    } else if attr, ok := d.GetOk("parent_ingress_external_service_template_entry"); ok {
+        parent := &vspk.IngressExternalServiceTemplateEntry{ID: attr.(string)}
+        filteredStatistics, err = parent.Statistics(fetchFilter)
+        if err != nil {
+            return
         }
     } else if attr, ok := d.GetOk("parent_container_interface"); ok {
         parent := &vspk.ContainerInterface{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_bridge_interface"); ok {
         parent := &vspk.BridgeInterface{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_subnet"); ok {
         parent := &vspk.Subnet{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_ns_port"); ok {
         parent := &vspk.NSPort{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return err
+            return
+        }
+    } else if attr, ok := d.GetOk("parent_virtual_firewall_rule"); ok {
+        parent := &vspk.VirtualFirewallRule{ID: attr.(string)}
+        filteredStatistics, err = parent.Statistics(fetchFilter)
+        if err != nil {
+            return
+        }
+    } else if attr, ok := d.GetOk("parent_egress_adv_fwd_entry_template"); ok {
+        parent := &vspk.EgressAdvFwdEntryTemplate{ID: attr.(string)}
+        filteredStatistics, err = parent.Statistics(fetchFilter)
+        if err != nil {
+            return
+        }
+    } else if attr, ok := d.GetOk("parent_wireless_port"); ok {
+        parent := &vspk.WirelessPort{ID: attr.(string)}
+        filteredStatistics, err = parent.Statistics(fetchFilter)
+        if err != nil {
+            return
         }
     } else if attr, ok := d.GetOk("parent_ingress_adv_fwd_entry_template"); ok {
         parent := &vspk.IngressAdvFwdEntryTemplate{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_ingress_acl_entry_template"); ok {
         parent := &vspk.IngressACLEntryTemplate{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_zone"); ok {
         parent := &vspk.Zone{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vlan"); ok {
         parent := &vspk.VLAN{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_patnat_pool"); ok {
         parent := &vspk.PATNATPool{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vsc"); ok {
         parent := &vspk.VSC{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vrs"); ok {
         parent := &vspk.VRS{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_egress_acl_entry_template"); ok {
         parent := &vspk.EgressACLEntryTemplate{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_address_map"); ok {
         parent := &vspk.AddressMap{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -293,5 +336,5 @@ func dataSourceStatisticsRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(Statistics.Identifier())
     
-    return nil
+    return
 }

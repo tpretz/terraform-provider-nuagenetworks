@@ -63,9 +63,8 @@ func dataSourceVMResync() *schema.Resource {
 }
 
 
-func dataSourceVMResyncRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceVMResyncRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredVMResyncs := vspk.VMResyncsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -85,13 +84,13 @@ func dataSourceVMResyncRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.Subnet{ID: attr.(string)}
         filteredVMResyncs, err = parent.VMResyncs(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vm"); ok {
         parent := &vspk.VM{ID: attr.(string)}
         filteredVMResyncs, err = parent.VMResyncs(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -122,5 +121,5 @@ func dataSourceVMResyncRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(VMResync.Identifier())
     
-    return nil
+    return
 }

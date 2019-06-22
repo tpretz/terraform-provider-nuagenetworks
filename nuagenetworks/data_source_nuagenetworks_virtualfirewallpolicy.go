@@ -117,9 +117,8 @@ func dataSourceVirtualFirewallPolicy() *schema.Resource {
 }
 
 
-func dataSourceVirtualFirewallPolicyRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceVirtualFirewallPolicyRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredVirtualFirewallPolicies := vspk.VirtualFirewallPoliciesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -139,31 +138,31 @@ func dataSourceVirtualFirewallPolicyRead(d *schema.ResourceData, m interface{}) 
         parent := &vspk.Domain{ID: attr.(string)}
         filteredVirtualFirewallPolicies, err = parent.VirtualFirewallPolicies(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredVirtualFirewallPolicies, err = parent.VirtualFirewallPolicies(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_l2_domain_template"); ok {
         parent := &vspk.L2DomainTemplate{ID: attr.(string)}
         filteredVirtualFirewallPolicies, err = parent.VirtualFirewallPolicies(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_domain_template"); ok {
         parent := &vspk.DomainTemplate{ID: attr.(string)}
         filteredVirtualFirewallPolicies, err = parent.VirtualFirewallPolicies(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredVirtualFirewallPolicies, err = parent.VirtualFirewallPolicies(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -205,5 +204,5 @@ func dataSourceVirtualFirewallPolicyRead(d *schema.ResourceData, m interface{}) 
 
     d.SetId(VirtualFirewallPolicy.Identifier())
     
-    return nil
+    return
 }

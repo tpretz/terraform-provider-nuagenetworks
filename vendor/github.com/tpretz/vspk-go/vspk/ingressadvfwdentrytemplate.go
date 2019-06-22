@@ -49,12 +49,10 @@ type IngressAdvFwdEntryTemplate struct {
 	DSCP                           string `json:"DSCP,omitempty"`
 	DSCPRemarking                  string `json:"DSCPRemarking,omitempty"`
 	FailsafeDatapath               string `json:"failsafeDatapath,omitempty"`
+	Name                           string `json:"name,omitempty"`
 	LastUpdatedBy                  string `json:"lastUpdatedBy,omitempty"`
 	Action                         string `json:"action,omitempty"`
 	AddressOverride                string `json:"addressOverride,omitempty"`
-	AddressOverrideType            string `json:"addressOverrideType,omitempty"`
-	WebFilterID                    string `json:"webFilterID,omitempty"`
-	WebFilterType                  string `json:"webFilterType,omitempty"`
 	RedirectRewriteType            string `json:"redirectRewriteType,omitempty"`
 	RedirectRewriteValue           string `json:"redirectRewriteValue,omitempty"`
 	RedirectVPortTagID             string `json:"redirectVPortTagID,omitempty"`
@@ -81,7 +79,6 @@ type IngressAdvFwdEntryTemplate struct {
 	AssociatedApplicationID        string `json:"associatedApplicationID,omitempty"`
 	AssociatedForwardingPathListID string `json:"associatedForwardingPathListID,omitempty"`
 	AssociatedLiveEntityID         string `json:"associatedLiveEntityID,omitempty"`
-	AssociatedLiveTemplateID       string `json:"associatedLiveTemplateID,omitempty"`
 	AssociatedTrafficType          string `json:"associatedTrafficType,omitempty"`
 	AssociatedTrafficTypeID        string `json:"associatedTrafficTypeID,omitempty"`
 	StatsID                        string `json:"statsID,omitempty"`
@@ -95,7 +92,6 @@ func NewIngressAdvFwdEntryTemplate() *IngressAdvFwdEntryTemplate {
 
 	return &IngressAdvFwdEntryTemplate{
 		FailsafeDatapath:       "FAIL_TO_BLOCK",
-		AddressOverrideType:    "IPV4",
 		RemoteUplinkPreference: "DEFAULT",
 		AppType:                "NONE",
 		IsSLAAware:             false,

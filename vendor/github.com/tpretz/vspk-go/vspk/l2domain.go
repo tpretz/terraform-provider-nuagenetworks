@@ -46,7 +46,6 @@ type L2Domain struct {
 	IPType                            string `json:"IPType,omitempty"`
 	IPv6Address                       string `json:"IPv6Address,omitempty"`
 	IPv6Gateway                       string `json:"IPv6Gateway,omitempty"`
-	VXLANECMPEnabled                  bool   `json:"VXLANECMPEnabled"`
 	MaintenanceMode                   string `json:"maintenanceMode,omitempty"`
 	Name                              string `json:"name,omitempty"`
 	LastUpdatedBy                     string `json:"lastUpdatedBy,omitempty"`
@@ -60,7 +59,6 @@ type L2Domain struct {
 	FlowCollectionEnabled             string `json:"flowCollectionEnabled,omitempty"`
 	VnId                              int    `json:"vnId,omitempty"`
 	Encryption                        string `json:"encryption,omitempty"`
-	IngressReplicationEnabled         bool   `json:"ingressReplicationEnabled"`
 	EntityScope                       string `json:"entityScope,omitempty"`
 	EntityState                       string `json:"entityState,omitempty"`
 	PolicyChangeStatus                string `json:"policyChangeStatus,omitempty"`
@@ -74,7 +72,6 @@ type L2Domain struct {
 	AssociatedUnderlayID              string `json:"associatedUnderlayID,omitempty"`
 	Stretched                         bool   `json:"stretched"`
 	Multicast                         string `json:"multicast,omitempty"`
-	CustomerID                        int    `json:"customerID,omitempty"`
 	ExternalID                        string `json:"externalID,omitempty"`
 	DynamicIpv6Address                bool   `json:"dynamicIpv6Address"`
 }
@@ -83,13 +80,10 @@ type L2Domain struct {
 func NewL2Domain() *L2Domain {
 
 	return &L2Domain{
-		DPI:                       "DISABLED",
-		VXLANECMPEnabled:          false,
-		FlowCollectionEnabled:     "INHERITED",
-		IngressReplicationEnabled: false,
-		RoutedVPLSEnabled:         false,
-		UseGlobalMAC:              "DISABLED",
-		DynamicIpv6Address:        false,
+		DPI: "DISABLED",
+		FlowCollectionEnabled: "INHERITED",
+		RoutedVPLSEnabled:     false,
+		DynamicIpv6Address:    false,
 	}
 }
 
@@ -129,14 +123,6 @@ func (o *L2Domain) Delete() *bambou.Error {
 	return bambou.CurrentSession().DeleteEntity(o)
 }
 
-// Gateways retrieves the list of child Gateways of the L2Domain
-func (o *L2Domain) Gateways(info *bambou.FetchingInfo) (GatewaysList, *bambou.Error) {
-
-	var list GatewaysList
-	err := bambou.CurrentSession().FetchChildren(o, GatewayIdentity, &list, info)
-	return list, err
-}
-
 // TCAs retrieves the list of child TCAs of the L2Domain
 func (o *L2Domain) TCAs(info *bambou.FetchingInfo) (TCAsList, *bambou.Error) {
 
@@ -169,28 +155,6 @@ func (o *L2Domain) RedirectionTargets(info *bambou.FetchingInfo) (RedirectionTar
 
 // CreateRedirectionTarget creates a new child RedirectionTarget under the L2Domain
 func (o *L2Domain) CreateRedirectionTarget(child *RedirectionTarget) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
-}
-
-// RedundancyGroups retrieves the list of child RedundancyGroups of the L2Domain
-func (o *L2Domain) RedundancyGroups(info *bambou.FetchingInfo) (RedundancyGroupsList, *bambou.Error) {
-
-	var list RedundancyGroupsList
-	err := bambou.CurrentSession().FetchChildren(o, RedundancyGroupIdentity, &list, info)
-	return list, err
-}
-
-// DeploymentFailures retrieves the list of child DeploymentFailures of the L2Domain
-func (o *L2Domain) DeploymentFailures(info *bambou.FetchingInfo) (DeploymentFailuresList, *bambou.Error) {
-
-	var list DeploymentFailuresList
-	err := bambou.CurrentSession().FetchChildren(o, DeploymentFailureIdentity, &list, info)
-	return list, err
-}
-
-// CreateDeploymentFailure creates a new child DeploymentFailure under the L2Domain
-func (o *L2Domain) CreateDeploymentFailure(child *DeploymentFailure) *bambou.Error {
 
 	return bambou.CurrentSession().CreateChild(o, child)
 }
@@ -315,22 +279,6 @@ func (o *L2Domain) CreateVirtualFirewallPolicy(child *VirtualFirewallPolicy) *ba
 	return bambou.CurrentSession().CreateChild(o, child)
 }
 
-// VirtualFirewallRules retrieves the list of child VirtualFirewallRules of the L2Domain
-func (o *L2Domain) VirtualFirewallRules(info *bambou.FetchingInfo) (VirtualFirewallRulesList, *bambou.Error) {
-
-	var list VirtualFirewallRulesList
-	err := bambou.CurrentSession().FetchChildren(o, VirtualFirewallRuleIdentity, &list, info)
-	return list, err
-}
-
-// Alarms retrieves the list of child Alarms of the L2Domain
-func (o *L2Domain) Alarms(info *bambou.FetchingInfo) (AlarmsList, *bambou.Error) {
-
-	var list AlarmsList
-	err := bambou.CurrentSession().FetchChildren(o, AlarmIdentity, &list, info)
-	return list, err
-}
-
 // GlobalMetadatas retrieves the list of child GlobalMetadatas of the L2Domain
 func (o *L2Domain) GlobalMetadatas(info *bambou.FetchingInfo) (GlobalMetadatasList, *bambou.Error) {
 
@@ -369,6 +317,12 @@ func (o *L2Domain) IngressACLEntryTemplates(info *bambou.FetchingInfo) (IngressA
 	return list, err
 }
 
+// CreateIngressACLEntryTemplate creates a new child IngressACLEntryTemplate under the L2Domain
+func (o *L2Domain) CreateIngressACLEntryTemplate(child *IngressACLEntryTemplate) *bambou.Error {
+
+	return bambou.CurrentSession().CreateChild(o, child)
+}
+
 // IngressACLTemplates retrieves the list of child IngressACLTemplates of the L2Domain
 func (o *L2Domain) IngressACLTemplates(info *bambou.FetchingInfo) (IngressACLTemplatesList, *bambou.Error) {
 
@@ -393,6 +347,20 @@ func (o *L2Domain) IngressAdvFwdTemplates(info *bambou.FetchingInfo) (IngressAdv
 
 // CreateIngressAdvFwdTemplate creates a new child IngressAdvFwdTemplate under the L2Domain
 func (o *L2Domain) CreateIngressAdvFwdTemplate(child *IngressAdvFwdTemplate) *bambou.Error {
+
+	return bambou.CurrentSession().CreateChild(o, child)
+}
+
+// IngressExternalServiceTemplates retrieves the list of child IngressExternalServiceTemplates of the L2Domain
+func (o *L2Domain) IngressExternalServiceTemplates(info *bambou.FetchingInfo) (IngressExternalServiceTemplatesList, *bambou.Error) {
+
+	var list IngressExternalServiceTemplatesList
+	err := bambou.CurrentSession().FetchChildren(o, IngressExternalServiceTemplateIdentity, &list, info)
+	return list, err
+}
+
+// CreateIngressExternalServiceTemplate creates a new child IngressExternalServiceTemplate under the L2Domain
+func (o *L2Domain) CreateIngressExternalServiceTemplate(child *IngressExternalServiceTemplate) *bambou.Error {
 
 	return bambou.CurrentSession().CreateChild(o, child)
 }
@@ -491,14 +459,6 @@ func (o *L2Domain) CreateVPort(child *VPort) *bambou.Error {
 	return bambou.CurrentSession().CreateChild(o, child)
 }
 
-// Applications retrieves the list of child Applications of the L2Domain
-func (o *L2Domain) Applications(info *bambou.FetchingInfo) (ApplicationsList, *bambou.Error) {
-
-	var list ApplicationsList
-	err := bambou.CurrentSession().FetchChildren(o, ApplicationIdentity, &list, info)
-	return list, err
-}
-
 // Applicationperformancemanagementbindings retrieves the list of child Applicationperformancemanagementbindings of the L2Domain
 func (o *L2Domain) Applicationperformancemanagementbindings(info *bambou.FetchingInfo) (ApplicationperformancemanagementbindingsList, *bambou.Error) {
 
@@ -529,34 +489,12 @@ func (o *L2Domain) Groups(info *bambou.FetchingInfo) (GroupsList, *bambou.Error)
 	return list, err
 }
 
-// ProxyARPFilters retrieves the list of child ProxyARPFilters of the L2Domain
-func (o *L2Domain) ProxyARPFilters(info *bambou.FetchingInfo) (ProxyARPFiltersList, *bambou.Error) {
-
-	var list ProxyARPFiltersList
-	err := bambou.CurrentSession().FetchChildren(o, ProxyARPFilterIdentity, &list, info)
-	return list, err
-}
-
 // NSGatewaySummaries retrieves the list of child NSGatewaySummaries of the L2Domain
 func (o *L2Domain) NSGatewaySummaries(info *bambou.FetchingInfo) (NSGatewaySummariesList, *bambou.Error) {
 
 	var list NSGatewaySummariesList
 	err := bambou.CurrentSession().FetchChildren(o, NSGatewaySummaryIdentity, &list, info)
 	return list, err
-}
-
-// StaticRoutes retrieves the list of child StaticRoutes of the L2Domain
-func (o *L2Domain) StaticRoutes(info *bambou.FetchingInfo) (StaticRoutesList, *bambou.Error) {
-
-	var list StaticRoutesList
-	err := bambou.CurrentSession().FetchChildren(o, StaticRouteIdentity, &list, info)
-	return list, err
-}
-
-// CreateStaticRoute creates a new child StaticRoute under the L2Domain
-func (o *L2Domain) CreateStaticRoute(child *StaticRoute) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
 }
 
 // Statistics retrieves the list of child Statistics of the L2Domain

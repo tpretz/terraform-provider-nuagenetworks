@@ -63,9 +63,8 @@ func dataSourceApplicationBinding() *schema.Resource {
 }
 
 
-func dataSourceApplicationBindingRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceApplicationBindingRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredApplicationBindings := vspk.ApplicationBindingsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -85,13 +84,13 @@ func dataSourceApplicationBindingRead(d *schema.ResourceData, m interface{}) err
         parent := &vspk.Application{ID: attr.(string)}
         filteredApplicationBindings, err = parent.ApplicationBindings(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_applicationperformancemanagement"); ok {
         parent := &vspk.Applicationperformancemanagement{ID: attr.(string)}
         filteredApplicationBindings, err = parent.ApplicationBindings(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -122,5 +121,5 @@ func dataSourceApplicationBindingRead(d *schema.ResourceData, m interface{}) err
 
     d.SetId(ApplicationBinding.Identifier())
     
-    return nil
+    return
 }

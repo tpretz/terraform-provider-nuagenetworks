@@ -28,11 +28,15 @@ func dataSourcePolicyEntry() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
+            "match_criteria": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "match_criteria": &schema.Schema{
+            "match_overlay_address_pool_id": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
+            "match_policy_object_group_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -41,14 +45,6 @@ func dataSourcePolicyEntry() *schema.Resource {
                 Computed: true,
             },
             "description": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -61,9 +57,8 @@ func dataSourcePolicyEntry() *schema.Resource {
 }
 
 
-func dataSourcePolicyEntryRead(d *schema.ResourceData, m interface{}) error {
+func dataSourcePolicyEntryRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredPolicyEntries := vspk.PolicyEntriesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -82,7 +77,7 @@ func dataSourcePolicyEntryRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.PolicyStatement{ID: d.Get("parent_policy_statement").(string)}
     filteredPolicyEntries, err = parent.PolicyEntries(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     PolicyEntry := &vspk.PolicyEntry{}
@@ -99,12 +94,11 @@ func dataSourcePolicyEntryRead(d *schema.ResourceData, m interface{}) error {
     PolicyEntry = filteredPolicyEntries[0]
 
     d.Set("name", PolicyEntry.Name)
-    d.Set("last_updated_by", PolicyEntry.LastUpdatedBy)
     d.Set("match_criteria", PolicyEntry.MatchCriteria)
+    d.Set("match_overlay_address_pool_id", PolicyEntry.MatchOverlayAddressPoolID)
+    d.Set("match_policy_object_group_id", PolicyEntry.MatchPolicyObjectGroupID)
     d.Set("actions", PolicyEntry.Actions)
     d.Set("description", PolicyEntry.Description)
-    d.Set("entity_scope", PolicyEntry.EntityScope)
-    d.Set("external_id", PolicyEntry.ExternalID)
     
     d.Set("id", PolicyEntry.Identifier())
     d.Set("parent_id", PolicyEntry.ParentID)
@@ -113,5 +107,5 @@ func dataSourcePolicyEntryRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(PolicyEntry.Identifier())
     
-    return nil
+    return
 }

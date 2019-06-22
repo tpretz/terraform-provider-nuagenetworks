@@ -44,10 +44,6 @@ func dataSourceFirewallRule() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "action": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -56,19 +52,35 @@ func dataSourceFirewallRule() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "web_filter_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "web_filter_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
+            "dest_network": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
+            "dest_pg_id": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
+            "dest_pg_type": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
+            "destination_ipv6_value": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
             "destination_port": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
+            "destination_type": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
+            "destination_value": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -92,10 +104,6 @@ func dataSourceFirewallRule() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "location_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -108,27 +116,43 @@ func dataSourceFirewallRule() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
+            "source_ipv6_value": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
+            "source_network": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
+            "source_pg_id": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
+            "source_pg_type": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
             "source_port": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
+            "source_type": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
+            "source_value": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
             "priority": &schema.Schema{
-                Type:     schema.TypeInt,
-                Computed: true,
-            },
-            "protocol": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "associated_live_template_id": &schema.Schema{
+            "associated_application_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "associated_traffic_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "associated_traffic_type_id": &schema.Schema{
+            "associated_application_object_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -152,10 +176,6 @@ func dataSourceFirewallRule() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -171,9 +191,8 @@ func dataSourceFirewallRule() *schema.Resource {
 }
 
 
-func dataSourceFirewallRuleRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceFirewallRuleRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredFirewallRules := vspk.FirewallRulesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -193,13 +212,13 @@ func dataSourceFirewallRuleRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredFirewallRules, err = parent.FirewallRules(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_firewall_acl"); ok {
         parent := &vspk.FirewallAcl{ID: attr.(string)}
         filteredFirewallRules, err = parent.FirewallRules(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -221,34 +240,39 @@ func dataSourceFirewallRuleRead(d *schema.ResourceData, m interface{}) error {
     d.Set("icmp_type", FirewallRule.ICMPType)
     d.Set("ipv6_address_override", FirewallRule.IPv6AddressOverride)
     d.Set("dscp", FirewallRule.DSCP)
-    d.Set("last_updated_by", FirewallRule.LastUpdatedBy)
     d.Set("action", FirewallRule.Action)
     d.Set("address_override", FirewallRule.AddressOverride)
-    d.Set("web_filter_id", FirewallRule.WebFilterID)
-    d.Set("web_filter_type", FirewallRule.WebFilterType)
     d.Set("description", FirewallRule.Description)
+    d.Set("dest_network", FirewallRule.DestNetwork)
+    d.Set("dest_pg_id", FirewallRule.DestPgId)
+    d.Set("dest_pg_type", FirewallRule.DestPgType)
+    d.Set("destination_ipv6_value", FirewallRule.DestinationIpv6Value)
     d.Set("destination_port", FirewallRule.DestinationPort)
+    d.Set("destination_type", FirewallRule.DestinationType)
+    d.Set("destination_value", FirewallRule.DestinationValue)
     d.Set("network_id", FirewallRule.NetworkID)
     d.Set("network_type", FirewallRule.NetworkType)
     d.Set("mirror_destination_id", FirewallRule.MirrorDestinationID)
     d.Set("flow_logging_enabled", FirewallRule.FlowLoggingEnabled)
     d.Set("enterprise_name", FirewallRule.EnterpriseName)
-    d.Set("entity_scope", FirewallRule.EntityScope)
     d.Set("location_id", FirewallRule.LocationID)
     d.Set("location_type", FirewallRule.LocationType)
     d.Set("domain_name", FirewallRule.DomainName)
+    d.Set("source_ipv6_value", FirewallRule.SourceIpv6Value)
+    d.Set("source_network", FirewallRule.SourceNetwork)
+    d.Set("source_pg_id", FirewallRule.SourcePgId)
+    d.Set("source_pg_type", FirewallRule.SourcePgType)
     d.Set("source_port", FirewallRule.SourcePort)
+    d.Set("source_type", FirewallRule.SourceType)
+    d.Set("source_value", FirewallRule.SourceValue)
     d.Set("priority", FirewallRule.Priority)
-    d.Set("protocol", FirewallRule.Protocol)
-    d.Set("associated_live_template_id", FirewallRule.AssociatedLiveTemplateID)
-    d.Set("associated_traffic_type", FirewallRule.AssociatedTrafficType)
-    d.Set("associated_traffic_type_id", FirewallRule.AssociatedTrafficTypeID)
+    d.Set("associated_application_id", FirewallRule.AssociatedApplicationID)
+    d.Set("associated_application_object_id", FirewallRule.AssociatedApplicationObjectID)
     d.Set("associatedfirewall_aclid", FirewallRule.AssociatedfirewallACLID)
     d.Set("stateful", FirewallRule.Stateful)
     d.Set("stats_id", FirewallRule.StatsID)
     d.Set("stats_logging_enabled", FirewallRule.StatsLoggingEnabled)
     d.Set("ether_type", FirewallRule.EtherType)
-    d.Set("external_id", FirewallRule.ExternalID)
     
     d.Set("id", FirewallRule.Identifier())
     d.Set("parent_id", FirewallRule.ParentID)
@@ -257,5 +281,5 @@ func dataSourceFirewallRuleRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(FirewallRule.Identifier())
     
-    return nil
+    return
 }

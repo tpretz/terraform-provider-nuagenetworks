@@ -28,14 +28,6 @@ func dataSourceNSGateway() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "aar_application_release_date": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "aar_application_version": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "nat_traversal_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
                 Computed: true,
@@ -80,10 +72,6 @@ func dataSourceNSGateway() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "vsdaar_application_version": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "nsg_version": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -113,6 +101,10 @@ func dataSourceNSGateway() *schema.Resource {
                 Computed: true,
             },
             "datapath_id": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
+            "patches": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -228,15 +220,6 @@ func dataSourceNSGateway() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "associated_overlay_management_profile_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "functions": &schema.Schema{
-                Type:     schema.TypeList,
-                Computed: true,
-                Elem:     &schema.Schema{Type: schema.TypeString},
-            },
             "auto_disc_gateway_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -249,39 +232,43 @@ func dataSourceNSGateway() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
+            "parent_performance_monitor": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+                ConflictsWith: []string{"parent_policy_object_group", "parent_duc_group", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_nsg_group"},
+            },
             "parent_policy_object_group": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_duc_group", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_nsg_group"},
+                ConflictsWith: []string{"parent_performance_monitor", "parent_duc_group", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_nsg_group"},
             },
             "parent_duc_group": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_policy_object_group", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_nsg_group"},
+                ConflictsWith: []string{"parent_performance_monitor", "parent_policy_object_group", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_nsg_group"},
             },
             "parent_ns_redundant_gateway_group": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_policy_object_group", "parent_duc_group", "parent_enterprise", "parent_nsg_group"},
+                ConflictsWith: []string{"parent_performance_monitor", "parent_policy_object_group", "parent_duc_group", "parent_enterprise", "parent_nsg_group"},
             },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_policy_object_group", "parent_duc_group", "parent_ns_redundant_gateway_group", "parent_nsg_group"},
+                ConflictsWith: []string{"parent_performance_monitor", "parent_policy_object_group", "parent_duc_group", "parent_ns_redundant_gateway_group", "parent_nsg_group"},
             },
             "parent_nsg_group": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_policy_object_group", "parent_duc_group", "parent_ns_redundant_gateway_group", "parent_enterprise"},
+                ConflictsWith: []string{"parent_performance_monitor", "parent_policy_object_group", "parent_duc_group", "parent_ns_redundant_gateway_group", "parent_enterprise"},
             },
         },
     }
 }
 
 
-func dataSourceNSGatewayRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceNSGatewayRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredNSGateways := vspk.NSGatewaysList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -297,41 +284,47 @@ func dataSourceNSGatewayRead(d *schema.ResourceData, m interface{}) error {
            
         }
     }
-    if attr, ok := d.GetOk("parent_policy_object_group"); ok {
+    if attr, ok := d.GetOk("parent_performance_monitor"); ok {
+        parent := &vspk.PerformanceMonitor{ID: attr.(string)}
+        filteredNSGateways, err = parent.NSGateways(fetchFilter)
+        if err != nil {
+            return
+        }
+    } else if attr, ok := d.GetOk("parent_policy_object_group"); ok {
         parent := &vspk.PolicyObjectGroup{ID: attr.(string)}
         filteredNSGateways, err = parent.NSGateways(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_duc_group"); ok {
         parent := &vspk.DUCGroup{ID: attr.(string)}
         filteredNSGateways, err = parent.NSGateways(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_ns_redundant_gateway_group"); ok {
         parent := &vspk.NSRedundantGatewayGroup{ID: attr.(string)}
         filteredNSGateways, err = parent.NSGateways(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredNSGateways, err = parent.NSGateways(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_nsg_group"); ok {
         parent := &vspk.NSGGroup{ID: attr.(string)}
         filteredNSGateways, err = parent.NSGateways(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredNSGateways, err = parent.NSGateways(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -349,8 +342,6 @@ func dataSourceNSGatewayRead(d *schema.ResourceData, m interface{}) error {
     NSGateway = filteredNSGateways[0]
 
     d.Set("mac_address", NSGateway.MACAddress)
-    d.Set("aar_application_release_date", NSGateway.AARApplicationReleaseDate)
-    d.Set("aar_application_version", NSGateway.AARApplicationVersion)
     d.Set("nat_traversal_enabled", NSGateway.NATTraversalEnabled)
     d.Set("tcpmss_enabled", NSGateway.TCPMSSEnabled)
     d.Set("tcp_maximum_segment_size", NSGateway.TCPMaximumSegmentSize)
@@ -362,7 +353,6 @@ func dataSourceNSGatewayRead(d *schema.ResourceData, m interface{}) error {
     d.Set("tpm_status", NSGateway.TPMStatus)
     d.Set("tpm_version", NSGateway.TPMVersion)
     d.Set("cpu_type", NSGateway.CPUType)
-    d.Set("vsdaar_application_version", NSGateway.VSDAARApplicationVersion)
     d.Set("nsg_version", NSGateway.NSGVersion)
     d.Set("ssh_service", NSGateway.SSHService)
     d.Set("uuid", NSGateway.UUID)
@@ -371,6 +361,7 @@ func dataSourceNSGatewayRead(d *schema.ResourceData, m interface{}) error {
     d.Set("last_configuration_reload_timestamp", NSGateway.LastConfigurationReloadTimestamp)
     d.Set("last_updated_by", NSGateway.LastUpdatedBy)
     d.Set("datapath_id", NSGateway.DatapathID)
+    d.Set("patches", NSGateway.Patches)
     d.Set("gateway_connected", NSGateway.GatewayConnected)
     d.Set("redundancy_group_id", NSGateway.RedundancyGroupID)
     d.Set("template_id", NSGateway.TemplateID)
@@ -399,8 +390,6 @@ func dataSourceNSGatewayRead(d *schema.ResourceData, m interface{}) error {
     d.Set("associated_gateway_security_profile_id", NSGateway.AssociatedGatewaySecurityProfileID)
     d.Set("associated_nsg_info_id", NSGateway.AssociatedNSGInfoID)
     d.Set("associated_nsg_upgrade_profile_id", NSGateway.AssociatedNSGUpgradeProfileID)
-    d.Set("associated_overlay_management_profile_id", NSGateway.AssociatedOverlayManagementProfileID)
-    d.Set("functions", NSGateway.Functions)
     d.Set("auto_disc_gateway_id", NSGateway.AutoDiscGatewayID)
     d.Set("external_id", NSGateway.ExternalID)
     d.Set("system_id", NSGateway.SystemID)
@@ -412,5 +401,5 @@ func dataSourceNSGatewayRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(NSGateway.Identifier())
     
-    return nil
+    return
 }

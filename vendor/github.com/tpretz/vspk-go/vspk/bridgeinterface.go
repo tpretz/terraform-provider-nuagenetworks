@@ -43,6 +43,7 @@ type BridgeInterface struct {
 	Owner                       string `json:"owner,omitempty"`
 	VPortID                     string `json:"VPortID,omitempty"`
 	VPortName                   string `json:"VPortName,omitempty"`
+	IPv6Address                 string `json:"IPv6Address,omitempty"`
 	IPv6Gateway                 string `json:"IPv6Gateway,omitempty"`
 	Name                        string `json:"name,omitempty"`
 	LastUpdatedBy               string `json:"lastUpdatedBy,omitempty"`
@@ -118,20 +119,6 @@ func (o *BridgeInterface) RedirectionTargets(info *bambou.FetchingInfo) (Redirec
 	var list RedirectionTargetsList
 	err := bambou.CurrentSession().FetchChildren(o, RedirectionTargetIdentity, &list, info)
 	return list, err
-}
-
-// DeploymentFailures retrieves the list of child DeploymentFailures of the BridgeInterface
-func (o *BridgeInterface) DeploymentFailures(info *bambou.FetchingInfo) (DeploymentFailuresList, *bambou.Error) {
-
-	var list DeploymentFailuresList
-	err := bambou.CurrentSession().FetchChildren(o, DeploymentFailureIdentity, &list, info)
-	return list, err
-}
-
-// CreateDeploymentFailure creates a new child DeploymentFailure under the BridgeInterface
-func (o *BridgeInterface) CreateDeploymentFailure(child *DeploymentFailure) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
 }
 
 // Metadatas retrieves the list of child Metadatas of the BridgeInterface

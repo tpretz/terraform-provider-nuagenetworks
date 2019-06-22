@@ -197,6 +197,20 @@ func (o *DomainTemplate) CreateDomainFIPAclTemplate(child *DomainFIPAclTemplate)
 	return bambou.CurrentSession().CreateChild(o, child)
 }
 
+// FloatingIPACLTemplates retrieves the list of child FloatingIPACLTemplates of the DomainTemplate
+func (o *DomainTemplate) FloatingIPACLTemplates(info *bambou.FetchingInfo) (FloatingIPACLTemplatesList, *bambou.Error) {
+
+	var list FloatingIPACLTemplatesList
+	err := bambou.CurrentSession().FetchChildren(o, FloatingIPACLTemplateIdentity, &list, info)
+	return list, err
+}
+
+// CreateFloatingIPACLTemplate creates a new child FloatingIPACLTemplate under the DomainTemplate
+func (o *DomainTemplate) CreateFloatingIPACLTemplate(child *FloatingIPACLTemplate) *bambou.Error {
+
+	return bambou.CurrentSession().CreateChild(o, child)
+}
+
 // VirtualFirewallPolicies retrieves the list of child VirtualFirewallPolicies of the DomainTemplate
 func (o *DomainTemplate) VirtualFirewallPolicies(info *bambou.FetchingInfo) (VirtualFirewallPoliciesList, *bambou.Error) {
 
@@ -249,6 +263,20 @@ func (o *DomainTemplate) IngressAdvFwdTemplates(info *bambou.FetchingInfo) (Ingr
 
 // CreateIngressAdvFwdTemplate creates a new child IngressAdvFwdTemplate under the DomainTemplate
 func (o *DomainTemplate) CreateIngressAdvFwdTemplate(child *IngressAdvFwdTemplate) *bambou.Error {
+
+	return bambou.CurrentSession().CreateChild(o, child)
+}
+
+// IngressExternalServiceTemplates retrieves the list of child IngressExternalServiceTemplates of the DomainTemplate
+func (o *DomainTemplate) IngressExternalServiceTemplates(info *bambou.FetchingInfo) (IngressExternalServiceTemplatesList, *bambou.Error) {
+
+	var list IngressExternalServiceTemplatesList
+	err := bambou.CurrentSession().FetchChildren(o, IngressExternalServiceTemplateIdentity, &list, info)
+	return list, err
+}
+
+// CreateIngressExternalServiceTemplate creates a new child IngressExternalServiceTemplate under the DomainTemplate
+func (o *DomainTemplate) CreateIngressExternalServiceTemplate(child *IngressExternalServiceTemplate) *bambou.Error {
 
 	return bambou.CurrentSession().CreateChild(o, child)
 }

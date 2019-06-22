@@ -96,6 +96,10 @@ func dataSourceHostInterface() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
+            "associated_floating_ip_address": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
             "attached_network_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -128,9 +132,8 @@ func dataSourceHostInterface() *schema.Resource {
 }
 
 
-func dataSourceHostInterfaceRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceHostInterfaceRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredHostInterfaces := vspk.HostInterfacesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -150,25 +153,25 @@ func dataSourceHostInterfaceRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.Domain{ID: attr.(string)}
         filteredHostInterfaces, err = parent.HostInterfaces(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredHostInterfaces, err = parent.HostInterfaces(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredHostInterfaces, err = parent.HostInterfaces(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredHostInterfaces, err = parent.HostInterfaces(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -203,6 +206,7 @@ func dataSourceHostInterfaceRead(d *schema.ResourceData, m interface{}) error {
     d.Set("domain_name", HostInterface.DomainName)
     d.Set("zone_id", HostInterface.ZoneID)
     d.Set("zone_name", HostInterface.ZoneName)
+    d.Set("associated_floating_ip_address", HostInterface.AssociatedFloatingIPAddress)
     d.Set("attached_network_id", HostInterface.AttachedNetworkID)
     d.Set("attached_network_type", HostInterface.AttachedNetworkType)
     d.Set("external_id", HostInterface.ExternalID)
@@ -214,5 +218,5 @@ func dataSourceHostInterfaceRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(HostInterface.Identifier())
     
-    return nil
+    return
 }

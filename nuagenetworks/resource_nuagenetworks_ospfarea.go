@@ -15,11 +15,6 @@ func resourceOSPFArea() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -43,6 +38,7 @@ func resourceOSPFArea() *schema.Resource {
             "redistribute_external_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Default: true,
             },
             "default_metric": &schema.Schema{
                 Type:     schema.TypeInt,
@@ -83,6 +79,7 @@ func resourceOSPFArea() *schema.Resource {
             "summaries_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Default: true,
             },
             "suppress_area_range": &schema.Schema{
                 Type:     schema.TypeList,

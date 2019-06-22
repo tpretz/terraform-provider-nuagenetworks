@@ -36,10 +36,6 @@ func dataSourceLicense() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "request_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "phone": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -176,18 +172,13 @@ func dataSourceLicense() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "system": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
         },
     }
 }
 
 
-func dataSourceLicenseRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceLicenseRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredLicenses := vspk.LicensesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -206,7 +197,7 @@ func dataSourceLicenseRead(d *schema.ResourceData, m interface{}) error {
     parent := m.(*vspk.Me)
     filteredLicenses, err = parent.Licenses(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     License := &vspk.License{}
@@ -225,7 +216,6 @@ func dataSourceLicenseRead(d *schema.ResourceData, m interface{}) error {
     d.Set("major_release", License.MajorRelease)
     d.Set("last_updated_by", License.LastUpdatedBy)
     d.Set("additional_supported_versions", License.AdditionalSupportedVersions)
-    d.Set("request_id", License.RequestID)
     d.Set("phone", License.Phone)
     d.Set("license", License.License)
     d.Set("license_encryption", License.LicenseEncryption)
@@ -261,7 +251,6 @@ func dataSourceLicenseRead(d *schema.ResourceData, m interface{}) error {
     d.Set("expiration_date", License.ExpirationDate)
     d.Set("expiry_timestamp", License.ExpiryTimestamp)
     d.Set("external_id", License.ExternalID)
-    d.Set("system", License.System)
     
     d.Set("id", License.Identifier())
     d.Set("parent_id", License.ParentID)
@@ -270,5 +259,5 @@ func dataSourceLicenseRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(License.Identifier())
     
-    return nil
+    return
 }

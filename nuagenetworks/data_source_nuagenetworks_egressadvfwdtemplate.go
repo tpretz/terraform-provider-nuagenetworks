@@ -36,14 +36,6 @@ func dataSourceEgressAdvFwdTemplate() *schema.Resource {
                 Type:     schema.TypeBool,
                 Computed: true,
             },
-            "default_allow_ip": &schema.Schema{
-                Type:     schema.TypeBool,
-                Computed: true,
-            },
-            "default_allow_non_ip": &schema.Schema{
-                Type:     schema.TypeBool,
-                Computed: true,
-            },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -101,9 +93,8 @@ func dataSourceEgressAdvFwdTemplate() *schema.Resource {
 }
 
 
-func dataSourceEgressAdvFwdTemplateRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceEgressAdvFwdTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredEgressAdvFwdTemplates := vspk.EgressAdvFwdTemplatesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -123,25 +114,25 @@ func dataSourceEgressAdvFwdTemplateRead(d *schema.ResourceData, m interface{}) e
         parent := &vspk.Domain{ID: attr.(string)}
         filteredEgressAdvFwdTemplates, err = parent.EgressAdvFwdTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredEgressAdvFwdTemplates, err = parent.EgressAdvFwdTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_l2_domain_template"); ok {
         parent := &vspk.L2DomainTemplate{ID: attr.(string)}
         filteredEgressAdvFwdTemplates, err = parent.EgressAdvFwdTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_domain_template"); ok {
         parent := &vspk.DomainTemplate{ID: attr.(string)}
         filteredEgressAdvFwdTemplates, err = parent.EgressAdvFwdTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -161,8 +152,6 @@ func dataSourceEgressAdvFwdTemplateRead(d *schema.ResourceData, m interface{}) e
     d.Set("name", EgressAdvFwdTemplate.Name)
     d.Set("last_updated_by", EgressAdvFwdTemplate.LastUpdatedBy)
     d.Set("active", EgressAdvFwdTemplate.Active)
-    d.Set("default_allow_ip", EgressAdvFwdTemplate.DefaultAllowIP)
-    d.Set("default_allow_non_ip", EgressAdvFwdTemplate.DefaultAllowNonIP)
     d.Set("description", EgressAdvFwdTemplate.Description)
     d.Set("entity_scope", EgressAdvFwdTemplate.EntityScope)
     d.Set("policy_state", EgressAdvFwdTemplate.PolicyState)
@@ -179,5 +168,5 @@ func dataSourceEgressAdvFwdTemplateRead(d *schema.ResourceData, m interface{}) e
 
     d.SetId(EgressAdvFwdTemplate.Identifier())
     
-    return nil
+    return
 }

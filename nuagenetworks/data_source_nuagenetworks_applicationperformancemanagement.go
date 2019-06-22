@@ -44,10 +44,6 @@ func dataSourceApplicationperformancemanagement() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "app_group_unique_id": &schema.Schema{
-                Type:     schema.TypeInt,
-                Computed: true,
-            },
             "associated_performance_monitor_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -59,21 +55,25 @@ func dataSourceApplicationperformancemanagement() *schema.Resource {
             "parent_performance_monitor": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_enterprise"},
+                ConflictsWith: []string{"parent_enterprise", "parent_vport"},
             },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_performance_monitor"},
+                ConflictsWith: []string{"parent_performance_monitor", "parent_vport"},
+            },
+            "parent_vport": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+                ConflictsWith: []string{"parent_performance_monitor", "parent_enterprise"},
             },
         },
     }
 }
 
 
-func dataSourceApplicationperformancemanagementRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceApplicationperformancemanagementRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredApplicationperformancemanagements := vspk.ApplicationperformancemanagementsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -93,19 +93,19 @@ func dataSourceApplicationperformancemanagementRead(d *schema.ResourceData, m in
         parent := &vspk.PerformanceMonitor{ID: attr.(string)}
         filteredApplicationperformancemanagements, err = parent.Applicationperformancemanagements(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredApplicationperformancemanagements, err = parent.Applicationperformancemanagements(fetchFilter)
         if err != nil {
-            return err
+            return
         }
-    } else {
-        parent := m.(*vspk.Me)
+    } else if attr, ok := d.GetOk("parent_vport"); ok {
+        parent := &vspk.VPort{ID: attr.(string)}
         filteredApplicationperformancemanagements, err = parent.Applicationperformancemanagements(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -127,7 +127,6 @@ func dataSourceApplicationperformancemanagementRead(d *schema.ResourceData, m in
     d.Set("read_only", Applicationperformancemanagement.ReadOnly)
     d.Set("description", Applicationperformancemanagement.Description)
     d.Set("entity_scope", Applicationperformancemanagement.EntityScope)
-    d.Set("app_group_unique_id", Applicationperformancemanagement.AppGroupUniqueId)
     d.Set("associated_performance_monitor_id", Applicationperformancemanagement.AssociatedPerformanceMonitorID)
     d.Set("external_id", Applicationperformancemanagement.ExternalID)
     
@@ -138,5 +137,5 @@ func dataSourceApplicationperformancemanagementRead(d *schema.ResourceData, m in
 
     d.SetId(Applicationperformancemanagement.Identifier())
     
-    return nil
+    return
 }

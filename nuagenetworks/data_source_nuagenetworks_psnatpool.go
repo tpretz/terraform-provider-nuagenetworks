@@ -24,19 +24,7 @@ func dataSourcePSNATPool() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "ip_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "name": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -44,15 +32,7 @@ func dataSourcePSNATPool() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "start_address": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -65,9 +45,8 @@ func dataSourcePSNATPool() *schema.Resource {
 }
 
 
-func dataSourcePSNATPoolRead(d *schema.ResourceData, m interface{}) error {
+func dataSourcePSNATPoolRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredPSNATPools := vspk.PSNATPoolsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -86,7 +65,7 @@ func dataSourcePSNATPoolRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.Link{ID: d.Get("parent_link").(string)}
     filteredPSNATPools, err = parent.PSNATPools(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     PSNATPool := &vspk.PSNATPool{}
@@ -102,14 +81,9 @@ func dataSourcePSNATPoolRead(d *schema.ResourceData, m interface{}) error {
     
     PSNATPool = filteredPSNATPools[0]
 
-    d.Set("ip_type", PSNATPool.IPType)
     d.Set("name", PSNATPool.Name)
-    d.Set("last_updated_by", PSNATPool.LastUpdatedBy)
-    d.Set("description", PSNATPool.Description)
     d.Set("end_address", PSNATPool.EndAddress)
-    d.Set("entity_scope", PSNATPool.EntityScope)
     d.Set("start_address", PSNATPool.StartAddress)
-    d.Set("external_id", PSNATPool.ExternalID)
     
     d.Set("id", PSNATPool.Identifier())
     d.Set("parent_id", PSNATPool.ParentID)
@@ -118,5 +92,5 @@ func dataSourcePSNATPoolRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(PSNATPool.Identifier())
     
-    return nil
+    return
 }

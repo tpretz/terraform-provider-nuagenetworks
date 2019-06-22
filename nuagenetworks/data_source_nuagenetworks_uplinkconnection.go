@@ -40,10 +40,6 @@ func dataSourceUplinkConnection() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "gateway": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -76,16 +72,12 @@ func dataSourceUplinkConnection() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "vlan": &schema.Schema{
-                Type:     schema.TypeInt,
+            "vlan_id": &schema.Schema{
+                Type:     schema.TypeString,
                 Computed: true,
             },
             "underlay_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
-                Computed: true,
-            },
-            "underlay_id": &schema.Schema{
-                Type:     schema.TypeInt,
                 Computed: true,
             },
             "inherited": &schema.Schema{
@@ -100,10 +92,6 @@ func dataSourceUplinkConnection() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "mode": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -113,7 +101,7 @@ func dataSourceUplinkConnection() *schema.Resource {
                 Computed: true,
             },
             "role_order": &schema.Schema{
-                Type:     schema.TypeInt,
+                Type:     schema.TypeString,
                 Computed: true,
             },
             "port_name": &schema.Schema{
@@ -148,10 +136,6 @@ func dataSourceUplinkConnection() *schema.Resource {
                 Type:     schema.TypeBool,
                 Computed: true,
             },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "parent_vlan_template": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -172,9 +156,8 @@ func dataSourceUplinkConnection() *schema.Resource {
 }
 
 
-func dataSourceUplinkConnectionRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceUplinkConnectionRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredUplinkConnections := vspk.UplinkConnectionsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -194,19 +177,19 @@ func dataSourceUplinkConnectionRead(d *schema.ResourceData, m interface{}) error
         parent := &vspk.VLANTemplate{ID: attr.(string)}
         filteredUplinkConnections, err = parent.UplinkConnections(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vlan"); ok {
         parent := &vspk.VLAN{ID: attr.(string)}
         filteredUplinkConnections, err = parent.UplinkConnections(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_ns_gateway"); ok {
         parent := &vspk.NSGateway{ID: attr.(string)}
         filteredUplinkConnections, err = parent.UplinkConnections(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -227,7 +210,6 @@ func dataSourceUplinkConnectionRead(d *schema.ResourceData, m interface{}) error
     d.Set("dns_address", UplinkConnection.DNSAddress)
     d.Set("dns_address_v6", UplinkConnection.DNSAddressV6)
     d.Set("password", UplinkConnection.Password)
-    d.Set("last_updated_by", UplinkConnection.LastUpdatedBy)
     d.Set("gateway", UplinkConnection.Gateway)
     d.Set("gateway_v6", UplinkConnection.GatewayV6)
     d.Set("address", UplinkConnection.Address)
@@ -236,13 +218,11 @@ func dataSourceUplinkConnectionRead(d *schema.ResourceData, m interface{}) error
     d.Set("advertisement_criteria", UplinkConnection.AdvertisementCriteria)
     d.Set("secondary_address", UplinkConnection.SecondaryAddress)
     d.Set("netmask", UplinkConnection.Netmask)
-    d.Set("vlan", UplinkConnection.Vlan)
+    d.Set("vlan_id", UplinkConnection.VlanId)
     d.Set("underlay_enabled", UplinkConnection.UnderlayEnabled)
-    d.Set("underlay_id", UplinkConnection.UnderlayID)
     d.Set("inherited", UplinkConnection.Inherited)
     d.Set("installer_managed", UplinkConnection.InstallerManaged)
     d.Set("interface_connection_type", UplinkConnection.InterfaceConnectionType)
-    d.Set("entity_scope", UplinkConnection.EntityScope)
     d.Set("mode", UplinkConnection.Mode)
     d.Set("role", UplinkConnection.Role)
     d.Set("role_order", UplinkConnection.RoleOrder)
@@ -254,7 +234,6 @@ func dataSourceUplinkConnectionRead(d *schema.ResourceData, m interface{}) error
     d.Set("associated_bgp_neighbor_id", UplinkConnection.AssociatedBGPNeighborID)
     d.Set("associated_underlay_name", UplinkConnection.AssociatedUnderlayName)
     d.Set("auxiliary_link", UplinkConnection.AuxiliaryLink)
-    d.Set("external_id", UplinkConnection.ExternalID)
     
     d.Set("id", UplinkConnection.Identifier())
     d.Set("parent_id", UplinkConnection.ParentID)
@@ -263,5 +242,5 @@ func dataSourceUplinkConnectionRead(d *schema.ResourceData, m interface{}) error
 
     d.SetId(UplinkConnection.Identifier())
     
-    return nil
+    return
 }

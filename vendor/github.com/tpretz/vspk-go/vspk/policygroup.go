@@ -47,7 +47,6 @@ type PolicyGroup struct {
 	TemplateID                   string `json:"templateID,omitempty"`
 	Description                  string `json:"description,omitempty"`
 	EntityScope                  string `json:"entityScope,omitempty"`
-	EntityState                  string `json:"entityState,omitempty"`
 	PolicyGroupID                int    `json:"policyGroupID,omitempty"`
 	AssocPolicyGroupCategoryID   string `json:"assocPolicyGroupCategoryID,omitempty"`
 	AssocPolicyGroupCategoryName string `json:"assocPolicyGroupCategoryName,omitempty"`
@@ -124,14 +123,6 @@ func (o *PolicyGroup) GlobalMetadatas(info *bambou.FetchingInfo) (GlobalMetadata
 func (o *PolicyGroup) CreateGlobalMetadata(child *GlobalMetadata) *bambou.Error {
 
 	return bambou.CurrentSession().CreateChild(o, child)
-}
-
-// PolicyGroupCategories retrieves the list of child PolicyGroupCategories of the PolicyGroup
-func (o *PolicyGroup) PolicyGroupCategories(info *bambou.FetchingInfo) (PolicyGroupCategoriesList, *bambou.Error) {
-
-	var list PolicyGroupCategoriesList
-	err := bambou.CurrentSession().FetchChildren(o, PolicyGroupCategoryIdentity, &list, info)
-	return list, err
 }
 
 // VPorts retrieves the list of child VPorts of the PolicyGroup

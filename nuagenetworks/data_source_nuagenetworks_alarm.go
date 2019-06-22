@@ -56,10 +56,6 @@ func dataSourceAlarm() *schema.Resource {
                 Type:     schema.TypeInt,
                 Computed: true,
             },
-            "alarmed_object_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "enterprise_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -80,144 +76,123 @@ func dataSourceAlarm() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "parent_domain": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_tca", "parent_l2_domain", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_netconf_manager", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
-            },
             "parent_tca": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_l2_domain", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_netconf_manager", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
-            },
-            "parent_l2_domain": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_tca", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_netconf_manager", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
+                ConflictsWith: []string{"parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
             },
             "parent_ns_port": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_tca", "parent_l2_domain", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_netconf_manager", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
+                ConflictsWith: []string{"parent_tca", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
             },
             "parent_shunt_link": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_tca", "parent_l2_domain", "parent_ns_port", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_netconf_manager", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
+                ConflictsWith: []string{"parent_tca", "parent_ns_port", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
             },
             "parent_ns_redundant_gateway_group": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_tca", "parent_l2_domain", "parent_ns_port", "parent_shunt_link", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_netconf_manager", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
+                ConflictsWith: []string{"parent_tca", "parent_ns_port", "parent_shunt_link", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
             },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_tca", "parent_l2_domain", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_netconf_manager", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
+                ConflictsWith: []string{"parent_tca", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_wan_service", "parent_vsg_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
             },
             "parent_wan_service": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_tca", "parent_l2_domain", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_netconf_manager", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
+                ConflictsWith: []string{"parent_tca", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_vsg_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
             },
             "parent_vsg_redundant_port": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_tca", "parent_l2_domain", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_gateway_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_netconf_manager", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
-            },
-            "parent_gateway_redundant_port": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_tca", "parent_l2_domain", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_netconf_manager", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
+                ConflictsWith: []string{"parent_tca", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
             },
             "parent_wireless_port": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_tca", "parent_l2_domain", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_netconf_manager", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
+                ConflictsWith: []string{"parent_tca", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
             },
             "parent_ssid_connection": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_tca", "parent_l2_domain", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_wireless_port", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_netconf_manager", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
+                ConflictsWith: []string{"parent_tca", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_wireless_port", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
             },
             "parent_vlan": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_tca", "parent_l2_domain", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_netconf_manager", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
+                ConflictsWith: []string{"parent_tca", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
             },
             "parent_vport": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_tca", "parent_l2_domain", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vsc", "parent_hsc", "parent_vrs", "parent_netconf_manager", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
+                ConflictsWith: []string{"parent_tca", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vsc", "parent_hsc", "parent_vrs", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
             },
             "parent_vsc": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_tca", "parent_l2_domain", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_hsc", "parent_vrs", "parent_netconf_manager", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
+                ConflictsWith: []string{"parent_tca", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_hsc", "parent_vrs", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
             },
             "parent_hsc": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_tca", "parent_l2_domain", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_vrs", "parent_netconf_manager", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
+                ConflictsWith: []string{"parent_tca", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_vrs", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
             },
             "parent_vrs": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_tca", "parent_l2_domain", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_netconf_manager", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
-            },
-            "parent_netconf_manager": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_tca", "parent_l2_domain", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
+                ConflictsWith: []string{"parent_tca", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
             },
             "parent_ns_gateway": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_tca", "parent_l2_domain", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_netconf_manager", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
+                ConflictsWith: []string{"parent_tca", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
             },
             "parent_port": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_tca", "parent_l2_domain", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_netconf_manager", "parent_ns_gateway", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
+                ConflictsWith: []string{"parent_tca", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_ns_gateway", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
             },
             "parent_redundancy_group": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_tca", "parent_l2_domain", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_netconf_manager", "parent_ns_gateway", "parent_port", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
+                ConflictsWith: []string{"parent_tca", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_ns_gateway", "parent_port", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
             },
             "parent_vm": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_tca", "parent_l2_domain", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_netconf_manager", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
+                ConflictsWith: []string{"parent_tca", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_container", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
             },
             "parent_container": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_tca", "parent_l2_domain", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_netconf_manager", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
+                ConflictsWith: []string{"parent_tca", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_gateway", "parent_ike_gateway_connection", "parent_vsd"},
             },
             "parent_gateway": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_tca", "parent_l2_domain", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_netconf_manager", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_ike_gateway_connection", "parent_vsd"},
+                ConflictsWith: []string{"parent_tca", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_ike_gateway_connection", "parent_vsd"},
             },
             "parent_ike_gateway_connection": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_tca", "parent_l2_domain", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_netconf_manager", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_vsd"},
+                ConflictsWith: []string{"parent_tca", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_vsd"},
             },
             "parent_vsd": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_tca", "parent_l2_domain", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_gateway_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_netconf_manager", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection"},
+                ConflictsWith: []string{"parent_tca", "parent_ns_port", "parent_shunt_link", "parent_ns_redundant_gateway_group", "parent_enterprise", "parent_wan_service", "parent_vsg_redundant_port", "parent_wireless_port", "parent_ssid_connection", "parent_vlan", "parent_vport", "parent_vsc", "parent_hsc", "parent_vrs", "parent_ns_gateway", "parent_port", "parent_redundancy_group", "parent_vm", "parent_container", "parent_gateway", "parent_ike_gateway_connection"},
             },
         },
     }
 }
 
 
-func dataSourceAlarmRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceAlarmRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredAlarms := vspk.AlarmsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -233,161 +208,137 @@ func dataSourceAlarmRead(d *schema.ResourceData, m interface{}) error {
            
         }
     }
-    if attr, ok := d.GetOk("parent_domain"); ok {
-        parent := &vspk.Domain{ID: attr.(string)}
-        filteredAlarms, err = parent.Alarms(fetchFilter)
-        if err != nil {
-            return err
-        }
-    } else if attr, ok := d.GetOk("parent_tca"); ok {
+    if attr, ok := d.GetOk("parent_tca"); ok {
         parent := &vspk.TCA{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return err
-        }
-    } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
-        parent := &vspk.L2Domain{ID: attr.(string)}
-        filteredAlarms, err = parent.Alarms(fetchFilter)
-        if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_ns_port"); ok {
         parent := &vspk.NSPort{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_shunt_link"); ok {
         parent := &vspk.ShuntLink{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_ns_redundant_gateway_group"); ok {
         parent := &vspk.NSRedundantGatewayGroup{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_wan_service"); ok {
         parent := &vspk.WANService{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vsg_redundant_port"); ok {
         parent := &vspk.VsgRedundantPort{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return err
-        }
-    } else if attr, ok := d.GetOk("parent_gateway_redundant_port"); ok {
-        parent := &vspk.GatewayRedundantPort{ID: attr.(string)}
-        filteredAlarms, err = parent.Alarms(fetchFilter)
-        if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_wireless_port"); ok {
         parent := &vspk.WirelessPort{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_ssid_connection"); ok {
         parent := &vspk.SSIDConnection{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vlan"); ok {
         parent := &vspk.VLAN{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vsc"); ok {
         parent := &vspk.VSC{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_hsc"); ok {
         parent := &vspk.HSC{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vrs"); ok {
         parent := &vspk.VRS{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return err
-        }
-    } else if attr, ok := d.GetOk("parent_netconf_manager"); ok {
-        parent := &vspk.NetconfManager{ID: attr.(string)}
-        filteredAlarms, err = parent.Alarms(fetchFilter)
-        if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_ns_gateway"); ok {
         parent := &vspk.NSGateway{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_port"); ok {
         parent := &vspk.Port{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_redundancy_group"); ok {
         parent := &vspk.RedundancyGroup{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vm"); ok {
         parent := &vspk.VM{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_container"); ok {
         parent := &vspk.Container{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_gateway"); ok {
         parent := &vspk.Gateway{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_ike_gateway_connection"); ok {
         parent := &vspk.IKEGatewayConnection{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vsd"); ok {
         parent := &vspk.VSD{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -412,7 +363,6 @@ func dataSourceAlarmRead(d *schema.ResourceData, m interface{}) error {
     d.Set("description", Alarm.Description)
     d.Set("severity", Alarm.Severity)
     d.Set("timestamp", Alarm.Timestamp)
-    d.Set("alarmed_object_id", Alarm.AlarmedObjectID)
     d.Set("enterprise_id", Alarm.EnterpriseID)
     d.Set("entity_scope", Alarm.EntityScope)
     d.Set("error_condition", Alarm.ErrorCondition)
@@ -426,5 +376,5 @@ func dataSourceAlarmRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(Alarm.Identifier())
     
-    return nil
+    return
 }

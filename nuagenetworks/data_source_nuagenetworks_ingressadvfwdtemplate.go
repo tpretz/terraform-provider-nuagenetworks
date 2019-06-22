@@ -36,14 +36,6 @@ func dataSourceIngressAdvFwdTemplate() *schema.Resource {
                 Type:     schema.TypeBool,
                 Computed: true,
             },
-            "default_allow_ip": &schema.Schema{
-                Type:     schema.TypeBool,
-                Computed: true,
-            },
-            "default_allow_non_ip": &schema.Schema{
-                Type:     schema.TypeBool,
-                Computed: true,
-            },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -101,9 +93,8 @@ func dataSourceIngressAdvFwdTemplate() *schema.Resource {
 }
 
 
-func dataSourceIngressAdvFwdTemplateRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceIngressAdvFwdTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredIngressAdvFwdTemplates := vspk.IngressAdvFwdTemplatesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -123,25 +114,25 @@ func dataSourceIngressAdvFwdTemplateRead(d *schema.ResourceData, m interface{}) 
         parent := &vspk.Domain{ID: attr.(string)}
         filteredIngressAdvFwdTemplates, err = parent.IngressAdvFwdTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredIngressAdvFwdTemplates, err = parent.IngressAdvFwdTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_l2_domain_template"); ok {
         parent := &vspk.L2DomainTemplate{ID: attr.(string)}
         filteredIngressAdvFwdTemplates, err = parent.IngressAdvFwdTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_domain_template"); ok {
         parent := &vspk.DomainTemplate{ID: attr.(string)}
         filteredIngressAdvFwdTemplates, err = parent.IngressAdvFwdTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -161,8 +152,6 @@ func dataSourceIngressAdvFwdTemplateRead(d *schema.ResourceData, m interface{}) 
     d.Set("name", IngressAdvFwdTemplate.Name)
     d.Set("last_updated_by", IngressAdvFwdTemplate.LastUpdatedBy)
     d.Set("active", IngressAdvFwdTemplate.Active)
-    d.Set("default_allow_ip", IngressAdvFwdTemplate.DefaultAllowIP)
-    d.Set("default_allow_non_ip", IngressAdvFwdTemplate.DefaultAllowNonIP)
     d.Set("description", IngressAdvFwdTemplate.Description)
     d.Set("entity_scope", IngressAdvFwdTemplate.EntityScope)
     d.Set("policy_state", IngressAdvFwdTemplate.PolicyState)
@@ -179,5 +168,5 @@ func dataSourceIngressAdvFwdTemplateRead(d *schema.ResourceData, m interface{}) 
 
     d.SetId(IngressAdvFwdTemplate.Identifier())
     
-    return nil
+    return
 }

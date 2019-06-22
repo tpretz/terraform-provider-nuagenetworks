@@ -24,26 +24,6 @@ func dataSourceNetconfSession() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "gateway_model": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "gateway_vendor": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "gateway_version": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "associated_gateway_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -56,10 +36,6 @@ func dataSourceNetconfSession() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "parent_netconf_manager": &schema.Schema{
                 Type:     schema.TypeString,
                 Required: true,
@@ -69,9 +45,8 @@ func dataSourceNetconfSession() *schema.Resource {
 }
 
 
-func dataSourceNetconfSessionRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceNetconfSessionRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredNetconfSessions := vspk.NetconfSessionsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -90,7 +65,7 @@ func dataSourceNetconfSessionRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.NetconfManager{ID: d.Get("parent_netconf_manager").(string)}
     filteredNetconfSessions, err = parent.NetconfSessions(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     NetconfSession := &vspk.NetconfSession{}
@@ -106,15 +81,9 @@ func dataSourceNetconfSessionRead(d *schema.ResourceData, m interface{}) error {
     
     NetconfSession = filteredNetconfSessions[0]
 
-    d.Set("last_updated_by", NetconfSession.LastUpdatedBy)
-    d.Set("gateway_model", NetconfSession.GatewayModel)
-    d.Set("gateway_vendor", NetconfSession.GatewayVendor)
-    d.Set("gateway_version", NetconfSession.GatewayVersion)
-    d.Set("entity_scope", NetconfSession.EntityScope)
     d.Set("associated_gateway_id", NetconfSession.AssociatedGatewayID)
     d.Set("associated_gateway_name", NetconfSession.AssociatedGatewayName)
     d.Set("status", NetconfSession.Status)
-    d.Set("external_id", NetconfSession.ExternalID)
     
     d.Set("id", NetconfSession.Identifier())
     d.Set("parent_id", NetconfSession.ParentID)
@@ -123,5 +92,5 @@ func dataSourceNetconfSessionRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(NetconfSession.Identifier())
     
-    return nil
+    return
 }

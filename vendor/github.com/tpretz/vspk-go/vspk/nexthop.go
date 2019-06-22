@@ -41,13 +41,11 @@ type NextHop struct {
 	ParentID           string `json:"parentID,omitempty"`
 	ParentType         string `json:"parentType,omitempty"`
 	Owner              string `json:"owner,omitempty"`
-	IPType             string `json:"IPType,omitempty"`
 	LastUpdatedBy      string `json:"lastUpdatedBy,omitempty"`
 	EntityScope        string `json:"entityScope,omitempty"`
 	RouteDistinguisher string `json:"routeDistinguisher,omitempty"`
 	Ip                 string `json:"ip,omitempty"`
 	ExternalID         string `json:"externalID,omitempty"`
-	Type               string `json:"type,omitempty"`
 }
 
 // NewNextHop returns a new *NextHop

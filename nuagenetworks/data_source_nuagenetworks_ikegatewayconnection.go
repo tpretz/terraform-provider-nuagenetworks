@@ -111,9 +111,8 @@ func dataSourceIKEGatewayConnection() *schema.Resource {
 }
 
 
-func dataSourceIKEGatewayConnectionRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceIKEGatewayConnectionRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredIKEGatewayConnections := vspk.IKEGatewayConnectionsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -133,13 +132,13 @@ func dataSourceIKEGatewayConnectionRead(d *schema.ResourceData, m interface{}) e
         parent := &vspk.Subnet{ID: attr.(string)}
         filteredIKEGatewayConnections, err = parent.IKEGatewayConnections(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vlan"); ok {
         parent := &vspk.VLAN{ID: attr.(string)}
         filteredIKEGatewayConnections, err = parent.IKEGatewayConnections(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -182,5 +181,5 @@ func dataSourceIKEGatewayConnectionRead(d *schema.ResourceData, m interface{}) e
 
     d.SetId(IKEGatewayConnection.Identifier())
     
-    return nil
+    return
 }

@@ -53,9 +53,8 @@ func dataSourceDSCPRemarkingPolicy() *schema.Resource {
 }
 
 
-func dataSourceDSCPRemarkingPolicyRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceDSCPRemarkingPolicyRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredDSCPRemarkingPolicies := vspk.DSCPRemarkingPoliciesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -74,7 +73,7 @@ func dataSourceDSCPRemarkingPolicyRead(d *schema.ResourceData, m interface{}) er
     parent := &vspk.DSCPRemarkingPolicyTable{ID: d.Get("parent_dscp_remarking_policy_table").(string)}
     filteredDSCPRemarkingPolicies, err = parent.DSCPRemarkingPolicies(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     DSCPRemarkingPolicy := &vspk.DSCPRemarkingPolicy{}
@@ -103,5 +102,5 @@ func dataSourceDSCPRemarkingPolicyRead(d *schema.ResourceData, m interface{}) er
 
     d.SetId(DSCPRemarkingPolicy.Identifier())
     
-    return nil
+    return
 }

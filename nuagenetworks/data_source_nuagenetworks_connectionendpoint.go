@@ -32,15 +32,7 @@ func dataSourceConnectionendpoint() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "ipv6_address": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "name": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -49,14 +41,6 @@ func dataSourceConnectionendpoint() *schema.Resource {
                 Computed: true,
             },
             "end_point_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -69,9 +53,8 @@ func dataSourceConnectionendpoint() *schema.Resource {
 }
 
 
-func dataSourceConnectionendpointRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceConnectionendpointRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredConnectionendpoints := vspk.ConnectionendpointsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -90,7 +73,7 @@ func dataSourceConnectionendpointRead(d *schema.ResourceData, m interface{}) err
     parent := &vspk.InfrastructureAccessProfile{ID: d.Get("parent_infrastructure_access_profile").(string)}
     filteredConnectionendpoints, err = parent.Connectionendpoints(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     Connectionendpoint := &vspk.Connectionendpoint{}
@@ -108,13 +91,9 @@ func dataSourceConnectionendpointRead(d *schema.ResourceData, m interface{}) err
 
     d.Set("ip_address", Connectionendpoint.IPAddress)
     d.Set("ip_type", Connectionendpoint.IPType)
-    d.Set("ipv6_address", Connectionendpoint.IPv6Address)
     d.Set("name", Connectionendpoint.Name)
-    d.Set("last_updated_by", Connectionendpoint.LastUpdatedBy)
     d.Set("description", Connectionendpoint.Description)
     d.Set("end_point_type", Connectionendpoint.EndPointType)
-    d.Set("entity_scope", Connectionendpoint.EntityScope)
-    d.Set("external_id", Connectionendpoint.ExternalID)
     
     d.Set("id", Connectionendpoint.Identifier())
     d.Set("parent_id", Connectionendpoint.ParentID)
@@ -123,5 +102,5 @@ func dataSourceConnectionendpointRead(d *schema.ResourceData, m interface{}) err
 
     d.SetId(Connectionendpoint.Identifier())
     
-    return nil
+    return
 }

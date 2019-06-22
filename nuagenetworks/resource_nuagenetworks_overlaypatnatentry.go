@@ -15,11 +15,6 @@ func resourceOverlayPATNATEntry() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -36,19 +31,8 @@ func resourceOverlayPATNATEntry() *schema.Resource {
                 Computed: true,
             },
             "nat_enabled": &schema.Schema{
-                Type:     schema.TypeBool,
-                Optional: true,
-                Default: true,
-            },
-            "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
             },
             "private_ip": &schema.Schema{
                 Type:     schema.TypeString,
@@ -66,10 +50,6 @@ func resourceOverlayPATNATEntry() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
             "parent_overlay_address_pool": &schema.Schema{
                 Type:     schema.TypeString,
                 Required: true,
@@ -84,7 +64,7 @@ func resourceOverlayPATNATEntryCreate(d *schema.ResourceData, m interface{}) err
     o := &vspk.OverlayPATNATEntry{
     }
     if attr, ok := d.GetOk("nat_enabled"); ok {
-        o.NATEnabled = attr.(bool)
+        o.NATEnabled = attr.(string)
     }
     if attr, ok := d.GetOk("private_ip"); ok {
         o.PrivateIP = attr.(string)
@@ -97,9 +77,6 @@ func resourceOverlayPATNATEntryCreate(d *schema.ResourceData, m interface{}) err
     }
     if attr, ok := d.GetOk("public_ip"); ok {
         o.PublicIP = attr.(string)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
     parent := &vspk.OverlayAddressPool{ID: d.Get("parent_overlay_address_pool").(string)}
     err := parent.CreateOverlayPATNATEntry(o)
@@ -125,13 +102,10 @@ func resourceOverlayPATNATEntryRead(d *schema.ResourceData, m interface{}) error
     }
 
     d.Set("nat_enabled", o.NATEnabled)
-    d.Set("last_updated_by", o.LastUpdatedBy)
-    d.Set("entity_scope", o.EntityScope)
     d.Set("private_ip", o.PrivateIP)
     d.Set("associated_domain_id", o.AssociatedDomainID)
     d.Set("associated_link_id", o.AssociatedLinkID)
     d.Set("public_ip", o.PublicIP)
-    d.Set("external_id", o.ExternalID)
     
     d.Set("id", o.Identifier())
     d.Set("parent_id", o.ParentID)
@@ -153,7 +127,7 @@ func resourceOverlayPATNATEntryUpdate(d *schema.ResourceData, m interface{}) err
     
     
     if attr, ok := d.GetOk("nat_enabled"); ok {
-        o.NATEnabled = attr.(bool)
+        o.NATEnabled = attr.(string)
     }
     if attr, ok := d.GetOk("private_ip"); ok {
         o.PrivateIP = attr.(string)
@@ -166,9 +140,6 @@ func resourceOverlayPATNATEntryUpdate(d *schema.ResourceData, m interface{}) err
     }
     if attr, ok := d.GetOk("public_ip"); ok {
         o.PublicIP = attr.(string)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
 
     o.Save()

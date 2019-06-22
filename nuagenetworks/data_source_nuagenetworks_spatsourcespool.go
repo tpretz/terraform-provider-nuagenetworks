@@ -32,22 +32,10 @@ func dataSourceSPATSourcesPool() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "address_list": &schema.Schema{
                 Type:     schema.TypeList,
                 Computed: true,
                 Elem:     &schema.Schema{Type: schema.TypeString},
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
             },
             "parent_domain": &schema.Schema{
                 Type:     schema.TypeString,
@@ -58,9 +46,8 @@ func dataSourceSPATSourcesPool() *schema.Resource {
 }
 
 
-func dataSourceSPATSourcesPoolRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceSPATSourcesPoolRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredSPATSourcesPools := vspk.SPATSourcesPoolsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -79,7 +66,7 @@ func dataSourceSPATSourcesPoolRead(d *schema.ResourceData, m interface{}) error 
     parent := &vspk.Domain{ID: d.Get("parent_domain").(string)}
     filteredSPATSourcesPools, err = parent.SPATSourcesPools(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     SPATSourcesPool := &vspk.SPATSourcesPool{}
@@ -97,10 +84,7 @@ func dataSourceSPATSourcesPoolRead(d *schema.ResourceData, m interface{}) error 
 
     d.Set("name", SPATSourcesPool.Name)
     d.Set("family", SPATSourcesPool.Family)
-    d.Set("last_updated_by", SPATSourcesPool.LastUpdatedBy)
     d.Set("address_list", SPATSourcesPool.AddressList)
-    d.Set("entity_scope", SPATSourcesPool.EntityScope)
-    d.Set("external_id", SPATSourcesPool.ExternalID)
     
     d.Set("id", SPATSourcesPool.Identifier())
     d.Set("parent_id", SPATSourcesPool.ParentID)
@@ -109,5 +93,5 @@ func dataSourceSPATSourcesPoolRead(d *schema.ResourceData, m interface{}) error 
 
     d.SetId(SPATSourcesPool.Identifier())
     
-    return nil
+    return
 }

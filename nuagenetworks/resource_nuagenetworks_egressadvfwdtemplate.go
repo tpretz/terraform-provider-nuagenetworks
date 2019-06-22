@@ -15,11 +15,6 @@ func resourceEgressAdvFwdTemplate() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -45,14 +40,6 @@ func resourceEgressAdvFwdTemplate() *schema.Resource {
                 Computed: true,
             },
             "active": &schema.Schema{
-                Type:     schema.TypeBool,
-                Optional: true,
-            },
-            "default_allow_ip": &schema.Schema{
-                Type:     schema.TypeBool,
-                Optional: true,
-            },
-            "default_allow_non_ip": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
             },
@@ -124,12 +111,6 @@ func resourceEgressAdvFwdTemplateCreate(d *schema.ResourceData, m interface{}) e
     if attr, ok := d.GetOk("active"); ok {
         o.Active = attr.(bool)
     }
-    if attr, ok := d.GetOk("default_allow_ip"); ok {
-        o.DefaultAllowIP = attr.(bool)
-    }
-    if attr, ok := d.GetOk("default_allow_non_ip"); ok {
-        o.DefaultAllowNonIP = attr.(bool)
-    }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
     }
@@ -200,8 +181,6 @@ func resourceEgressAdvFwdTemplateRead(d *schema.ResourceData, m interface{}) err
     d.Set("name", o.Name)
     d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("active", o.Active)
-    d.Set("default_allow_ip", o.DefaultAllowIP)
-    d.Set("default_allow_non_ip", o.DefaultAllowNonIP)
     d.Set("description", o.Description)
     d.Set("entity_scope", o.EntityScope)
     d.Set("policy_state", o.PolicyState)
@@ -235,12 +214,6 @@ func resourceEgressAdvFwdTemplateUpdate(d *schema.ResourceData, m interface{}) e
     }
     if attr, ok := d.GetOk("active"); ok {
         o.Active = attr.(bool)
-    }
-    if attr, ok := d.GetOk("default_allow_ip"); ok {
-        o.DefaultAllowIP = attr.(bool)
-    }
-    if attr, ok := d.GetOk("default_allow_non_ip"); ok {
-        o.DefaultAllowNonIP = attr.(bool)
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)

@@ -28,23 +28,7 @@ func dataSourceMACFilterProfile() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "description": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "assoc_entity_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -63,9 +47,8 @@ func dataSourceMACFilterProfile() *schema.Resource {
 }
 
 
-func dataSourceMACFilterProfileRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceMACFilterProfileRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredMACFilterProfiles := vspk.MACFilterProfilesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -85,13 +68,13 @@ func dataSourceMACFilterProfileRead(d *schema.ResourceData, m interface{}) error
         parent := &vspk.RedundancyGroup{ID: attr.(string)}
         filteredMACFilterProfiles, err = parent.MACFilterProfiles(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_gateway"); ok {
         parent := &vspk.Gateway{ID: attr.(string)}
         filteredMACFilterProfiles, err = parent.MACFilterProfiles(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -109,11 +92,7 @@ func dataSourceMACFilterProfileRead(d *schema.ResourceData, m interface{}) error
     MACFilterProfile = filteredMACFilterProfiles[0]
 
     d.Set("name", MACFilterProfile.Name)
-    d.Set("last_updated_by", MACFilterProfile.LastUpdatedBy)
     d.Set("description", MACFilterProfile.Description)
-    d.Set("entity_scope", MACFilterProfile.EntityScope)
-    d.Set("assoc_entity_type", MACFilterProfile.AssocEntityType)
-    d.Set("external_id", MACFilterProfile.ExternalID)
     
     d.Set("id", MACFilterProfile.Identifier())
     d.Set("parent_id", MACFilterProfile.ParentID)
@@ -122,5 +101,5 @@ func dataSourceMACFilterProfileRead(d *schema.ResourceData, m interface{}) error
 
     d.SetId(MACFilterProfile.Identifier())
     
-    return nil
+    return
 }

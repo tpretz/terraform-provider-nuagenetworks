@@ -15,11 +15,6 @@ func resourceAddressMap() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -60,7 +55,7 @@ func resourceAddressMap() *schema.Resource {
             },
             "public_ip": &schema.Schema{
                 Type:     schema.TypeString,
-                Optional: true,
+                Required: true,
             },
             "public_port": &schema.Schema{
                 Type:     schema.TypeInt,
@@ -87,12 +82,10 @@ func resourceAddressMapCreate(d *schema.ResourceData, m interface{}) error {
     // Initialize AddressMap object
     o := &vspk.AddressMap{
         PrivateIP: d.Get("private_ip").(string),
+        PublicIP: d.Get("public_ip").(string),
     }
     if attr, ok := d.GetOk("private_port"); ok {
         o.PrivatePort = attr.(int)
-    }
-    if attr, ok := d.GetOk("public_ip"); ok {
-        o.PublicIP = attr.(string)
     }
     if attr, ok := d.GetOk("public_port"); ok {
         o.PublicPort = attr.(int)
@@ -155,12 +148,10 @@ func resourceAddressMapUpdate(d *schema.ResourceData, m interface{}) error {
     }
     
     o.PrivateIP = d.Get("private_ip").(string)
+    o.PublicIP = d.Get("public_ip").(string)
     
     if attr, ok := d.GetOk("private_port"); ok {
         o.PrivatePort = attr.(int)
-    }
-    if attr, ok := d.GetOk("public_ip"); ok {
-        o.PublicIP = attr.(string)
     }
     if attr, ok := d.GetOk("public_port"); ok {
         o.PublicPort = attr.(int)

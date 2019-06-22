@@ -32,10 +32,6 @@ func dataSourceNetworkPerformanceMeasurement() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "read_only": &schema.Schema{
                 Type:     schema.TypeBool,
                 Computed: true,
@@ -44,30 +40,21 @@ func dataSourceNetworkPerformanceMeasurement() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "associated_performance_monitor_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,
-                Optional: true,
+                Required: true,
             },
         },
     }
 }
 
 
-func dataSourceNetworkPerformanceMeasurementRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceNetworkPerformanceMeasurementRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredNetworkPerformanceMeasurements := vspk.NetworkPerformanceMeasurementsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -83,18 +70,10 @@ func dataSourceNetworkPerformanceMeasurementRead(d *schema.ResourceData, m inter
            
         }
     }
-    if attr, ok := d.GetOk("parent_enterprise"); ok {
-        parent := &vspk.Enterprise{ID: attr.(string)}
-        filteredNetworkPerformanceMeasurements, err = parent.NetworkPerformanceMeasurements(fetchFilter)
-        if err != nil {
-            return err
-        }
-    } else {
-        parent := m.(*vspk.Me)
-        filteredNetworkPerformanceMeasurements, err = parent.NetworkPerformanceMeasurements(fetchFilter)
-        if err != nil {
-            return err
-        }
+    parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
+    filteredNetworkPerformanceMeasurements, err = parent.NetworkPerformanceMeasurements(fetchFilter)
+    if err != nil {
+        return
     }
 
     NetworkPerformanceMeasurement := &vspk.NetworkPerformanceMeasurement{}
@@ -112,12 +91,9 @@ func dataSourceNetworkPerformanceMeasurementRead(d *schema.ResourceData, m inter
 
     d.Set("npm_type", NetworkPerformanceMeasurement.NPMType)
     d.Set("name", NetworkPerformanceMeasurement.Name)
-    d.Set("last_updated_by", NetworkPerformanceMeasurement.LastUpdatedBy)
     d.Set("read_only", NetworkPerformanceMeasurement.ReadOnly)
     d.Set("description", NetworkPerformanceMeasurement.Description)
-    d.Set("entity_scope", NetworkPerformanceMeasurement.EntityScope)
     d.Set("associated_performance_monitor_id", NetworkPerformanceMeasurement.AssociatedPerformanceMonitorID)
-    d.Set("external_id", NetworkPerformanceMeasurement.ExternalID)
     
     d.Set("id", NetworkPerformanceMeasurement.Identifier())
     d.Set("parent_id", NetworkPerformanceMeasurement.ParentID)
@@ -126,5 +102,5 @@ func dataSourceNetworkPerformanceMeasurementRead(d *schema.ResourceData, m inter
 
     d.SetId(NetworkPerformanceMeasurement.Identifier())
     
-    return nil
+    return
 }

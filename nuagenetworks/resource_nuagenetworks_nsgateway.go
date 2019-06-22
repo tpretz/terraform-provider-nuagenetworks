@@ -15,11 +15,6 @@ func resourceNSGateway() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -38,16 +33,6 @@ func resourceNSGateway() *schema.Resource {
             "mac_address": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-            },
-            "aar_application_release_date": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "aar_application_version": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
             },
             "nat_traversal_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
@@ -98,11 +83,6 @@ func resourceNSGateway() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "vsdaar_application_version": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "nsg_version": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -135,6 +115,11 @@ func resourceNSGateway() *schema.Resource {
                 Computed: true,
             },
             "datapath_id": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+                Computed: true,
+            },
+            "patches": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
                 Computed: true,
@@ -267,15 +252,6 @@ func resourceNSGateway() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "associated_overlay_management_profile_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
-            "functions": &schema.Schema{
-                Type:     schema.TypeList,
-                Optional: true,
-                Elem:     &schema.Schema{Type: schema.TypeString},
-            },
             "auto_disc_gateway_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -289,15 +265,9 @@ func resourceNSGateway() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "parent_duc_group": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_enterprise"},
-            },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_duc_group"},
+                Required: true,
             },
         },
     }
@@ -406,31 +376,16 @@ func resourceNSGatewayCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("associated_nsg_upgrade_profile_id"); ok {
         o.AssociatedNSGUpgradeProfileID = attr.(string)
     }
-    if attr, ok := d.GetOk("associated_overlay_management_profile_id"); ok {
-        o.AssociatedOverlayManagementProfileID = attr.(string)
-    }
-    if attr, ok := d.GetOk("functions"); ok {
-        o.Functions = attr.([]interface{})
-    }
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)
     }
     if attr, ok := d.GetOk("system_id"); ok {
         o.SystemID = attr.(string)
     }
-    if attr, ok := d.GetOk("parent_me"); ok {
-        parent := &vspk.Me{ID: attr.(string)}
-        err := parent.CreateNSGateway(o)
-        if err != nil {
-            return err
-        }
-    }
-    if attr, ok := d.GetOk("parent_enterprise"); ok {
-        parent := &vspk.Enterprise{ID: attr.(string)}
-        err := parent.CreateNSGateway(o)
-        if err != nil {
-            return err
-        }
+    parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
+    err := parent.CreateNSGateway(o)
+    if err != nil {
+        return err
     }
     
     
@@ -454,8 +409,6 @@ func resourceNSGatewayRead(d *schema.ResourceData, m interface{}) error {
     }
 
     d.Set("mac_address", o.MACAddress)
-    d.Set("aar_application_release_date", o.AARApplicationReleaseDate)
-    d.Set("aar_application_version", o.AARApplicationVersion)
     d.Set("nat_traversal_enabled", o.NATTraversalEnabled)
     d.Set("tcpmss_enabled", o.TCPMSSEnabled)
     d.Set("tcp_maximum_segment_size", o.TCPMaximumSegmentSize)
@@ -467,7 +420,6 @@ func resourceNSGatewayRead(d *schema.ResourceData, m interface{}) error {
     d.Set("tpm_status", o.TPMStatus)
     d.Set("tpm_version", o.TPMVersion)
     d.Set("cpu_type", o.CPUType)
-    d.Set("vsdaar_application_version", o.VSDAARApplicationVersion)
     d.Set("nsg_version", o.NSGVersion)
     d.Set("ssh_service", o.SSHService)
     d.Set("uuid", o.UUID)
@@ -476,6 +428,7 @@ func resourceNSGatewayRead(d *schema.ResourceData, m interface{}) error {
     d.Set("last_configuration_reload_timestamp", o.LastConfigurationReloadTimestamp)
     d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("datapath_id", o.DatapathID)
+    d.Set("patches", o.Patches)
     d.Set("gateway_connected", o.GatewayConnected)
     d.Set("redundancy_group_id", o.RedundancyGroupID)
     d.Set("template_id", o.TemplateID)
@@ -504,8 +457,6 @@ func resourceNSGatewayRead(d *schema.ResourceData, m interface{}) error {
     d.Set("associated_gateway_security_profile_id", o.AssociatedGatewaySecurityProfileID)
     d.Set("associated_nsg_info_id", o.AssociatedNSGInfoID)
     d.Set("associated_nsg_upgrade_profile_id", o.AssociatedNSGUpgradeProfileID)
-    d.Set("associated_overlay_management_profile_id", o.AssociatedOverlayManagementProfileID)
-    d.Set("functions", o.Functions)
     d.Set("auto_disc_gateway_id", o.AutoDiscGatewayID)
     d.Set("external_id", o.ExternalID)
     d.Set("system_id", o.SystemID)
@@ -626,12 +577,6 @@ func resourceNSGatewayUpdate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("associated_nsg_upgrade_profile_id"); ok {
         o.AssociatedNSGUpgradeProfileID = attr.(string)
-    }
-    if attr, ok := d.GetOk("associated_overlay_management_profile_id"); ok {
-        o.AssociatedOverlayManagementProfileID = attr.(string)
-    }
-    if attr, ok := d.GetOk("functions"); ok {
-        o.Functions = attr.([]interface{})
     }
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)

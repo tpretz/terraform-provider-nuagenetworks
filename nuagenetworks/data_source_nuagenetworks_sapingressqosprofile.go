@@ -28,23 +28,7 @@ func dataSourceSAPIngressQoSProfile() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "description": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "assoc_entity_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -63,9 +47,8 @@ func dataSourceSAPIngressQoSProfile() *schema.Resource {
 }
 
 
-func dataSourceSAPIngressQoSProfileRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceSAPIngressQoSProfileRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredSAPIngressQoSProfiles := vspk.SAPIngressQoSProfilesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -85,13 +68,13 @@ func dataSourceSAPIngressQoSProfileRead(d *schema.ResourceData, m interface{}) e
         parent := &vspk.RedundancyGroup{ID: attr.(string)}
         filteredSAPIngressQoSProfiles, err = parent.SAPIngressQoSProfiles(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_gateway"); ok {
         parent := &vspk.Gateway{ID: attr.(string)}
         filteredSAPIngressQoSProfiles, err = parent.SAPIngressQoSProfiles(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -109,11 +92,7 @@ func dataSourceSAPIngressQoSProfileRead(d *schema.ResourceData, m interface{}) e
     SAPIngressQoSProfile = filteredSAPIngressQoSProfiles[0]
 
     d.Set("name", SAPIngressQoSProfile.Name)
-    d.Set("last_updated_by", SAPIngressQoSProfile.LastUpdatedBy)
     d.Set("description", SAPIngressQoSProfile.Description)
-    d.Set("entity_scope", SAPIngressQoSProfile.EntityScope)
-    d.Set("assoc_entity_type", SAPIngressQoSProfile.AssocEntityType)
-    d.Set("external_id", SAPIngressQoSProfile.ExternalID)
     
     d.Set("id", SAPIngressQoSProfile.Identifier())
     d.Set("parent_id", SAPIngressQoSProfile.ParentID)
@@ -122,5 +101,5 @@ func dataSourceSAPIngressQoSProfileRead(d *schema.ResourceData, m interface{}) e
 
     d.SetId(SAPIngressQoSProfile.Identifier())
     
-    return nil
+    return
 }

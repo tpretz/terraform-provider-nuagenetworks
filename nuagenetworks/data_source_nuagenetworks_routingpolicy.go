@@ -44,14 +44,6 @@ func dataSourceRoutingPolicy() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "content_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "routing_protocol": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -71,9 +63,8 @@ func dataSourceRoutingPolicy() *schema.Resource {
 }
 
 
-func dataSourceRoutingPolicyRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceRoutingPolicyRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredRoutingPolicies := vspk.RoutingPoliciesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -93,19 +84,19 @@ func dataSourceRoutingPolicyRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.Domain{ID: attr.(string)}
         filteredRoutingPolicies, err = parent.RoutingPolicies(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredRoutingPolicies, err = parent.RoutingPolicies(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredRoutingPolicies, err = parent.RoutingPolicies(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -127,8 +118,6 @@ func dataSourceRoutingPolicyRead(d *schema.ResourceData, m interface{}) error {
     d.Set("description", RoutingPolicy.Description)
     d.Set("entity_scope", RoutingPolicy.EntityScope)
     d.Set("policy_definition", RoutingPolicy.PolicyDefinition)
-    d.Set("content_type", RoutingPolicy.ContentType)
-    d.Set("routing_protocol", RoutingPolicy.RoutingProtocol)
     d.Set("external_id", RoutingPolicy.ExternalID)
     
     d.Set("id", RoutingPolicy.Identifier())
@@ -138,5 +127,5 @@ func dataSourceRoutingPolicyRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(RoutingPolicy.Identifier())
     
-    return nil
+    return
 }

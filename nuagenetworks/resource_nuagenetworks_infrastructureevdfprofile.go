@@ -15,11 +15,6 @@ func resourceInfrastructureEVDFProfile() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -65,10 +60,6 @@ func resourceInfrastructureEVDFProfile() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "enterprise_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -81,7 +72,7 @@ func resourceInfrastructureEVDFProfile() *schema.Resource {
             "use_two_factor": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
-                Default: true,
+                Default: false,
             },
             "standby_controller": &schema.Schema{
                 Type:     schema.TypeString,
@@ -119,9 +110,6 @@ func resourceInfrastructureEVDFProfileCreate(d *schema.ResourceData, m interface
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
-    }
-    if attr, ok := d.GetOk("enterprise_id"); ok {
-        o.EnterpriseID = attr.(string)
     }
     if attr, ok := d.GetOk("use_two_factor"); ok {
         o.UseTwoFactor = attr.(bool)
@@ -165,7 +153,6 @@ func resourceInfrastructureEVDFProfileRead(d *schema.ResourceData, m interface{}
     d.Set("active_controller", o.ActiveController)
     d.Set("service_ipv4_subnet", o.ServiceIPv4Subnet)
     d.Set("description", o.Description)
-    d.Set("enterprise_id", o.EnterpriseID)
     d.Set("entity_scope", o.EntityScope)
     d.Set("proxy_dns_name", o.ProxyDNSName)
     d.Set("use_two_factor", o.UseTwoFactor)
@@ -206,9 +193,6 @@ func resourceInfrastructureEVDFProfileUpdate(d *schema.ResourceData, m interface
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
-    }
-    if attr, ok := d.GetOk("enterprise_id"); ok {
-        o.EnterpriseID = attr.(string)
     }
     if attr, ok := d.GetOk("use_two_factor"); ok {
         o.UseTwoFactor = attr.(bool)

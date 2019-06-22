@@ -57,9 +57,8 @@ func dataSourceQosPolicer() *schema.Resource {
 }
 
 
-func dataSourceQosPolicerRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceQosPolicerRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredQosPolicers := vspk.QosPolicersList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -78,7 +77,7 @@ func dataSourceQosPolicerRead(d *schema.ResourceData, m interface{}) error {
     parent := m.(*vspk.Me)
     filteredQosPolicers, err = parent.QosPolicers(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     QosPolicer := &vspk.QosPolicer{}
@@ -109,5 +108,5 @@ func dataSourceQosPolicerRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(QosPolicer.Identifier())
     
-    return nil
+    return
 }

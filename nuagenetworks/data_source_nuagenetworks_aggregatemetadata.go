@@ -53,10 +53,6 @@ func dataSourceAggregateMetadata() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "assoc_entity_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -70,9 +66,8 @@ func dataSourceAggregateMetadata() *schema.Resource {
 }
 
 
-func dataSourceAggregateMetadataRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceAggregateMetadataRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredAggregateMetadatas := vspk.AggregateMetadatasList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -91,7 +86,7 @@ func dataSourceAggregateMetadataRead(d *schema.ResourceData, m interface{}) erro
     parent := &vspk.VPort{ID: d.Get("parent_vport").(string)}
     filteredAggregateMetadatas, err = parent.AggregateMetadatas(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     AggregateMetadata := &vspk.AggregateMetadata{}
@@ -114,7 +109,6 @@ func dataSourceAggregateMetadataRead(d *schema.ResourceData, m interface{}) erro
     d.Set("blob", AggregateMetadata.Blob)
     d.Set("global", AggregateMetadata.Global)
     d.Set("entity_scope", AggregateMetadata.EntityScope)
-    d.Set("assoc_entity_type", AggregateMetadata.AssocEntityType)
     d.Set("external_id", AggregateMetadata.ExternalID)
     
     d.Set("id", AggregateMetadata.Identifier())
@@ -124,5 +118,5 @@ func dataSourceAggregateMetadataRead(d *schema.ResourceData, m interface{}) erro
 
     d.SetId(AggregateMetadata.Identifier())
     
-    return nil
+    return
 }

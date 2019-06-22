@@ -79,9 +79,8 @@ func dataSourceL4Service() *schema.Resource {
 }
 
 
-func dataSourceL4ServiceRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceL4ServiceRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredL4Services := vspk.L4ServicesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -101,19 +100,19 @@ func dataSourceL4ServiceRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.L4ServiceGroup{ID: attr.(string)}
         filteredL4Services, err = parent.L4Services(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredL4Services, err = parent.L4Services(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredL4Services, err = parent.L4Services(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -148,5 +147,5 @@ func dataSourceL4ServiceRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(L4Service.Identifier())
     
-    return nil
+    return
 }

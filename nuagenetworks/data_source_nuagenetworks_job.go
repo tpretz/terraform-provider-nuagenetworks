@@ -105,9 +105,8 @@ func dataSourceJob() *schema.Resource {
 }
 
 
-func dataSourceJobRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceJobRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredJobs := vspk.JobsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -127,55 +126,55 @@ func dataSourceJobRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredJobs, err = parent.Jobs(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_egress_acl_template"); ok {
         parent := &vspk.EgressACLTemplate{ID: attr.(string)}
         filteredJobs, err = parent.Jobs(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredJobs, err = parent.Jobs(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_ingress_adv_fwd_template"); ok {
         parent := &vspk.IngressAdvFwdTemplate{ID: attr.(string)}
         filteredJobs, err = parent.Jobs(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_ns_gateway"); ok {
         parent := &vspk.NSGateway{ID: attr.(string)}
         filteredJobs, err = parent.Jobs(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_ingress_acl_template"); ok {
         parent := &vspk.IngressACLTemplate{ID: attr.(string)}
         filteredJobs, err = parent.Jobs(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_redundancy_group"); ok {
         parent := &vspk.RedundancyGroup{ID: attr.(string)}
         filteredJobs, err = parent.Jobs(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_gateway"); ok {
         parent := &vspk.Gateway{ID: attr.(string)}
         filteredJobs, err = parent.Jobs(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredJobs, err = parent.Jobs(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -209,5 +208,5 @@ func dataSourceJobRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(Job.Identifier())
     
-    return nil
+    return
 }

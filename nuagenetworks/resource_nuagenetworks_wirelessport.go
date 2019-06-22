@@ -15,11 +15,6 @@ func resourceWirelessPort() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -35,25 +30,11 @@ func resourceWirelessPort() *schema.Resource {
                 Optional: true,
                 Computed: true,
             },
-            "vlan_range": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "name": &schema.Schema{
                 Type:     schema.TypeString,
                 Required: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "generic_config": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
-            "permitted_action": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
@@ -73,11 +54,6 @@ func resourceWirelessPort() *schema.Resource {
                 Type:     schema.TypeString,
                 Required: true,
             },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "port_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Required: true,
@@ -89,27 +65,6 @@ func resourceWirelessPort() *schema.Resource {
             "frequency_channel": &schema.Schema{
                 Type:     schema.TypeString,
                 Required: true,
-            },
-            "use_user_mnemonic": &schema.Schema{
-                Type:     schema.TypeBool,
-                Optional: true,
-            },
-            "user_mnemonic": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
-            "associated_egress_qos_policy_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "status": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
             },
             "parent_ns_gateway": &schema.Schema{
                 Type:     schema.TypeString,
@@ -134,23 +89,8 @@ func resourceWirelessPortCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("generic_config"); ok {
         o.GenericConfig = attr.(string)
     }
-    if attr, ok := d.GetOk("permitted_action"); ok {
-        o.PermittedAction = attr.(string)
-    }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
-    }
-    if attr, ok := d.GetOk("use_user_mnemonic"); ok {
-        o.UseUserMnemonic = attr.(bool)
-    }
-    if attr, ok := d.GetOk("user_mnemonic"); ok {
-        o.UserMnemonic = attr.(string)
-    }
-    if attr, ok := d.GetOk("status"); ok {
-        o.Status = attr.(string)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
     parent := &vspk.NSGateway{ID: d.Get("parent_ns_gateway").(string)}
     err := parent.CreateWirelessPort(o)
@@ -175,24 +115,15 @@ func resourceWirelessPortRead(d *schema.ResourceData, m interface{}) error {
         return nil
     }
 
-    d.Set("vlan_range", o.VLANRange)
     d.Set("name", o.Name)
-    d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("generic_config", o.GenericConfig)
-    d.Set("permitted_action", o.PermittedAction)
     d.Set("description", o.Description)
     d.Set("physical_name", o.PhysicalName)
     d.Set("wifi_frequency_band", o.WifiFrequencyBand)
     d.Set("wifi_mode", o.WifiMode)
-    d.Set("entity_scope", o.EntityScope)
     d.Set("port_type", o.PortType)
     d.Set("country_code", o.CountryCode)
     d.Set("frequency_channel", o.FrequencyChannel)
-    d.Set("use_user_mnemonic", o.UseUserMnemonic)
-    d.Set("user_mnemonic", o.UserMnemonic)
-    d.Set("associated_egress_qos_policy_id", o.AssociatedEgressQOSPolicyID)
-    d.Set("status", o.Status)
-    d.Set("external_id", o.ExternalID)
     
     d.Set("id", o.Identifier())
     d.Set("parent_id", o.ParentID)
@@ -223,23 +154,8 @@ func resourceWirelessPortUpdate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("generic_config"); ok {
         o.GenericConfig = attr.(string)
     }
-    if attr, ok := d.GetOk("permitted_action"); ok {
-        o.PermittedAction = attr.(string)
-    }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
-    }
-    if attr, ok := d.GetOk("use_user_mnemonic"); ok {
-        o.UseUserMnemonic = attr.(bool)
-    }
-    if attr, ok := d.GetOk("user_mnemonic"); ok {
-        o.UserMnemonic = attr.(string)
-    }
-    if attr, ok := d.GetOk("status"); ok {
-        o.Status = attr.(string)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
 
     o.Save()

@@ -15,11 +15,6 @@ func resourceStaticRoute() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -65,11 +60,6 @@ func resourceStaticRoute() *schema.Resource {
                 Type:     schema.TypeString,
                 Required: true,
             },
-            "black_hole_enabled": &schema.Schema{
-                Type:     schema.TypeBool,
-                Optional: true,
-                Default: false,
-            },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -78,11 +68,6 @@ func resourceStaticRoute() *schema.Resource {
             "route_distinguisher": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-            },
-            "associated_gateway_ids": &schema.Schema{
-                Type:     schema.TypeList,
-                Optional: true,
-                Elem:     &schema.Schema{Type: schema.TypeString},
             },
             "associated_subnet_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -99,17 +84,12 @@ func resourceStaticRoute() *schema.Resource {
             "parent_shared_network_resource": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_l2_domain"},
+                ConflictsWith: []string{"parent_domain"},
             },
             "parent_domain": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_shared_network_resource", "parent_l2_domain"},
-            },
-            "parent_l2_domain": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_shared_network_resource", "parent_domain"},
+                ConflictsWith: []string{"parent_shared_network_resource"},
             },
         },
     }
@@ -132,14 +112,8 @@ func resourceStaticRouteCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("ipv6_address"); ok {
         o.IPv6Address = attr.(string)
     }
-    if attr, ok := d.GetOk("black_hole_enabled"); ok {
-        o.BlackHoleEnabled = attr.(bool)
-    }
     if attr, ok := d.GetOk("route_distinguisher"); ok {
         o.RouteDistinguisher = attr.(string)
-    }
-    if attr, ok := d.GetOk("associated_gateway_ids"); ok {
-        o.AssociatedGatewayIDs = attr.([]interface{})
     }
     if attr, ok := d.GetOk("associated_subnet_id"); ok {
         o.AssociatedSubnetID = attr.(string)
@@ -159,13 +133,6 @@ func resourceStaticRouteCreate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("parent_domain"); ok {
         parent := &vspk.Domain{ID: attr.(string)}
-        err := parent.CreateStaticRoute(o)
-        if err != nil {
-            return err
-        }
-    }
-    if attr, ok := d.GetOk("parent_l2_domain"); ok {
-        parent := &vspk.L2Domain{ID: attr.(string)}
         err := parent.CreateStaticRoute(o)
         if err != nil {
             return err
@@ -196,10 +163,8 @@ func resourceStaticRouteRead(d *schema.ResourceData, m interface{}) error {
     d.Set("address", o.Address)
     d.Set("netmask", o.Netmask)
     d.Set("next_hop_ip", o.NextHopIp)
-    d.Set("black_hole_enabled", o.BlackHoleEnabled)
     d.Set("entity_scope", o.EntityScope)
     d.Set("route_distinguisher", o.RouteDistinguisher)
-    d.Set("associated_gateway_ids", o.AssociatedGatewayIDs)
     d.Set("associated_subnet_id", o.AssociatedSubnetID)
     d.Set("external_id", o.ExternalID)
     d.Set("type", o.Type)
@@ -235,14 +200,8 @@ func resourceStaticRouteUpdate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("ipv6_address"); ok {
         o.IPv6Address = attr.(string)
     }
-    if attr, ok := d.GetOk("black_hole_enabled"); ok {
-        o.BlackHoleEnabled = attr.(bool)
-    }
     if attr, ok := d.GetOk("route_distinguisher"); ok {
         o.RouteDistinguisher = attr.(string)
-    }
-    if attr, ok := d.GetOk("associated_gateway_ids"); ok {
-        o.AssociatedGatewayIDs = attr.([]interface{})
     }
     if attr, ok := d.GetOk("associated_subnet_id"); ok {
         o.AssociatedSubnetID = attr.(string)

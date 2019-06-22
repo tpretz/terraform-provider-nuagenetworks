@@ -15,11 +15,6 @@ func resourcePATNATPool() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -34,10 +29,6 @@ func resourcePATNATPool() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
                 Computed: true,
-            },
-            "ip_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
             },
             "name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -119,9 +110,6 @@ func resourcePATNATPoolCreate(d *schema.ResourceData, m interface{}) error {
     o := &vspk.PATNATPool{
         Name: d.Get("name").(string),
     }
-    if attr, ok := d.GetOk("ip_type"); ok {
-        o.IPType = attr.(string)
-    }
     if attr, ok := d.GetOk("address_range"); ok {
         o.AddressRange = attr.(string)
     }
@@ -187,7 +175,6 @@ func resourcePATNATPoolRead(d *schema.ResourceData, m interface{}) error {
         return nil
     }
 
-    d.Set("ip_type", o.IPType)
     d.Set("name", o.Name)
     d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("address_range", o.AddressRange)
@@ -226,9 +213,6 @@ func resourcePATNATPoolUpdate(d *schema.ResourceData, m interface{}) error {
     
     o.Name = d.Get("name").(string)
     
-    if attr, ok := d.GetOk("ip_type"); ok {
-        o.IPType = attr.(string)
-    }
     if attr, ok := d.GetOk("address_range"); ok {
         o.AddressRange = attr.(string)
     }

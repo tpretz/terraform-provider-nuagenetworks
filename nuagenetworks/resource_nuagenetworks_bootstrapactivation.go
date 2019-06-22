@@ -15,11 +15,6 @@ func resourceBootstrapActivation() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -90,11 +85,6 @@ func resourceBootstrapActivation() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "associated_entity_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "status": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -109,13 +99,7 @@ func resourceBootstrapActivation() *schema.Resource {
             },
             "parent_ns_gateway": &schema.Schema{
                 Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_gateway"},
-            },
-            "parent_gateway": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_ns_gateway"},
+                Required: true,
             },
         },
     }
@@ -168,19 +152,10 @@ func resourceBootstrapActivationCreate(d *schema.ResourceData, m interface{}) er
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)
     }
-    if attr, ok := d.GetOk("parent_ns_gateway"); ok {
-        parent := &vspk.NSGateway{ID: attr.(string)}
-        err := parent.CreateBootstrapActivation(o)
-        if err != nil {
-            return err
-        }
-    }
-    if attr, ok := d.GetOk("parent_gateway"); ok {
-        parent := &vspk.Gateway{ID: attr.(string)}
-        err := parent.CreateBootstrapActivation(o)
-        if err != nil {
-            return err
-        }
+    parent := &vspk.NSGateway{ID: d.Get("parent_ns_gateway").(string)}
+    err := parent.CreateBootstrapActivation(o)
+    if err != nil {
+        return err
     }
     
     
@@ -213,7 +188,6 @@ func resourceBootstrapActivationRead(d *schema.ResourceData, m interface{}) erro
     d.Set("srk_password", o.SrkPassword)
     d.Set("vsd_time", o.VsdTime)
     d.Set("csr", o.Csr)
-    d.Set("associated_entity_type", o.AssociatedEntityType)
     d.Set("status", o.Status)
     d.Set("auto_bootstrap", o.AutoBootstrap)
     d.Set("external_id", o.ExternalID)

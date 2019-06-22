@@ -50,9 +50,8 @@ func dataSourceLtestatistics() *schema.Resource {
 }
 
 
-func dataSourceLtestatisticsRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceLtestatisticsRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredLtestatistics := vspk.LtestatisticsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -71,7 +70,7 @@ func dataSourceLtestatisticsRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.VLAN{ID: d.Get("parent_vlan").(string)}
     filteredLtestatistics, err = parent.Ltestatistics(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     Ltestatistics := &vspk.Ltestatistics{}
@@ -99,5 +98,5 @@ func dataSourceLtestatisticsRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(Ltestatistics.Identifier())
     
-    return nil
+    return
 }

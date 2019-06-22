@@ -47,7 +47,6 @@ type GatewaySecuredData struct {
 	KeyserverCertSerialNumber string `json:"keyserverCertSerialNumber,omitempty"`
 	SignedData                string `json:"signedData,omitempty"`
 	EntityScope               string `json:"entityScope,omitempty"`
-	AssociatedEnterpriseID    string `json:"associatedEnterpriseID,omitempty"`
 	ExternalID                string `json:"externalID,omitempty"`
 }
 

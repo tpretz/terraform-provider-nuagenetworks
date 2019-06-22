@@ -15,11 +15,6 @@ func resourceVCenter() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -34,10 +29,6 @@ func resourceVCenter() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
                 Computed: true,
-            },
-            "arp_reply": &schema.Schema{
-                Type:     schema.TypeBool,
-                Optional: true,
             },
             "vrs_configuration_time_limit": &schema.Schema{
                 Type:     schema.TypeInt,
@@ -520,9 +511,6 @@ func resourceVCenterCreate(d *schema.ResourceData, m interface{}) error {
         IpAddress: d.Get("ip_address").(string),
         UserName: d.Get("user_name").(string),
     }
-    if attr, ok := d.GetOk("arp_reply"); ok {
-        o.ARPReply = attr.(bool)
-    }
     if attr, ok := d.GetOk("vrs_configuration_time_limit"); ok {
         o.VRSConfigurationTimeLimit = attr.(int)
     }
@@ -852,7 +840,6 @@ func resourceVCenterRead(d *schema.ResourceData, m interface{}) error {
         return nil
     }
 
-    d.Set("arp_reply", o.ARPReply)
     d.Set("vrs_configuration_time_limit", o.VRSConfigurationTimeLimit)
     d.Set("v_require_nuage_metadata", o.VRequireNuageMetadata)
     d.Set("name", o.Name)
@@ -991,9 +978,6 @@ func resourceVCenterUpdate(d *schema.ResourceData, m interface{}) error {
     o.IpAddress = d.Get("ip_address").(string)
     o.UserName = d.Get("user_name").(string)
     
-    if attr, ok := d.GetOk("arp_reply"); ok {
-        o.ARPReply = attr.(bool)
-    }
     if attr, ok := d.GetOk("vrs_configuration_time_limit"); ok {
         o.VRSConfigurationTimeLimit = attr.(int)
     }

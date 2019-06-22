@@ -48,10 +48,6 @@ func dataSourceOverlayMirrorDestination() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "destination_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "virtual_network_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -74,16 +70,15 @@ func dataSourceOverlayMirrorDestination() *schema.Resource {
             },
             "parent_l2_domain": &schema.Schema{
                 Type:     schema.TypeString,
-                Optional: true,
+                Required: true,
             },
         },
     }
 }
 
 
-func dataSourceOverlayMirrorDestinationRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceOverlayMirrorDestinationRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredOverlayMirrorDestinations := vspk.OverlayMirrorDestinationsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -99,18 +94,10 @@ func dataSourceOverlayMirrorDestinationRead(d *schema.ResourceData, m interface{
            
         }
     }
-    if attr, ok := d.GetOk("parent_l2_domain"); ok {
-        parent := &vspk.L2Domain{ID: attr.(string)}
-        filteredOverlayMirrorDestinations, err = parent.OverlayMirrorDestinations(fetchFilter)
-        if err != nil {
-            return err
-        }
-    } else {
-        parent := m.(*vspk.Me)
-        filteredOverlayMirrorDestinations, err = parent.OverlayMirrorDestinations(fetchFilter)
-        if err != nil {
-            return err
-        }
+    parent := &vspk.L2Domain{ID: d.Get("parent_l2_domain").(string)}
+    filteredOverlayMirrorDestinations, err = parent.OverlayMirrorDestinations(fetchFilter)
+    if err != nil {
+        return
     }
 
     OverlayMirrorDestination := &vspk.OverlayMirrorDestination{}
@@ -132,7 +119,6 @@ func dataSourceOverlayMirrorDestinationRead(d *schema.ResourceData, m interface{
     d.Set("redundancy_enabled", OverlayMirrorDestination.RedundancyEnabled)
     d.Set("template_id", OverlayMirrorDestination.TemplateID)
     d.Set("description", OverlayMirrorDestination.Description)
-    d.Set("destination_type", OverlayMirrorDestination.DestinationType)
     d.Set("virtual_network_id", OverlayMirrorDestination.VirtualNetworkID)
     d.Set("end_point_type", OverlayMirrorDestination.EndPointType)
     d.Set("entity_scope", OverlayMirrorDestination.EntityScope)
@@ -146,5 +132,5 @@ func dataSourceOverlayMirrorDestinationRead(d *schema.ResourceData, m interface{
 
     d.SetId(OverlayMirrorDestination.Identifier())
     
-    return nil
+    return
 }

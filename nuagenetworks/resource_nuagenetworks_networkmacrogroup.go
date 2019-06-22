@@ -15,11 +15,6 @@ func resourceNetworkMacroGroup() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -47,6 +42,11 @@ func resourceNetworkMacroGroup() *schema.Resource {
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+            },
+            "network_macros": &schema.Schema{
+                Type:     schema.TypeList,
+                Optional: true,
+                Elem:     &schema.Schema{Type: schema.TypeString},
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -78,6 +78,9 @@ func resourceNetworkMacroGroupCreate(d *schema.ResourceData, m interface{}) erro
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
+    }
+    if attr, ok := d.GetOk("network_macros"); ok {
+        o.NetworkMacros = attr.([]interface{})
     }
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)
@@ -111,6 +114,7 @@ func resourceNetworkMacroGroupRead(d *schema.ResourceData, m interface{}) error 
     d.Set("name", o.Name)
     d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("description", o.Description)
+    d.Set("network_macros", o.NetworkMacros)
     d.Set("entity_scope", o.EntityScope)
     d.Set("is_saa_s_type", o.IsSaaSType)
     d.Set("external_id", o.ExternalID)
@@ -137,6 +141,9 @@ func resourceNetworkMacroGroupUpdate(d *schema.ResourceData, m interface{}) erro
     
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
+    }
+    if attr, ok := d.GetOk("network_macros"); ok {
+        o.NetworkMacros = attr.([]interface{})
     }
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)

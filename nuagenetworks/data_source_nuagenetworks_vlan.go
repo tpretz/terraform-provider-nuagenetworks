@@ -158,9 +158,8 @@ func dataSourceVLAN() *schema.Resource {
 }
 
 
-func dataSourceVLANRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceVLANRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredVLANs := vspk.VLANsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -180,31 +179,31 @@ func dataSourceVLANRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.NSPort{ID: attr.(string)}
         filteredVLANs, err = parent.VLANs(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vsg_redundant_port"); ok {
         parent := &vspk.VsgRedundantPort{ID: attr.(string)}
         filteredVLANs, err = parent.VLANs(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_gateway_redundant_port"); ok {
         parent := &vspk.GatewayRedundantPort{ID: attr.(string)}
         filteredVLANs, err = parent.VLANs(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_redundant_port"); ok {
         parent := &vspk.RedundantPort{ID: attr.(string)}
         filteredVLANs, err = parent.VLANs(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_port"); ok {
         parent := &vspk.Port{ID: attr.(string)}
         filteredVLANs, err = parent.VLANs(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -255,5 +254,5 @@ func dataSourceVLANRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(VLAN.Identifier())
     
-    return nil
+    return
 }

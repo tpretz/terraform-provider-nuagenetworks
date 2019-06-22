@@ -30,5 +30,5 @@
   version = "1.0.1"
 
 [[constraint]]
-  name = "github.com/nuagenetworks/vspk-go"
-  version = "5.4.1"
+  name = "github.com/tpretz/vspk-go"
+  version = "=5.3.2"

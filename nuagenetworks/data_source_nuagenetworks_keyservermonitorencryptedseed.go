@@ -32,10 +32,6 @@ func dataSourceKeyServerMonitorEncryptedSeed() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "seed_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "key_server_certificate_serial_number": &schema.Schema{
                 Type:     schema.TypeInt,
                 Computed: true,
@@ -83,9 +79,8 @@ func dataSourceKeyServerMonitorEncryptedSeed() *schema.Resource {
 }
 
 
-func dataSourceKeyServerMonitorEncryptedSeedRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceKeyServerMonitorEncryptedSeedRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredKeyServerMonitorEncryptedSeeds := vspk.KeyServerMonitorEncryptedSeedsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -105,13 +100,13 @@ func dataSourceKeyServerMonitorEncryptedSeedRead(d *schema.ResourceData, m inter
         parent := &vspk.KeyServerMonitorSeed{ID: attr.(string)}
         filteredKeyServerMonitorEncryptedSeeds, err = parent.KeyServerMonitorEncryptedSeeds(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_key_server_monitor"); ok {
         parent := &vspk.KeyServerMonitor{ID: attr.(string)}
         filteredKeyServerMonitorEncryptedSeeds, err = parent.KeyServerMonitorEncryptedSeeds(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -130,7 +125,6 @@ func dataSourceKeyServerMonitorEncryptedSeedRead(d *schema.ResourceData, m inter
 
     d.Set("sek_creation_time", KeyServerMonitorEncryptedSeed.SEKCreationTime)
     d.Set("last_updated_by", KeyServerMonitorEncryptedSeed.LastUpdatedBy)
-    d.Set("seed_type", KeyServerMonitorEncryptedSeed.SeedType)
     d.Set("key_server_certificate_serial_number", KeyServerMonitorEncryptedSeed.KeyServerCertificateSerialNumber)
     d.Set("enterprise_secured_data_id", KeyServerMonitorEncryptedSeed.EnterpriseSecuredDataID)
     d.Set("entity_scope", KeyServerMonitorEncryptedSeed.EntityScope)
@@ -147,5 +141,5 @@ func dataSourceKeyServerMonitorEncryptedSeedRead(d *schema.ResourceData, m inter
 
     d.SetId(KeyServerMonitorEncryptedSeed.Identifier())
     
-    return nil
+    return
 }

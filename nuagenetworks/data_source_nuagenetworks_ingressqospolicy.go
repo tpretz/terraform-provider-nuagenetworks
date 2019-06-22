@@ -97,9 +97,8 @@ func dataSourceIngressQOSPolicy() *schema.Resource {
 }
 
 
-func dataSourceIngressQOSPolicyRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceIngressQOSPolicyRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredIngressQOSPolicies := vspk.IngressQOSPoliciesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -119,13 +118,13 @@ func dataSourceIngressQOSPolicyRead(d *schema.ResourceData, m interface{}) error
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredIngressQOSPolicies, err = parent.IngressQOSPolicies(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredIngressQOSPolicies, err = parent.IngressQOSPolicies(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -165,5 +164,5 @@ func dataSourceIngressQOSPolicyRead(d *schema.ResourceData, m interface{}) error
 
     d.SetId(IngressQOSPolicy.Identifier())
     
-    return nil
+    return
 }

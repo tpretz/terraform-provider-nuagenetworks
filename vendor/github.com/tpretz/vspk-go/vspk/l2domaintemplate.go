@@ -271,6 +271,20 @@ func (o *L2DomainTemplate) CreateIngressAdvFwdTemplate(child *IngressAdvFwdTempl
 	return bambou.CurrentSession().CreateChild(o, child)
 }
 
+// IngressExternalServiceTemplates retrieves the list of child IngressExternalServiceTemplates of the L2DomainTemplate
+func (o *L2DomainTemplate) IngressExternalServiceTemplates(info *bambou.FetchingInfo) (IngressExternalServiceTemplatesList, *bambou.Error) {
+
+	var list IngressExternalServiceTemplatesList
+	err := bambou.CurrentSession().FetchChildren(o, IngressExternalServiceTemplateIdentity, &list, info)
+	return list, err
+}
+
+// CreateIngressExternalServiceTemplate creates a new child IngressExternalServiceTemplate under the L2DomainTemplate
+func (o *L2DomainTemplate) CreateIngressExternalServiceTemplate(child *IngressExternalServiceTemplate) *bambou.Error {
+
+	return bambou.CurrentSession().CreateChild(o, child)
+}
+
 // CreateJob creates a new child Job under the L2DomainTemplate
 func (o *L2DomainTemplate) CreateJob(child *Job) *bambou.Error {
 

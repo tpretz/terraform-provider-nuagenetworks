@@ -28,19 +28,7 @@ func dataSourceIngressProfile() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "description": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "assoc_entity_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -76,10 +64,6 @@ func dataSourceIngressProfile() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "parent_redundancy_group": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -95,9 +79,8 @@ func dataSourceIngressProfile() *schema.Resource {
 }
 
 
-func dataSourceIngressProfileRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceIngressProfileRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredIngressProfiles := vspk.IngressProfilesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -117,13 +100,13 @@ func dataSourceIngressProfileRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.RedundancyGroup{ID: attr.(string)}
         filteredIngressProfiles, err = parent.IngressProfiles(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_gateway"); ok {
         parent := &vspk.Gateway{ID: attr.(string)}
         filteredIngressProfiles, err = parent.IngressProfiles(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -141,10 +124,7 @@ func dataSourceIngressProfileRead(d *schema.ResourceData, m interface{}) error {
     IngressProfile = filteredIngressProfiles[0]
 
     d.Set("name", IngressProfile.Name)
-    d.Set("last_updated_by", IngressProfile.LastUpdatedBy)
     d.Set("description", IngressProfile.Description)
-    d.Set("entity_scope", IngressProfile.EntityScope)
-    d.Set("assoc_entity_type", IngressProfile.AssocEntityType)
     d.Set("associated_ip_filter_profile_id", IngressProfile.AssociatedIPFilterProfileID)
     d.Set("associated_ip_filter_profile_name", IngressProfile.AssociatedIPFilterProfileName)
     d.Set("associated_ipv6_filter_profile_id", IngressProfile.AssociatedIPv6FilterProfileID)
@@ -153,7 +133,6 @@ func dataSourceIngressProfileRead(d *schema.ResourceData, m interface{}) error {
     d.Set("associated_mac_filter_profile_name", IngressProfile.AssociatedMACFilterProfileName)
     d.Set("associated_sap_ingress_qo_s_profile_id", IngressProfile.AssociatedSAPIngressQoSProfileID)
     d.Set("associated_sap_ingress_qo_s_profile_name", IngressProfile.AssociatedSAPIngressQoSProfileName)
-    d.Set("external_id", IngressProfile.ExternalID)
     
     d.Set("id", IngressProfile.Identifier())
     d.Set("parent_id", IngressProfile.ParentID)
@@ -162,5 +141,5 @@ func dataSourceIngressProfileRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(IngressProfile.Identifier())
     
-    return nil
+    return
 }

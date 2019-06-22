@@ -61,9 +61,8 @@ func dataSourceForwardingPathListEntry() *schema.Resource {
 }
 
 
-func dataSourceForwardingPathListEntryRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceForwardingPathListEntryRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredForwardingPathListEntries := vspk.ForwardingPathListEntriesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -82,7 +81,7 @@ func dataSourceForwardingPathListEntryRead(d *schema.ResourceData, m interface{}
     parent := &vspk.ForwardingPathList{ID: d.Get("parent_forwarding_path_list").(string)}
     filteredForwardingPathListEntries, err = parent.ForwardingPathListEntries(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     ForwardingPathListEntry := &vspk.ForwardingPathListEntry{}
@@ -113,5 +112,5 @@ func dataSourceForwardingPathListEntryRead(d *schema.ResourceData, m interface{}
 
     d.SetId(ForwardingPathListEntry.Identifier())
     
-    return nil
+    return
 }

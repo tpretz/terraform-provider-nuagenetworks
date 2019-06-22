@@ -32,10 +32,6 @@ func dataSourceVNFThresholdPolicy() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "action": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -52,44 +48,25 @@ func dataSourceVNFThresholdPolicy() *schema.Resource {
                 Type:     schema.TypeInt,
                 Computed: true,
             },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "monit_interval": &schema.Schema{
                 Type:     schema.TypeInt,
-                Computed: true,
-            },
-            "assoc_entity_type": &schema.Schema{
-                Type:     schema.TypeString,
                 Computed: true,
             },
             "storage_threshold": &schema.Schema{
                 Type:     schema.TypeInt,
                 Computed: true,
             },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_vnf"},
-            },
-            "parent_vnf": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_enterprise"},
             },
         },
     }
 }
 
 
-func dataSourceVNFThresholdPolicyRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceVNFThresholdPolicyRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredVNFThresholdPolicies := vspk.VNFThresholdPoliciesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -109,19 +86,13 @@ func dataSourceVNFThresholdPolicyRead(d *schema.ResourceData, m interface{}) err
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredVNFThresholdPolicies, err = parent.VNFThresholdPolicies(fetchFilter)
         if err != nil {
-            return err
-        }
-    } else if attr, ok := d.GetOk("parent_vnf"); ok {
-        parent := &vspk.VNF{ID: attr.(string)}
-        filteredVNFThresholdPolicies, err = parent.VNFThresholdPolicies(fetchFilter)
-        if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredVNFThresholdPolicies, err = parent.VNFThresholdPolicies(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -140,16 +111,12 @@ func dataSourceVNFThresholdPolicyRead(d *schema.ResourceData, m interface{}) err
 
     d.Set("cpu_threshold", VNFThresholdPolicy.CPUThreshold)
     d.Set("name", VNFThresholdPolicy.Name)
-    d.Set("last_updated_by", VNFThresholdPolicy.LastUpdatedBy)
     d.Set("action", VNFThresholdPolicy.Action)
     d.Set("memory_threshold", VNFThresholdPolicy.MemoryThreshold)
     d.Set("description", VNFThresholdPolicy.Description)
     d.Set("min_occurrence", VNFThresholdPolicy.MinOccurrence)
-    d.Set("entity_scope", VNFThresholdPolicy.EntityScope)
     d.Set("monit_interval", VNFThresholdPolicy.MonitInterval)
-    d.Set("assoc_entity_type", VNFThresholdPolicy.AssocEntityType)
     d.Set("storage_threshold", VNFThresholdPolicy.StorageThreshold)
-    d.Set("external_id", VNFThresholdPolicy.ExternalID)
     
     d.Set("id", VNFThresholdPolicy.Identifier())
     d.Set("parent_id", VNFThresholdPolicy.ParentID)
@@ -158,5 +125,5 @@ func dataSourceVNFThresholdPolicyRead(d *schema.ResourceData, m interface{}) err
 
     d.SetId(VNFThresholdPolicy.Identifier())
     
-    return nil
+    return
 }

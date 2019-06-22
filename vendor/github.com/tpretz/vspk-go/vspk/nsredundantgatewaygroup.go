@@ -112,20 +112,6 @@ func (o *NSRedundantGatewayGroup) Delete() *bambou.Error {
 	return bambou.CurrentSession().DeleteEntity(o)
 }
 
-// Permissions retrieves the list of child Permissions of the NSRedundantGatewayGroup
-func (o *NSRedundantGatewayGroup) Permissions(info *bambou.FetchingInfo) (PermissionsList, *bambou.Error) {
-
-	var list PermissionsList
-	err := bambou.CurrentSession().FetchChildren(o, PermissionIdentity, &list, info)
-	return list, err
-}
-
-// CreatePermission creates a new child Permission under the NSRedundantGatewayGroup
-func (o *NSRedundantGatewayGroup) CreatePermission(child *Permission) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
-}
-
 // Metadatas retrieves the list of child Metadatas of the NSRedundantGatewayGroup
 func (o *NSRedundantGatewayGroup) Metadatas(info *bambou.FetchingInfo) (MetadatasList, *bambou.Error) {
 
@@ -172,20 +158,6 @@ func (o *NSRedundantGatewayGroup) GlobalMetadatas(info *bambou.FetchingInfo) (Gl
 
 // CreateGlobalMetadata creates a new child GlobalMetadata under the NSRedundantGatewayGroup
 func (o *NSRedundantGatewayGroup) CreateGlobalMetadata(child *GlobalMetadata) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
-}
-
-// EnterprisePermissions retrieves the list of child EnterprisePermissions of the NSRedundantGatewayGroup
-func (o *NSRedundantGatewayGroup) EnterprisePermissions(info *bambou.FetchingInfo) (EnterprisePermissionsList, *bambou.Error) {
-
-	var list EnterprisePermissionsList
-	err := bambou.CurrentSession().FetchChildren(o, EnterprisePermissionIdentity, &list, info)
-	return list, err
-}
-
-// CreateEnterprisePermission creates a new child EnterprisePermission under the NSRedundantGatewayGroup
-func (o *NSRedundantGatewayGroup) CreateEnterprisePermission(child *EnterprisePermission) *bambou.Error {
 
 	return bambou.CurrentSession().CreateChild(o, child)
 }

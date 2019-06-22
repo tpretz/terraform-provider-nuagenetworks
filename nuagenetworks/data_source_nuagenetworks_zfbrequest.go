@@ -76,10 +76,6 @@ func dataSourceZFBRequest() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "registration_url": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "serial_number": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -137,9 +133,8 @@ func dataSourceZFBRequest() *schema.Resource {
 }
 
 
-func dataSourceZFBRequestRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceZFBRequestRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredZFBRequests := vspk.ZFBRequestsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -159,13 +154,13 @@ func dataSourceZFBRequestRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredZFBRequests, err = parent.ZFBRequests(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredZFBRequests, err = parent.ZFBRequests(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -195,7 +190,6 @@ func dataSourceZFBRequestRead(d *schema.ResourceData, m interface{}) error {
     d.Set("family", ZFBRequest.Family)
     d.Set("last_connected_time", ZFBRequest.LastConnectedTime)
     d.Set("last_updated_by", ZFBRequest.LastUpdatedBy)
-    d.Set("registration_url", ZFBRequest.RegistrationURL)
     d.Set("serial_number", ZFBRequest.SerialNumber)
     d.Set("entity_scope", ZFBRequest.EntityScope)
     d.Set("hostname", ZFBRequest.Hostname)
@@ -216,5 +210,5 @@ func dataSourceZFBRequestRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(ZFBRequest.Identifier())
     
-    return nil
+    return
 }

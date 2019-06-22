@@ -51,7 +51,6 @@ type IKEEncryptionprofile struct {
 	IPsecPreFragment                  bool   `json:"IPsecPreFragment"`
 	IPsecSALifetime                   int    `json:"IPsecSALifetime,omitempty"`
 	IPsecSAReplayWindowSize           string `json:"IPsecSAReplayWindowSize,omitempty"`
-	IPsecSAReplayWindowSizeValue      int    `json:"IPsecSAReplayWindowSizeValue,omitempty"`
 	ISAKMPAuthenticationMode          string `json:"ISAKMPAuthenticationMode,omitempty"`
 	ISAKMPDiffieHelmanGroupIdentifier string `json:"ISAKMPDiffieHelmanGroupIdentifier,omitempty"`
 	ISAKMPEncryptionAlgorithm         string `json:"ISAKMPEncryptionAlgorithm,omitempty"`
@@ -62,6 +61,7 @@ type IKEEncryptionprofile struct {
 	Sequence                          int    `json:"sequence,omitempty"`
 	Description                       string `json:"description,omitempty"`
 	EntityScope                       string `json:"entityScope,omitempty"`
+	IpsecSAReplayWindowSizeValue      int    `json:"ipsecSAReplayWindowSizeValue,omitempty"`
 	AssociatedEnterpriseID            string `json:"associatedEnterpriseID,omitempty"`
 	ExternalID                        string `json:"externalID,omitempty"`
 }
@@ -77,12 +77,12 @@ func NewIKEEncryptionprofile() *IKEEncryptionprofile {
 		IPsecEncryptionAlgorithm:          "AES256",
 		IPsecSALifetime:                   3600,
 		IPsecSAReplayWindowSize:           "WINDOW_SIZE_32",
-		IPsecSAReplayWindowSizeValue:      32,
 		ISAKMPAuthenticationMode:          "PRE_SHARED_KEY",
 		ISAKMPDiffieHelmanGroupIdentifier: "GROUP_5_1536_BIT_DH",
 		ISAKMPEncryptionAlgorithm:         "AES256",
 		ISAKMPEncryptionKeyLifetime:       28800,
 		ISAKMPHashAlgorithm:               "SHA256",
+		IpsecSAReplayWindowSizeValue:      32,
 	}
 }
 

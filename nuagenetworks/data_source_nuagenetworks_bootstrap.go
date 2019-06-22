@@ -48,10 +48,6 @@ func dataSourceBootstrap() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "associated_entity_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "status": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -75,9 +71,8 @@ func dataSourceBootstrap() *schema.Resource {
 }
 
 
-func dataSourceBootstrapRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceBootstrapRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredBootstraps := vspk.BootstrapsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -97,13 +92,13 @@ func dataSourceBootstrapRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.NSGateway{ID: attr.(string)}
         filteredBootstraps, err = parent.Bootstraps(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_gateway"); ok {
         parent := &vspk.Gateway{ID: attr.(string)}
         filteredBootstraps, err = parent.Bootstraps(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -126,7 +121,6 @@ func dataSourceBootstrapRead(d *schema.ResourceData, m interface{}) error {
     d.Set("last_updated_by", Bootstrap.LastUpdatedBy)
     d.Set("installer_id", Bootstrap.InstallerID)
     d.Set("entity_scope", Bootstrap.EntityScope)
-    d.Set("associated_entity_type", Bootstrap.AssociatedEntityType)
     d.Set("status", Bootstrap.Status)
     d.Set("external_id", Bootstrap.ExternalID)
     
@@ -137,5 +131,5 @@ func dataSourceBootstrapRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(Bootstrap.Identifier())
     
-    return nil
+    return
 }

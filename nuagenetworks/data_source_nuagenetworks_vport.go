@@ -40,10 +40,6 @@ func dataSourceVPort() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "backhaul_subnet_vnid": &schema.Schema{
-                Type:     schema.TypeInt,
-                Computed: true,
-            },
             "name": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -62,10 +58,6 @@ func dataSourceVPort() *schema.Resource {
             },
             "gateway_port_name": &schema.Schema{
                 Type:     schema.TypeString,
-                Computed: true,
-            },
-            "access_restriction_enabled": &schema.Schema{
-                Type:     schema.TypeBool,
                 Computed: true,
             },
             "active": &schema.Schema{
@@ -89,7 +81,7 @@ func dataSourceVPort() *schema.Resource {
                 Computed: true,
             },
             "service_id": &schema.Schema{
-                Type:     schema.TypeInt,
+                Type:     schema.TypeString,
                 Computed: true,
             },
             "description": &schema.Schema{
@@ -102,18 +94,6 @@ func dataSourceVPort() *schema.Resource {
             },
             "domain_id": &schema.Schema{
                 Type:     schema.TypeString,
-                Computed: true,
-            },
-            "domain_name": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "domain_service_label": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "domain_vlanid": &schema.Schema{
-                Type:     schema.TypeInt,
                 Computed: true,
             },
             "zone_id": &schema.Schema{
@@ -174,10 +154,6 @@ func dataSourceVPort() *schema.Resource {
             },
             "sub_type": &schema.Schema{
                 Type:     schema.TypeString,
-                Computed: true,
-            },
-            "subnet_vnid": &schema.Schema{
-                Type:     schema.TypeInt,
                 Computed: true,
             },
             "multi_nic_vport_id": &schema.Schema{
@@ -274,9 +250,8 @@ func dataSourceVPort() *schema.Resource {
 }
 
 
-func dataSourceVPortRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceVPortRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredVPorts := vspk.VPortsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -296,79 +271,79 @@ func dataSourceVPortRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.Domain{ID: attr.(string)}
         filteredVPorts, err = parent.VPorts(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredVPorts, err = parent.VPorts(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_subnet"); ok {
         parent := &vspk.Subnet{ID: attr.(string)}
         filteredVPorts, err = parent.VPorts(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_redirection_target"); ok {
         parent := &vspk.RedirectionTarget{ID: attr.(string)}
         filteredVPorts, err = parent.VPorts(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_policy_group"); ok {
         parent := &vspk.PolicyGroup{ID: attr.(string)}
         filteredVPorts, err = parent.VPorts(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_egress_profile"); ok {
         parent := &vspk.EgressProfile{ID: attr.(string)}
         filteredVPorts, err = parent.VPorts(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_zone"); ok {
         parent := &vspk.Zone{ID: attr.(string)}
         filteredVPorts, err = parent.VPorts(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vrs"); ok {
         parent := &vspk.VRS{ID: attr.(string)}
         filteredVPorts, err = parent.VPorts(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_multi_nic_vport"); ok {
         parent := &vspk.MultiNICVPort{ID: attr.(string)}
         filteredVPorts, err = parent.VPorts(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_floating_ip"); ok {
         parent := &vspk.FloatingIp{ID: attr.(string)}
         filteredVPorts, err = parent.VPorts(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_trunk"); ok {
         parent := &vspk.Trunk{ID: attr.(string)}
         filteredVPorts, err = parent.VPorts(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_ingress_profile"); ok {
         parent := &vspk.IngressProfile{ID: attr.(string)}
         filteredVPorts, err = parent.VPorts(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_overlay_mirror_destination"); ok {
         parent := &vspk.OverlayMirrorDestination{ID: attr.(string)}
         filteredVPorts, err = parent.VPorts(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -389,13 +364,11 @@ func dataSourceVPortRead(d *schema.ResourceData, m interface{}) error {
     d.Set("vlan", VPort.VLAN)
     d.Set("vlanid", VPort.VLANID)
     d.Set("dpi", VPort.DPI)
-    d.Set("backhaul_subnet_vnid", VPort.BackhaulSubnetVNID)
     d.Set("name", VPort.Name)
     d.Set("has_attached_interfaces", VPort.HasAttachedInterfaces)
     d.Set("last_updated_by", VPort.LastUpdatedBy)
     d.Set("gateway_mac_move_role", VPort.GatewayMACMoveRole)
     d.Set("gateway_port_name", VPort.GatewayPortName)
-    d.Set("access_restriction_enabled", VPort.AccessRestrictionEnabled)
     d.Set("active", VPort.Active)
     d.Set("address_spoofing", VPort.AddressSpoofing)
     d.Set("peer_operational_state", VPort.PeerOperationalState)
@@ -405,9 +378,6 @@ func dataSourceVPortRead(d *schema.ResourceData, m interface{}) error {
     d.Set("description", VPort.Description)
     d.Set("entity_scope", VPort.EntityScope)
     d.Set("domain_id", VPort.DomainID)
-    d.Set("domain_name", VPort.DomainName)
-    d.Set("domain_service_label", VPort.DomainServiceLabel)
-    d.Set("domain_vlanid", VPort.DomainVLANID)
     d.Set("zone_id", VPort.ZoneID)
     d.Set("operational_state", VPort.OperationalState)
     d.Set("trunk_role", VPort.TrunkRole)
@@ -423,7 +393,6 @@ func dataSourceVPortRead(d *schema.ResourceData, m interface{}) error {
     d.Set("associated_send_multicast_channel_map_id", VPort.AssociatedSendMulticastChannelMapID)
     d.Set("associated_trunk_id", VPort.AssociatedTrunkID)
     d.Set("sub_type", VPort.SubType)
-    d.Set("subnet_vnid", VPort.SubnetVNID)
     d.Set("multi_nic_vport_id", VPort.MultiNICVPortID)
     d.Set("multicast", VPort.Multicast)
     d.Set("gw_eligible", VPort.GwEligible)
@@ -438,5 +407,5 @@ func dataSourceVPortRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(VPort.Identifier())
     
-    return nil
+    return
 }

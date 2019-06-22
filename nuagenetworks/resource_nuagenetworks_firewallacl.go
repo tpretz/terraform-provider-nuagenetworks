@@ -15,11 +15,6 @@ func resourceFirewallAcl() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -39,11 +34,6 @@ func resourceFirewallAcl() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "active": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
@@ -60,23 +50,10 @@ func resourceFirewallAcl() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "rule_ids": &schema.Schema{
                 Type:     schema.TypeList,
                 Optional: true,
                 Elem:     &schema.Schema{Type: schema.TypeString},
-            },
-            "auto_generate_priority": &schema.Schema{
-                Type:     schema.TypeBool,
-                Optional: true,
-            },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
             },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,
@@ -109,12 +86,6 @@ func resourceFirewallAclCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("rule_ids"); ok {
         o.RuleIds = attr.([]interface{})
     }
-    if attr, ok := d.GetOk("auto_generate_priority"); ok {
-        o.AutoGeneratePriority = attr.(bool)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
-    }
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     err := parent.CreateFirewallAcl(o)
     if err != nil {
@@ -139,15 +110,11 @@ func resourceFirewallAclRead(d *schema.ResourceData, m interface{}) error {
     }
 
     d.Set("name", o.Name)
-    d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("active", o.Active)
     d.Set("default_allow_ip", o.DefaultAllowIP)
     d.Set("default_allow_non_ip", o.DefaultAllowNonIP)
     d.Set("description", o.Description)
-    d.Set("entity_scope", o.EntityScope)
     d.Set("rule_ids", o.RuleIds)
-    d.Set("auto_generate_priority", o.AutoGeneratePriority)
-    d.Set("external_id", o.ExternalID)
     
     d.Set("id", o.Identifier())
     d.Set("parent_id", o.ParentID)
@@ -185,12 +152,6 @@ func resourceFirewallAclUpdate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("rule_ids"); ok {
         o.RuleIds = attr.([]interface{})
-    }
-    if attr, ok := d.GetOk("auto_generate_priority"); ok {
-        o.AutoGeneratePriority = attr.(bool)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
 
     o.Save()

@@ -15,11 +15,6 @@ func resourceNetconfSession() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -35,31 +30,6 @@ func resourceNetconfSession() *schema.Resource {
                 Optional: true,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "gateway_model": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "gateway_vendor": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "gateway_version": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "associated_gateway_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -70,10 +40,6 @@ func resourceNetconfSession() *schema.Resource {
                 Computed: true,
             },
             "status": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
@@ -95,9 +61,6 @@ func resourceNetconfSessionCreate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("status"); ok {
         o.Status = attr.(string)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
     parent := &vspk.NetconfManager{ID: d.Get("parent_netconf_manager").(string)}
     err := parent.CreateNetconfSession(o)
@@ -122,15 +85,9 @@ func resourceNetconfSessionRead(d *schema.ResourceData, m interface{}) error {
         return nil
     }
 
-    d.Set("last_updated_by", o.LastUpdatedBy)
-    d.Set("gateway_model", o.GatewayModel)
-    d.Set("gateway_vendor", o.GatewayVendor)
-    d.Set("gateway_version", o.GatewayVersion)
-    d.Set("entity_scope", o.EntityScope)
     d.Set("associated_gateway_id", o.AssociatedGatewayID)
     d.Set("associated_gateway_name", o.AssociatedGatewayName)
     d.Set("status", o.Status)
-    d.Set("external_id", o.ExternalID)
     
     d.Set("id", o.Identifier())
     d.Set("parent_id", o.ParentID)
@@ -156,9 +113,6 @@ func resourceNetconfSessionUpdate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("status"); ok {
         o.Status = attr.(string)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
 
     o.Save()

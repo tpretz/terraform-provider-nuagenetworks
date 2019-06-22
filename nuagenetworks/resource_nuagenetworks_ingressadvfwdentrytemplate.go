@@ -15,11 +15,6 @@ func resourceIngressAdvFwdEntryTemplate() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -68,6 +63,10 @@ func resourceIngressAdvFwdEntryTemplate() *schema.Resource {
                 Optional: true,
                 Default: "FAIL_TO_BLOCK",
             },
+            "name": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+            },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -81,19 +80,6 @@ func resourceIngressAdvFwdEntryTemplate() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "address_override_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Default: "IPV4",
-            },
-            "web_filter_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
-            "web_filter_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
             "redirect_rewrite_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -104,7 +90,7 @@ func resourceIngressAdvFwdEntryTemplate() *schema.Resource {
             },
             "redirect_vport_tag_id": &schema.Schema{
                 Type:     schema.TypeString,
-                Optional: true,
+                Required: true,
             },
             "remote_uplink_preference": &schema.Schema{
                 Type:     schema.TypeString,
@@ -204,11 +190,6 @@ func resourceIngressAdvFwdEntryTemplate() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "associated_live_template_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "associated_traffic_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -248,6 +229,7 @@ func resourceIngressAdvFwdEntryTemplateCreate(d *schema.ResourceData, m interfac
     o := &vspk.IngressAdvFwdEntryTemplate{
         DSCP: d.Get("dscp").(string),
         Action: d.Get("action").(string),
+        RedirectVPortTagID: d.Get("redirect_vport_tag_id").(string),
         LocationType: d.Get("location_type").(string),
         EtherType: d.Get("ether_type").(string),
     }
@@ -272,26 +254,17 @@ func resourceIngressAdvFwdEntryTemplateCreate(d *schema.ResourceData, m interfac
     if attr, ok := d.GetOk("failsafe_datapath"); ok {
         o.FailsafeDatapath = attr.(string)
     }
+    if attr, ok := d.GetOk("name"); ok {
+        o.Name = attr.(string)
+    }
     if attr, ok := d.GetOk("address_override"); ok {
         o.AddressOverride = attr.(string)
-    }
-    if attr, ok := d.GetOk("address_override_type"); ok {
-        o.AddressOverrideType = attr.(string)
-    }
-    if attr, ok := d.GetOk("web_filter_id"); ok {
-        o.WebFilterID = attr.(string)
-    }
-    if attr, ok := d.GetOk("web_filter_type"); ok {
-        o.WebFilterType = attr.(string)
     }
     if attr, ok := d.GetOk("redirect_rewrite_type"); ok {
         o.RedirectRewriteType = attr.(string)
     }
     if attr, ok := d.GetOk("redirect_rewrite_value"); ok {
         o.RedirectRewriteValue = attr.(string)
-    }
-    if attr, ok := d.GetOk("redirect_vport_tag_id"); ok {
-        o.RedirectVPortTagID = attr.(string)
     }
     if attr, ok := d.GetOk("remote_uplink_preference"); ok {
         o.RemoteUplinkPreference = attr.(string)
@@ -393,12 +366,10 @@ func resourceIngressAdvFwdEntryTemplateRead(d *schema.ResourceData, m interface{
     d.Set("dscp", o.DSCP)
     d.Set("dscp_remarking", o.DSCPRemarking)
     d.Set("failsafe_datapath", o.FailsafeDatapath)
+    d.Set("name", o.Name)
     d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("action", o.Action)
     d.Set("address_override", o.AddressOverride)
-    d.Set("address_override_type", o.AddressOverrideType)
-    d.Set("web_filter_id", o.WebFilterID)
-    d.Set("web_filter_type", o.WebFilterType)
     d.Set("redirect_rewrite_type", o.RedirectRewriteType)
     d.Set("redirect_rewrite_value", o.RedirectRewriteValue)
     d.Set("redirect_vport_tag_id", o.RedirectVPortTagID)
@@ -425,7 +396,6 @@ func resourceIngressAdvFwdEntryTemplateRead(d *schema.ResourceData, m interface{
     d.Set("associated_application_id", o.AssociatedApplicationID)
     d.Set("associated_forwarding_path_list_id", o.AssociatedForwardingPathListID)
     d.Set("associated_live_entity_id", o.AssociatedLiveEntityID)
-    d.Set("associated_live_template_id", o.AssociatedLiveTemplateID)
     d.Set("associated_traffic_type", o.AssociatedTrafficType)
     d.Set("associated_traffic_type_id", o.AssociatedTrafficTypeID)
     d.Set("stats_id", o.StatsID)
@@ -453,6 +423,7 @@ func resourceIngressAdvFwdEntryTemplateUpdate(d *schema.ResourceData, m interfac
     
     o.DSCP = d.Get("dscp").(string)
     o.Action = d.Get("action").(string)
+    o.RedirectVPortTagID = d.Get("redirect_vport_tag_id").(string)
     o.LocationType = d.Get("location_type").(string)
     o.EtherType = d.Get("ether_type").(string)
     
@@ -477,26 +448,17 @@ func resourceIngressAdvFwdEntryTemplateUpdate(d *schema.ResourceData, m interfac
     if attr, ok := d.GetOk("failsafe_datapath"); ok {
         o.FailsafeDatapath = attr.(string)
     }
+    if attr, ok := d.GetOk("name"); ok {
+        o.Name = attr.(string)
+    }
     if attr, ok := d.GetOk("address_override"); ok {
         o.AddressOverride = attr.(string)
-    }
-    if attr, ok := d.GetOk("address_override_type"); ok {
-        o.AddressOverrideType = attr.(string)
-    }
-    if attr, ok := d.GetOk("web_filter_id"); ok {
-        o.WebFilterID = attr.(string)
-    }
-    if attr, ok := d.GetOk("web_filter_type"); ok {
-        o.WebFilterType = attr.(string)
     }
     if attr, ok := d.GetOk("redirect_rewrite_type"); ok {
         o.RedirectRewriteType = attr.(string)
     }
     if attr, ok := d.GetOk("redirect_rewrite_value"); ok {
         o.RedirectRewriteValue = attr.(string)
-    }
-    if attr, ok := d.GetOk("redirect_vport_tag_id"); ok {
-        o.RedirectVPortTagID = attr.(string)
     }
     if attr, ok := d.GetOk("remote_uplink_preference"); ok {
         o.RemoteUplinkPreference = attr.(string)

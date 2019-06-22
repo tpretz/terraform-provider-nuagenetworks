@@ -57,9 +57,8 @@ func dataSourceIPReservation() *schema.Resource {
 }
 
 
-func dataSourceIPReservationRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceIPReservationRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredIPReservations := vspk.IPReservationsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -78,7 +77,7 @@ func dataSourceIPReservationRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.Subnet{ID: d.Get("parent_subnet").(string)}
     filteredIPReservations, err = parent.IPReservations(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     IPReservation := &vspk.IPReservation{}
@@ -108,5 +107,5 @@ func dataSourceIPReservationRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(IPReservation.Identifier())
     
-    return nil
+    return
 }

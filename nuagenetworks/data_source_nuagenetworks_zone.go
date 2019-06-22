@@ -64,6 +64,10 @@ func dataSourceZone() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
+            "flow_collection_enabled": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
             "encryption": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -109,9 +113,8 @@ func dataSourceZone() *schema.Resource {
 }
 
 
-func dataSourceZoneRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceZoneRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredZones := vspk.ZonesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -131,13 +134,13 @@ func dataSourceZoneRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.Domain{ID: attr.(string)}
         filteredZones, err = parent.Zones(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredZones, err = parent.Zones(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -164,6 +167,7 @@ func dataSourceZoneRead(d *schema.ResourceData, m interface{}) error {
     d.Set("template_id", Zone.TemplateID)
     d.Set("description", Zone.Description)
     d.Set("netmask", Zone.Netmask)
+    d.Set("flow_collection_enabled", Zone.FlowCollectionEnabled)
     d.Set("encryption", Zone.Encryption)
     d.Set("entity_scope", Zone.EntityScope)
     d.Set("policy_group_id", Zone.PolicyGroupID)
@@ -181,5 +185,5 @@ func dataSourceZoneRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(Zone.Identifier())
     
-    return nil
+    return
 }

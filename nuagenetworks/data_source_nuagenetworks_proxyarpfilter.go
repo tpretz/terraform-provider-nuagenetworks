@@ -48,24 +48,17 @@ func dataSourceProxyARPFilter() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "parent_l2_domain": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_subnet"},
-            },
             "parent_subnet": &schema.Schema{
                 Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_l2_domain"},
+                Required: true,
             },
         },
     }
 }
 
 
-func dataSourceProxyARPFilterRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceProxyARPFilterRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredProxyARPFilters := vspk.ProxyARPFiltersList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -81,18 +74,10 @@ func dataSourceProxyARPFilterRead(d *schema.ResourceData, m interface{}) error {
            
         }
     }
-    if attr, ok := d.GetOk("parent_l2_domain"); ok {
-        parent := &vspk.L2Domain{ID: attr.(string)}
-        filteredProxyARPFilters, err = parent.ProxyARPFilters(fetchFilter)
-        if err != nil {
-            return err
-        }
-    } else if attr, ok := d.GetOk("parent_subnet"); ok {
-        parent := &vspk.Subnet{ID: attr.(string)}
-        filteredProxyARPFilters, err = parent.ProxyARPFilters(fetchFilter)
-        if err != nil {
-            return err
-        }
+    parent := &vspk.Subnet{ID: d.Get("parent_subnet").(string)}
+    filteredProxyARPFilters, err = parent.ProxyARPFilters(fetchFilter)
+    if err != nil {
+        return
     }
 
     ProxyARPFilter := &vspk.ProxyARPFilter{}
@@ -122,5 +107,5 @@ func dataSourceProxyARPFilterRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(ProxyARPFilter.Identifier())
     
-    return nil
+    return
 }

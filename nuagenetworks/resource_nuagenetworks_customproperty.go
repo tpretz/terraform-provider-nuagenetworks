@@ -15,11 +15,6 @@ func resourceCustomProperty() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -35,25 +30,11 @@ func resourceCustomProperty() *schema.Resource {
                 Optional: true,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "attribute_name": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
             "attribute_value": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
@@ -75,9 +56,6 @@ func resourceCustomPropertyCreate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("attribute_value"); ok {
         o.AttributeValue = attr.(string)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
     parent := &vspk.UplinkConnection{ID: d.Get("parent_uplink_connection").(string)}
     err := parent.CreateCustomProperty(o)
@@ -102,11 +80,8 @@ func resourceCustomPropertyRead(d *schema.ResourceData, m interface{}) error {
         return nil
     }
 
-    d.Set("last_updated_by", o.LastUpdatedBy)
-    d.Set("entity_scope", o.EntityScope)
     d.Set("attribute_name", o.AttributeName)
     d.Set("attribute_value", o.AttributeValue)
-    d.Set("external_id", o.ExternalID)
     
     d.Set("id", o.Identifier())
     d.Set("parent_id", o.ParentID)
@@ -132,9 +107,6 @@ func resourceCustomPropertyUpdate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("attribute_value"); ok {
         o.AttributeValue = attr.(string)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
 
     o.Save()

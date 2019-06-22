@@ -44,13 +44,9 @@ type VirtualFirewallRule struct {
 	ACLTemplateName                    string `json:"ACLTemplateName,omitempty"`
 	ICMPCode                           string `json:"ICMPCode,omitempty"`
 	ICMPType                           string `json:"ICMPType,omitempty"`
-	IPv6AddressOverride                string `json:"IPv6AddressOverride,omitempty"`
 	DSCP                               string `json:"DSCP,omitempty"`
 	LastUpdatedBy                      string `json:"lastUpdatedBy,omitempty"`
 	Action                             string `json:"action,omitempty"`
-	AddressOverride                    string `json:"addressOverride,omitempty"`
-	WebFilterID                        string `json:"webFilterID,omitempty"`
-	WebFilterType                      string `json:"webFilterType,omitempty"`
 	Description                        string `json:"description,omitempty"`
 	DestinationPort                    string `json:"destinationPort,omitempty"`
 	NetworkID                          string `json:"networkID,omitempty"`
@@ -66,17 +62,13 @@ type VirtualFirewallRule struct {
 	SourcePort                         string `json:"sourcePort,omitempty"`
 	Priority                           int    `json:"priority,omitempty"`
 	Protocol                           string `json:"protocol,omitempty"`
-	AssociatedEgressEntryID            string `json:"associatedEgressEntryID,omitempty"`
-	AssociatedIngressEntryID           string `json:"associatedIngressEntryID,omitempty"`
 	AssociatedL7ApplicationSignatureID string `json:"associatedL7ApplicationSignatureID,omitempty"`
 	AssociatedLiveEntityID             string `json:"associatedLiveEntityID,omitempty"`
-	AssociatedLiveTemplateID           string `json:"associatedLiveTemplateID,omitempty"`
 	AssociatedTrafficType              string `json:"associatedTrafficType,omitempty"`
 	AssociatedTrafficTypeID            string `json:"associatedTrafficTypeID,omitempty"`
 	Stateful                           bool   `json:"stateful"`
 	StatsID                            string `json:"statsID,omitempty"`
 	StatsLoggingEnabled                bool   `json:"statsLoggingEnabled"`
-	EtherType                          string `json:"etherType,omitempty"`
 	OverlayMirrorDestinationID         string `json:"overlayMirrorDestinationID,omitempty"`
 	ExternalID                         string `json:"externalID,omitempty"`
 }
@@ -85,7 +77,6 @@ type VirtualFirewallRule struct {
 func NewVirtualFirewallRule() *VirtualFirewallRule {
 
 	return &VirtualFirewallRule{
-		Action:              "FORWARD",
 		NetworkType:         "ANY",
 		FlowLoggingEnabled:  false,
 		Stateful:            false,
@@ -155,4 +146,12 @@ func (o *VirtualFirewallRule) GlobalMetadatas(info *bambou.FetchingInfo) (Global
 func (o *VirtualFirewallRule) CreateGlobalMetadata(child *GlobalMetadata) *bambou.Error {
 
 	return bambou.CurrentSession().CreateChild(o, child)
+}
+
+// Statistics retrieves the list of child Statistics of the VirtualFirewallRule
+func (o *VirtualFirewallRule) Statistics(info *bambou.FetchingInfo) (StatisticsList, *bambou.Error) {
+
+	var list StatisticsList
+	err := bambou.CurrentSession().FetchChildren(o, StatisticsIdentity, &list, info)
+	return list, err
 }

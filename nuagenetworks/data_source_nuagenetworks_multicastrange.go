@@ -24,10 +24,6 @@ func dataSourceMultiCastRange() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "ip_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -57,9 +53,8 @@ func dataSourceMultiCastRange() *schema.Resource {
 }
 
 
-func dataSourceMultiCastRangeRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceMultiCastRangeRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredMultiCastRanges := vspk.MultiCastRangesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -78,7 +73,7 @@ func dataSourceMultiCastRangeRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.MultiCastChannelMap{ID: d.Get("parent_multi_cast_channel_map").(string)}
     filteredMultiCastRanges, err = parent.MultiCastRanges(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     MultiCastRange := &vspk.MultiCastRange{}
@@ -94,7 +89,6 @@ func dataSourceMultiCastRangeRead(d *schema.ResourceData, m interface{}) error {
     
     MultiCastRange = filteredMultiCastRanges[0]
 
-    d.Set("ip_type", MultiCastRange.IPType)
     d.Set("last_updated_by", MultiCastRange.LastUpdatedBy)
     d.Set("max_address", MultiCastRange.MaxAddress)
     d.Set("min_address", MultiCastRange.MinAddress)
@@ -108,5 +102,5 @@ func dataSourceMultiCastRangeRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(MultiCastRange.Identifier())
     
-    return nil
+    return
 }

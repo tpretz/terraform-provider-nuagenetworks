@@ -15,11 +15,6 @@ func resourceSharedNetworkResource() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -104,10 +99,6 @@ func resourceSharedNetworkResource() *schema.Resource {
                 Type:     schema.TypeBool,
                 Optional: true,
             },
-            "enterprise_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -142,14 +133,6 @@ func resourceSharedNetworkResource() *schema.Resource {
                 Optional: true,
             },
             "associated_pat_mapper_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
-            "subnet_route_distinguisher": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
-            "subnet_route_target": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
@@ -217,9 +200,6 @@ func resourceSharedNetworkResourceCreate(d *schema.ResourceData, m interface{}) 
     if attr, ok := d.GetOk("underlay"); ok {
         o.Underlay = attr.(bool)
     }
-    if attr, ok := d.GetOk("enterprise_id"); ok {
-        o.EnterpriseID = attr.(string)
-    }
     if attr, ok := d.GetOk("domain_route_distinguisher"); ok {
         o.DomainRouteDistinguisher = attr.(string)
     }
@@ -243,12 +223,6 @@ func resourceSharedNetworkResourceCreate(d *schema.ResourceData, m interface{}) 
     }
     if attr, ok := d.GetOk("associated_pat_mapper_id"); ok {
         o.AssociatedPATMapperID = attr.(string)
-    }
-    if attr, ok := d.GetOk("subnet_route_distinguisher"); ok {
-        o.SubnetRouteDistinguisher = attr.(string)
-    }
-    if attr, ok := d.GetOk("subnet_route_target"); ok {
-        o.SubnetRouteTarget = attr.(string)
     }
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)
@@ -296,7 +270,6 @@ func resourceSharedNetworkResourceRead(d *schema.ResourceData, m interface{}) er
     d.Set("shared_resource_parent_id", o.SharedResourceParentID)
     d.Set("vn_id", o.VnID)
     d.Set("underlay", o.Underlay)
-    d.Set("enterprise_id", o.EnterpriseID)
     d.Set("entity_scope", o.EntityScope)
     d.Set("domain_route_distinguisher", o.DomainRouteDistinguisher)
     d.Set("domain_route_target", o.DomainRouteTarget)
@@ -306,8 +279,6 @@ func resourceSharedNetworkResourceRead(d *schema.ResourceData, m interface{}) er
     d.Set("uplink_vport_name", o.UplinkVPortName)
     d.Set("use_global_mac", o.UseGlobalMAC)
     d.Set("associated_pat_mapper_id", o.AssociatedPATMapperID)
-    d.Set("subnet_route_distinguisher", o.SubnetRouteDistinguisher)
-    d.Set("subnet_route_target", o.SubnetRouteTarget)
     d.Set("external_id", o.ExternalID)
     d.Set("dynamic_pat_allocation_enabled", o.DynamicPATAllocationEnabled)
     d.Set("type", o.Type)
@@ -374,9 +345,6 @@ func resourceSharedNetworkResourceUpdate(d *schema.ResourceData, m interface{}) 
     if attr, ok := d.GetOk("underlay"); ok {
         o.Underlay = attr.(bool)
     }
-    if attr, ok := d.GetOk("enterprise_id"); ok {
-        o.EnterpriseID = attr.(string)
-    }
     if attr, ok := d.GetOk("domain_route_distinguisher"); ok {
         o.DomainRouteDistinguisher = attr.(string)
     }
@@ -400,12 +368,6 @@ func resourceSharedNetworkResourceUpdate(d *schema.ResourceData, m interface{}) 
     }
     if attr, ok := d.GetOk("associated_pat_mapper_id"); ok {
         o.AssociatedPATMapperID = attr.(string)
-    }
-    if attr, ok := d.GetOk("subnet_route_distinguisher"); ok {
-        o.SubnetRouteDistinguisher = attr.(string)
-    }
-    if attr, ok := d.GetOk("subnet_route_target"); ok {
-        o.SubnetRouteTarget = attr.(string)
     }
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)

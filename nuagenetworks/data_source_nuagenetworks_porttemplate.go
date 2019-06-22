@@ -69,9 +69,8 @@ func dataSourcePortTemplate() *schema.Resource {
 }
 
 
-func dataSourcePortTemplateRead(d *schema.ResourceData, m interface{}) error {
+func dataSourcePortTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredPortTemplates := vspk.PortTemplatesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -90,7 +89,7 @@ func dataSourcePortTemplateRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.GatewayTemplate{ID: d.Get("parent_gateway_template").(string)}
     filteredPortTemplates, err = parent.PortTemplates(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     PortTemplate := &vspk.PortTemplate{}
@@ -123,5 +122,5 @@ func dataSourcePortTemplateRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(PortTemplate.Identifier())
     
-    return nil
+    return
 }

@@ -24,19 +24,7 @@ func dataSourceCSNATPool() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "ip_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "name": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -44,15 +32,7 @@ func dataSourceCSNATPool() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "start_address": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -65,9 +45,8 @@ func dataSourceCSNATPool() *schema.Resource {
 }
 
 
-func dataSourceCSNATPoolRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceCSNATPoolRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredCSNATPools := vspk.CSNATPoolsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -86,7 +65,7 @@ func dataSourceCSNATPoolRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.Link{ID: d.Get("parent_link").(string)}
     filteredCSNATPools, err = parent.CSNATPools(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     CSNATPool := &vspk.CSNATPool{}
@@ -102,14 +81,9 @@ func dataSourceCSNATPoolRead(d *schema.ResourceData, m interface{}) error {
     
     CSNATPool = filteredCSNATPools[0]
 
-    d.Set("ip_type", CSNATPool.IPType)
     d.Set("name", CSNATPool.Name)
-    d.Set("last_updated_by", CSNATPool.LastUpdatedBy)
-    d.Set("description", CSNATPool.Description)
     d.Set("end_address", CSNATPool.EndAddress)
-    d.Set("entity_scope", CSNATPool.EntityScope)
     d.Set("start_address", CSNATPool.StartAddress)
-    d.Set("external_id", CSNATPool.ExternalID)
     
     d.Set("id", CSNATPool.Identifier())
     d.Set("parent_id", CSNATPool.ParentID)
@@ -118,5 +92,5 @@ func dataSourceCSNATPoolRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(CSNATPool.Identifier())
     
-    return nil
+    return
 }

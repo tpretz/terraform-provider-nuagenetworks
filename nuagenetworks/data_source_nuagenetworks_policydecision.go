@@ -52,6 +52,11 @@ func dataSourcePolicyDecision() *schema.Resource {
                 Computed: true,
                 Elem:     &schema.Schema{Type: schema.TypeString},
             },
+            "ingress_external_service_acls": &schema.Schema{
+                Type:     schema.TypeList,
+                Computed: true,
+                Elem:     &schema.Schema{Type: schema.TypeString},
+            },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -93,9 +98,8 @@ func dataSourcePolicyDecision() *schema.Resource {
 }
 
 
-func dataSourcePolicyDecisionRead(d *schema.ResourceData, m interface{}) error {
+func dataSourcePolicyDecisionRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredPolicyDecisions := vspk.PolicyDecisionsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -115,25 +119,25 @@ func dataSourcePolicyDecisionRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.VMInterface{ID: attr.(string)}
         filteredPolicyDecisions, err = parent.PolicyDecisions(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_host_interface"); ok {
         parent := &vspk.HostInterface{ID: attr.(string)}
         filteredPolicyDecisions, err = parent.PolicyDecisions(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_container_interface"); ok {
         parent := &vspk.ContainerInterface{ID: attr.(string)}
         filteredPolicyDecisions, err = parent.PolicyDecisions(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_bridge_interface"); ok {
         parent := &vspk.BridgeInterface{ID: attr.(string)}
         filteredPolicyDecisions, err = parent.PolicyDecisions(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -156,6 +160,7 @@ func dataSourcePolicyDecisionRead(d *schema.ResourceData, m interface{}) error {
     d.Set("fip_acls", PolicyDecision.FipACLs)
     d.Set("ingress_acls", PolicyDecision.IngressACLs)
     d.Set("ingress_adv_fwd", PolicyDecision.IngressAdvFwd)
+    d.Set("ingress_external_service_acls", PolicyDecision.IngressExternalServiceACLs)
     d.Set("entity_scope", PolicyDecision.EntityScope)
     d.Set("qos", PolicyDecision.Qos)
     d.Set("stats", PolicyDecision.Stats)
@@ -168,5 +173,5 @@ func dataSourcePolicyDecisionRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(PolicyDecision.Identifier())
     
-    return nil
+    return
 }

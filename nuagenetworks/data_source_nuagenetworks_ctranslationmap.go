@@ -28,27 +28,11 @@ func dataSourceCTranslationMap() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "associated_domain_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "customer_alias_ip": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
             "customer_ip": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -61,9 +45,8 @@ func dataSourceCTranslationMap() *schema.Resource {
 }
 
 
-func dataSourceCTranslationMapRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceCTranslationMapRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredCTranslationMaps := vspk.CTranslationMapsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -82,7 +65,7 @@ func dataSourceCTranslationMapRead(d *schema.ResourceData, m interface{}) error 
     parent := &vspk.CSNATPool{ID: d.Get("parent_csnat_pool").(string)}
     filteredCTranslationMaps, err = parent.CTranslationMaps(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     CTranslationMap := &vspk.CTranslationMap{}
@@ -99,12 +82,8 @@ func dataSourceCTranslationMapRead(d *schema.ResourceData, m interface{}) error 
     CTranslationMap = filteredCTranslationMaps[0]
 
     d.Set("mapping_type", CTranslationMap.MappingType)
-    d.Set("last_updated_by", CTranslationMap.LastUpdatedBy)
-    d.Set("entity_scope", CTranslationMap.EntityScope)
-    d.Set("associated_domain_id", CTranslationMap.AssociatedDomainID)
     d.Set("customer_alias_ip", CTranslationMap.CustomerAliasIP)
     d.Set("customer_ip", CTranslationMap.CustomerIP)
-    d.Set("external_id", CTranslationMap.ExternalID)
     
     d.Set("id", CTranslationMap.Identifier())
     d.Set("parent_id", CTranslationMap.ParentID)
@@ -113,5 +92,5 @@ func dataSourceCTranslationMapRead(d *schema.ResourceData, m interface{}) error 
 
     d.SetId(CTranslationMap.Identifier())
     
-    return nil
+    return
 }

@@ -15,11 +15,6 @@ func resourceMonitorscope() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -39,11 +34,6 @@ func resourceMonitorscope() *schema.Resource {
                 Type:     schema.TypeString,
                 Required: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "read_only": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
@@ -62,19 +52,10 @@ func resourceMonitorscope() *schema.Resource {
                 Type:     schema.TypeBool,
                 Optional: true,
             },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "source_nsgs": &schema.Schema{
                 Type:     schema.TypeList,
                 Optional: true,
                 Elem:     &schema.Schema{Type: schema.TypeString},
-            },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
             },
             "parent_application": &schema.Schema{
                 Type:     schema.TypeString,
@@ -111,9 +92,6 @@ func resourceMonitorscopeCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("source_nsgs"); ok {
         o.SourceNSGs = attr.([]interface{})
     }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
-    }
     if attr, ok := d.GetOk("parent_application"); ok {
         parent := &vspk.Application{ID: attr.(string)}
         err := parent.CreateMonitorscope(o)
@@ -147,14 +125,11 @@ func resourceMonitorscopeRead(d *schema.ResourceData, m interface{}) error {
     }
 
     d.Set("name", o.Name)
-    d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("read_only", o.ReadOnly)
     d.Set("destination_nsgs", o.DestinationNSGs)
     d.Set("allow_all_destination_nsgs", o.AllowAllDestinationNSGs)
     d.Set("allow_all_source_nsgs", o.AllowAllSourceNSGs)
-    d.Set("entity_scope", o.EntityScope)
     d.Set("source_nsgs", o.SourceNSGs)
-    d.Set("external_id", o.ExternalID)
     
     d.Set("id", o.Identifier())
     d.Set("parent_id", o.ParentID)
@@ -190,9 +165,6 @@ func resourceMonitorscopeUpdate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("source_nsgs"); ok {
         o.SourceNSGs = attr.([]interface{})
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
 
     o.Save()

@@ -15,11 +15,6 @@ func resourceDemarcationService() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -31,16 +26,6 @@ func resourceDemarcationService() *schema.Resource {
                 Computed: true,
             },
             "owner": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
                 Computed: true,
@@ -59,10 +44,6 @@ func resourceDemarcationService() *schema.Resource {
                 Optional: true,
             },
             "associated_vlanid": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
@@ -92,9 +73,6 @@ func resourceDemarcationServiceCreate(d *schema.ResourceData, m interface{}) err
     if attr, ok := d.GetOk("associated_vlanid"); ok {
         o.AssociatedVLANID = attr.(string)
     }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
-    }
     if attr, ok := d.GetOk("type"); ok {
         o.Type = attr.(string)
     }
@@ -121,13 +99,10 @@ func resourceDemarcationServiceRead(d *schema.ResourceData, m interface{}) error
         return nil
     }
 
-    d.Set("last_updated_by", o.LastUpdatedBy)
-    d.Set("entity_scope", o.EntityScope)
     d.Set("route_distinguisher", o.RouteDistinguisher)
     d.Set("priority", o.Priority)
     d.Set("associated_gateway_id", o.AssociatedGatewayID)
     d.Set("associated_vlanid", o.AssociatedVLANID)
-    d.Set("external_id", o.ExternalID)
     d.Set("type", o.Type)
     
     d.Set("id", o.Identifier())
@@ -157,9 +132,6 @@ func resourceDemarcationServiceUpdate(d *schema.ResourceData, m interface{}) err
     }
     if attr, ok := d.GetOk("associated_vlanid"); ok {
         o.AssociatedVLANID = attr.(string)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
     if attr, ok := d.GetOk("type"); ok {
         o.Type = attr.(string)

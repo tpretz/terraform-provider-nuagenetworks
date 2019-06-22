@@ -48,14 +48,17 @@ func dataSourceUnderlay() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
+            "parent_uplink_connection": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+            },
         },
     }
 }
 
 
-func dataSourceUnderlayRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceUnderlayRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredUnderlays := vspk.UnderlaysList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -71,10 +74,18 @@ func dataSourceUnderlayRead(d *schema.ResourceData, m interface{}) error {
            
         }
     }
-    parent := m.(*vspk.Me)
-    filteredUnderlays, err = parent.Underlays(fetchFilter)
-    if err != nil {
-        return err
+    if attr, ok := d.GetOk("parent_uplink_connection"); ok {
+        parent := &vspk.UplinkConnection{ID: attr.(string)}
+        filteredUnderlays, err = parent.Underlays(fetchFilter)
+        if err != nil {
+            return
+        }
+    } else {
+        parent := m.(*vspk.Me)
+        filteredUnderlays, err = parent.Underlays(fetchFilter)
+        if err != nil {
+            return
+        }
     }
 
     Underlay := &vspk.Underlay{}
@@ -104,5 +115,5 @@ func dataSourceUnderlayRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(Underlay.Identifier())
     
-    return nil
+    return
 }

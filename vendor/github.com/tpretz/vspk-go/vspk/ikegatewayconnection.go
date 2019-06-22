@@ -147,6 +147,12 @@ func (o *IKEGatewayConnection) Alarms(info *bambou.FetchingInfo) (AlarmsList, *b
 	return list, err
 }
 
+// CreateAlarm creates a new child Alarm under the IKEGatewayConnection
+func (o *IKEGatewayConnection) CreateAlarm(child *Alarm) *bambou.Error {
+
+	return bambou.CurrentSession().CreateChild(o, child)
+}
+
 // GlobalMetadatas retrieves the list of child GlobalMetadatas of the IKEGatewayConnection
 func (o *IKEGatewayConnection) GlobalMetadatas(info *bambou.FetchingInfo) (GlobalMetadatasList, *bambou.Error) {
 

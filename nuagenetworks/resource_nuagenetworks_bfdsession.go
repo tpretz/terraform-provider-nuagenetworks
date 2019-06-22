@@ -15,11 +15,6 @@ func resourceBFDSession() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -36,15 +31,6 @@ func resourceBFDSession() *schema.Resource {
                 Computed: true,
             },
             "bfd_destination_ip": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
-            "bfd_destination_ip_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Default: "IPV4",
-            },
-            "bfd_destination_ipv6": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
@@ -99,12 +85,6 @@ func resourceBFDSessionCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("bfd_destination_ip"); ok {
         o.BFDDestinationIP = attr.(string)
     }
-    if attr, ok := d.GetOk("bfd_destination_ip_type"); ok {
-        o.BFDDestinationIPType = attr.(string)
-    }
-    if attr, ok := d.GetOk("bfd_destination_ipv6"); ok {
-        o.BFDDestinationIPv6 = attr.(string)
-    }
     if attr, ok := d.GetOk("bfd_multiplier"); ok {
         o.BFDMultiplier = attr.(int)
     }
@@ -150,8 +130,6 @@ func resourceBFDSessionRead(d *schema.ResourceData, m interface{}) error {
     }
 
     d.Set("bfd_destination_ip", o.BFDDestinationIP)
-    d.Set("bfd_destination_ip_type", o.BFDDestinationIPType)
-    d.Set("bfd_destination_ipv6", o.BFDDestinationIPv6)
     d.Set("bfd_multiplier", o.BFDMultiplier)
     d.Set("bfd_timer", o.BFDTimer)
     d.Set("last_updated_by", o.LastUpdatedBy)
@@ -180,12 +158,6 @@ func resourceBFDSessionUpdate(d *schema.ResourceData, m interface{}) error {
     
     if attr, ok := d.GetOk("bfd_destination_ip"); ok {
         o.BFDDestinationIP = attr.(string)
-    }
-    if attr, ok := d.GetOk("bfd_destination_ip_type"); ok {
-        o.BFDDestinationIPType = attr.(string)
-    }
-    if attr, ok := d.GetOk("bfd_destination_ipv6"); ok {
-        o.BFDDestinationIPv6 = attr.(string)
     }
     if attr, ok := d.GetOk("bfd_multiplier"); ok {
         o.BFDMultiplier = attr.(int)

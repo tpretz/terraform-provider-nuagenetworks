@@ -65,9 +65,8 @@ func dataSourceGatewayTemplate() *schema.Resource {
 }
 
 
-func dataSourceGatewayTemplateRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceGatewayTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredGatewayTemplates := vspk.GatewayTemplatesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -87,13 +86,13 @@ func dataSourceGatewayTemplateRead(d *schema.ResourceData, m interface{}) error 
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredGatewayTemplates, err = parent.GatewayTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredGatewayTemplates, err = parent.GatewayTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -126,5 +125,5 @@ func dataSourceGatewayTemplateRead(d *schema.ResourceData, m interface{}) error 
 
     d.SetId(GatewayTemplate.Identifier())
     
-    return nil
+    return
 }

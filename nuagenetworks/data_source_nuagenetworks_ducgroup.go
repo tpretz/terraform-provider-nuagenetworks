@@ -28,27 +28,11 @@ func dataSourceDUCGroup() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "associated_performance_monitor_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "function": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -57,9 +41,8 @@ func dataSourceDUCGroup() *schema.Resource {
 }
 
 
-func dataSourceDUCGroupRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceDUCGroupRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredDUCGroups := vspk.DUCGroupsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -78,7 +61,7 @@ func dataSourceDUCGroupRead(d *schema.ResourceData, m interface{}) error {
     parent := m.(*vspk.Me)
     filteredDUCGroups, err = parent.DUCGroups(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     DUCGroup := &vspk.DUCGroup{}
@@ -95,12 +78,8 @@ func dataSourceDUCGroupRead(d *schema.ResourceData, m interface{}) error {
     DUCGroup = filteredDUCGroups[0]
 
     d.Set("name", DUCGroup.Name)
-    d.Set("last_updated_by", DUCGroup.LastUpdatedBy)
     d.Set("description", DUCGroup.Description)
-    d.Set("entity_scope", DUCGroup.EntityScope)
     d.Set("associated_performance_monitor_id", DUCGroup.AssociatedPerformanceMonitorID)
-    d.Set("function", DUCGroup.Function)
-    d.Set("external_id", DUCGroup.ExternalID)
     
     d.Set("id", DUCGroup.Identifier())
     d.Set("parent_id", DUCGroup.ParentID)
@@ -109,5 +88,5 @@ func dataSourceDUCGroupRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(DUCGroup.Identifier())
     
-    return nil
+    return
 }

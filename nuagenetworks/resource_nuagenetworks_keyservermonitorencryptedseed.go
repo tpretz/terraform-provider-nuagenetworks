@@ -15,11 +15,6 @@ func resourceKeyServerMonitorEncryptedSeed() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -40,11 +35,6 @@ func resourceKeyServerMonitorEncryptedSeed() *schema.Resource {
                 Optional: true,
             },
             "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "seed_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
                 Computed: true,
@@ -144,7 +134,6 @@ func resourceKeyServerMonitorEncryptedSeedRead(d *schema.ResourceData, m interfa
 
     d.Set("sek_creation_time", o.SEKCreationTime)
     d.Set("last_updated_by", o.LastUpdatedBy)
-    d.Set("seed_type", o.SeedType)
     d.Set("key_server_certificate_serial_number", o.KeyServerCertificateSerialNumber)
     d.Set("enterprise_secured_data_id", o.EnterpriseSecuredDataID)
     d.Set("entity_scope", o.EntityScope)

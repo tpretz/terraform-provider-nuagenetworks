@@ -69,9 +69,8 @@ func dataSourceAddressMap() *schema.Resource {
 }
 
 
-func dataSourceAddressMapRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceAddressMapRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredAddressMaps := vspk.AddressMapsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -90,7 +89,7 @@ func dataSourceAddressMapRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.PATNATPool{ID: d.Get("parent_patnat_pool").(string)}
     filteredAddressMaps, err = parent.AddressMaps(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     AddressMap := &vspk.AddressMap{}
@@ -123,5 +122,5 @@ func dataSourceAddressMapRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(AddressMap.Identifier())
     
-    return nil
+    return
 }

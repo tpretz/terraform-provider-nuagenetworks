@@ -44,6 +44,10 @@ func dataSourceNSPortTemplate() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
+            "infrastructure_profile_id": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -77,9 +81,8 @@ func dataSourceNSPortTemplate() *schema.Resource {
 }
 
 
-func dataSourceNSPortTemplateRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceNSPortTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredNSPortTemplates := vspk.NSPortTemplatesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -98,7 +101,7 @@ func dataSourceNSPortTemplateRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.NSGatewayTemplate{ID: d.Get("parent_ns_gateway_template").(string)}
     filteredNSPortTemplates, err = parent.NSPortTemplates(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     NSPortTemplate := &vspk.NSPortTemplate{}
@@ -119,6 +122,7 @@ func dataSourceNSPortTemplateRead(d *schema.ResourceData, m interface{}) error {
     d.Set("last_updated_by", NSPortTemplate.LastUpdatedBy)
     d.Set("description", NSPortTemplate.Description)
     d.Set("physical_name", NSPortTemplate.PhysicalName)
+    d.Set("infrastructure_profile_id", NSPortTemplate.InfrastructureProfileID)
     d.Set("entity_scope", NSPortTemplate.EntityScope)
     d.Set("port_type", NSPortTemplate.PortType)
     d.Set("speed", NSPortTemplate.Speed)
@@ -133,5 +137,5 @@ func dataSourceNSPortTemplateRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(NSPortTemplate.Identifier())
     
-    return nil
+    return
 }

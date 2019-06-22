@@ -28,28 +28,12 @@ func dataSourcePSPATMap() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "family": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "reserved_spatips": &schema.Schema{
                 Type:     schema.TypeList,
                 Computed: true,
                 Elem:     &schema.Schema{Type: schema.TypeString},
             },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "associated_spat_sources_pool_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -62,9 +46,8 @@ func dataSourcePSPATMap() *schema.Resource {
 }
 
 
-func dataSourcePSPATMapRead(d *schema.ResourceData, m interface{}) error {
+func dataSourcePSPATMapRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredPSPATMaps := vspk.PSPATMapsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -83,7 +66,7 @@ func dataSourcePSPATMapRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.PSNATPool{ID: d.Get("parent_psnat_pool").(string)}
     filteredPSPATMaps, err = parent.PSPATMaps(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     PSPATMap := &vspk.PSPATMap{}
@@ -100,12 +83,8 @@ func dataSourcePSPATMapRead(d *schema.ResourceData, m interface{}) error {
     PSPATMap = filteredPSPATMaps[0]
 
     d.Set("name", PSPATMap.Name)
-    d.Set("family", PSPATMap.Family)
-    d.Set("last_updated_by", PSPATMap.LastUpdatedBy)
     d.Set("reserved_spatips", PSPATMap.ReservedSPATIPs)
-    d.Set("entity_scope", PSPATMap.EntityScope)
     d.Set("associated_spat_sources_pool_id", PSPATMap.AssociatedSPATSourcesPoolID)
-    d.Set("external_id", PSPATMap.ExternalID)
     
     d.Set("id", PSPATMap.Identifier())
     d.Set("parent_id", PSPATMap.ParentID)
@@ -114,5 +93,5 @@ func dataSourcePSPATMapRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(PSPATMap.Identifier())
     
-    return nil
+    return
 }

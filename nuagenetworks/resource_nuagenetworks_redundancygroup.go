@@ -15,11 +15,6 @@ func resourceRedundancyGroup() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -55,7 +50,7 @@ func resourceRedundancyGroup() *schema.Resource {
             },
             "gateway_peer1_id": &schema.Schema{
                 Type:     schema.TypeString,
-                Required: true,
+                Optional: true,
             },
             "gateway_peer1_name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -72,7 +67,7 @@ func resourceRedundancyGroup() *schema.Resource {
             },
             "gateway_peer2_id": &schema.Schema{
                 Type:     schema.TypeString,
-                Required: true,
+                Optional: true,
             },
             "gateway_peer2_name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -125,17 +120,21 @@ func resourceRedundancyGroupCreate(d *schema.ResourceData, m interface{}) error 
     // Initialize RedundancyGroup object
     o := &vspk.RedundancyGroup{
         Name: d.Get("name").(string),
-        GatewayPeer1ID: d.Get("gateway_peer1_id").(string),
-        GatewayPeer2ID: d.Get("gateway_peer2_id").(string),
     }
     if attr, ok := d.GetOk("gateway_peer1_autodiscovered_gateway_id"); ok {
         o.GatewayPeer1AutodiscoveredGatewayID = attr.(string)
+    }
+    if attr, ok := d.GetOk("gateway_peer1_id"); ok {
+        o.GatewayPeer1ID = attr.(string)
     }
     if attr, ok := d.GetOk("gateway_peer1_name"); ok {
         o.GatewayPeer1Name = attr.(string)
     }
     if attr, ok := d.GetOk("gateway_peer2_autodiscovered_gateway_id"); ok {
         o.GatewayPeer2AutodiscoveredGatewayID = attr.(string)
+    }
+    if attr, ok := d.GetOk("gateway_peer2_id"); ok {
+        o.GatewayPeer2ID = attr.(string)
     }
     if attr, ok := d.GetOk("gateway_peer2_name"); ok {
         o.GatewayPeer2Name = attr.(string)
@@ -228,17 +227,21 @@ func resourceRedundancyGroupUpdate(d *schema.ResourceData, m interface{}) error 
     }
     
     o.Name = d.Get("name").(string)
-    o.GatewayPeer1ID = d.Get("gateway_peer1_id").(string)
-    o.GatewayPeer2ID = d.Get("gateway_peer2_id").(string)
     
     if attr, ok := d.GetOk("gateway_peer1_autodiscovered_gateway_id"); ok {
         o.GatewayPeer1AutodiscoveredGatewayID = attr.(string)
+    }
+    if attr, ok := d.GetOk("gateway_peer1_id"); ok {
+        o.GatewayPeer1ID = attr.(string)
     }
     if attr, ok := d.GetOk("gateway_peer1_name"); ok {
         o.GatewayPeer1Name = attr.(string)
     }
     if attr, ok := d.GetOk("gateway_peer2_autodiscovered_gateway_id"); ok {
         o.GatewayPeer2AutodiscoveredGatewayID = attr.(string)
+    }
+    if attr, ok := d.GetOk("gateway_peer2_id"); ok {
+        o.GatewayPeer2ID = attr.(string)
     }
     if attr, ok := d.GetOk("gateway_peer2_name"); ok {
         o.GatewayPeer2Name = attr.(string)

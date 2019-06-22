@@ -15,11 +15,6 @@ func resourceGateway() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -92,18 +87,8 @@ func resourceGateway() *schema.Resource {
                 Optional: true,
                 Computed: true,
             },
-            "patches": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "gateway_connected": &schema.Schema{
                 Type:     schema.TypeBool,
-                Optional: true,
-                Computed: true,
-            },
-            "gateway_model": &schema.Schema{
-                Type:     schema.TypeString,
                 Optional: true,
                 Computed: true,
             },
@@ -128,11 +113,6 @@ func resourceGateway() *schema.Resource {
             "pending": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
-            },
-            "vendor": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
             },
             "serial_number": &schema.Schema{
                 Type:     schema.TypeString,
@@ -191,11 +171,6 @@ func resourceGateway() *schema.Resource {
                 Optional: true,
             },
             "associated_gateway_security_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "associated_gateway_security_profile_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
                 Computed: true,
@@ -298,9 +273,6 @@ func resourceGatewayCreate(d *schema.ResourceData, m interface{}) error {
     
 
     d.SetId(o.Identifier())
-    if attr, ok := d.GetOk("patnatpools"); ok {
-        o.AssignPATNATPools(attr.(vspk.PATNATPoolsList))
-    }
     return resourceGatewayRead(d, m)
 }
 
@@ -327,15 +299,12 @@ func resourceGatewayRead(d *schema.ResourceData, m interface{}) error {
     d.Set("management_id", o.ManagementID)
     d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("datapath_id", o.DatapathID)
-    d.Set("patches", o.Patches)
     d.Set("gateway_connected", o.GatewayConnected)
-    d.Set("gateway_model", o.GatewayModel)
     d.Set("gateway_version", o.GatewayVersion)
     d.Set("redundancy_group_id", o.RedundancyGroupID)
     d.Set("peer", o.Peer)
     d.Set("template_id", o.TemplateID)
     d.Set("pending", o.Pending)
-    d.Set("vendor", o.Vendor)
     d.Set("serial_number", o.SerialNumber)
     d.Set("permitted_action", o.PermittedAction)
     d.Set("personality", o.Personality)
@@ -349,7 +318,6 @@ func resourceGatewayRead(d *schema.ResourceData, m interface{}) error {
     d.Set("product_name", o.ProductName)
     d.Set("use_gateway_vlanvnid", o.UseGatewayVLANVNID)
     d.Set("associated_gateway_security_id", o.AssociatedGatewaySecurityID)
-    d.Set("associated_gateway_security_profile_id", o.AssociatedGatewaySecurityProfileID)
     d.Set("associated_nsg_info_id", o.AssociatedNSGInfoID)
     d.Set("associated_netconf_profile_id", o.AssociatedNetconfProfileID)
     d.Set("vtep", o.Vtep)

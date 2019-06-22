@@ -15,11 +15,6 @@ func resourceApplicationperformancemanagement() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -55,11 +50,6 @@ func resourceApplicationperformancemanagement() *schema.Resource {
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "app_group_unique_id": &schema.Schema{
-                Type:     schema.TypeInt,
                 Optional: true,
                 Computed: true,
             },
@@ -125,7 +115,6 @@ func resourceApplicationperformancemanagementRead(d *schema.ResourceData, m inte
     d.Set("read_only", o.ReadOnly)
     d.Set("description", o.Description)
     d.Set("entity_scope", o.EntityScope)
-    d.Set("app_group_unique_id", o.AppGroupUniqueId)
     d.Set("associated_performance_monitor_id", o.AssociatedPerformanceMonitorID)
     d.Set("external_id", o.ExternalID)
     

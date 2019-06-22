@@ -15,11 +15,6 @@ func resourceDomainFIPAclTemplateEntry() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -64,15 +59,16 @@ func resourceDomainFIPAclTemplateEntry() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
+            "action_details": &schema.Schema{
+                Type:     schema.TypeMap,
+                Optional: true,
+            },
+            "action_details_raw": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+			},
             "address_override": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
-            "web_filter_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
-            "web_filter_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
@@ -80,7 +76,23 @@ func resourceDomainFIPAclTemplateEntry() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
+            "dest_pg_id": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+            },
+            "dest_pg_type": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+            },
             "destination_port": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+            },
+            "destination_type": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+            },
+            "destination_value": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
@@ -127,7 +139,23 @@ func resourceDomainFIPAclTemplateEntry() *schema.Resource {
                 Optional: true,
                 Computed: true,
             },
+            "source_pg_id": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+            },
+            "source_pg_type": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+            },
             "source_port": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+            },
+            "source_type": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+            },
+            "source_value": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
@@ -142,21 +170,6 @@ func resourceDomainFIPAclTemplateEntry() *schema.Resource {
             "associated_live_entity_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-            },
-            "associated_live_template_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "associated_traffic_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "associated_traffic_type_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
             },
             "stateful": &schema.Schema{
                 Type:     schema.TypeBool,
@@ -208,20 +221,29 @@ func resourceDomainFIPAclTemplateEntryCreate(d *schema.ResourceData, m interface
     if attr, ok := d.GetOk("action"); ok {
         o.Action = attr.(string)
     }
+    if attr, ok := d.GetOk("action_details"); ok {
+        o.ActionDetails = attr.(interface{})
+    }
     if attr, ok := d.GetOk("address_override"); ok {
         o.AddressOverride = attr.(string)
-    }
-    if attr, ok := d.GetOk("web_filter_id"); ok {
-        o.WebFilterID = attr.(string)
-    }
-    if attr, ok := d.GetOk("web_filter_type"); ok {
-        o.WebFilterType = attr.(string)
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
     }
+    if attr, ok := d.GetOk("dest_pg_id"); ok {
+        o.DestPgId = attr.(string)
+    }
+    if attr, ok := d.GetOk("dest_pg_type"); ok {
+        o.DestPgType = attr.(string)
+    }
     if attr, ok := d.GetOk("destination_port"); ok {
         o.DestinationPort = attr.(string)
+    }
+    if attr, ok := d.GetOk("destination_type"); ok {
+        o.DestinationType = attr.(string)
+    }
+    if attr, ok := d.GetOk("destination_value"); ok {
+        o.DestinationValue = attr.(string)
     }
     if attr, ok := d.GetOk("network_id"); ok {
         o.NetworkID = attr.(string)
@@ -244,8 +266,20 @@ func resourceDomainFIPAclTemplateEntryCreate(d *schema.ResourceData, m interface
     if attr, ok := d.GetOk("policy_state"); ok {
         o.PolicyState = attr.(string)
     }
+    if attr, ok := d.GetOk("source_pg_id"); ok {
+        o.SourcePgId = attr.(string)
+    }
+    if attr, ok := d.GetOk("source_pg_type"); ok {
+        o.SourcePgType = attr.(string)
+    }
     if attr, ok := d.GetOk("source_port"); ok {
         o.SourcePort = attr.(string)
+    }
+    if attr, ok := d.GetOk("source_type"); ok {
+        o.SourceType = attr.(string)
+    }
+    if attr, ok := d.GetOk("source_value"); ok {
+        o.SourceValue = attr.(string)
     }
     if attr, ok := d.GetOk("priority"); ok {
         o.Priority = attr.(int)
@@ -301,11 +335,20 @@ func resourceDomainFIPAclTemplateEntryRead(d *schema.ResourceData, m interface{}
     d.Set("dscp", o.DSCP)
     d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("action", o.Action)
+    if v, ok := o.ActionDetails.(string); ok {
+		raw := make(map[string]string)
+		raw["raw"] = v
+		d.Set("action_details_raw", raw)
+	} else {
+		d.Set("action_details", o.ActionDetails)
+	}
     d.Set("address_override", o.AddressOverride)
-    d.Set("web_filter_id", o.WebFilterID)
-    d.Set("web_filter_type", o.WebFilterType)
     d.Set("description", o.Description)
+    d.Set("dest_pg_id", o.DestPgId)
+    d.Set("dest_pg_type", o.DestPgType)
     d.Set("destination_port", o.DestinationPort)
+    d.Set("destination_type", o.DestinationType)
+    d.Set("destination_value", o.DestinationValue)
     d.Set("network_id", o.NetworkID)
     d.Set("network_type", o.NetworkType)
     d.Set("mirror_destination_id", o.MirrorDestinationID)
@@ -316,13 +359,14 @@ func resourceDomainFIPAclTemplateEntryRead(d *schema.ResourceData, m interface{}
     d.Set("location_type", o.LocationType)
     d.Set("policy_state", o.PolicyState)
     d.Set("domain_name", o.DomainName)
+    d.Set("source_pg_id", o.SourcePgId)
+    d.Set("source_pg_type", o.SourcePgType)
     d.Set("source_port", o.SourcePort)
+    d.Set("source_type", o.SourceType)
+    d.Set("source_value", o.SourceValue)
     d.Set("priority", o.Priority)
     d.Set("protocol", o.Protocol)
     d.Set("associated_live_entity_id", o.AssociatedLiveEntityID)
-    d.Set("associated_live_template_id", o.AssociatedLiveTemplateID)
-    d.Set("associated_traffic_type", o.AssociatedTrafficType)
-    d.Set("associated_traffic_type_id", o.AssociatedTrafficTypeID)
     d.Set("stateful", o.Stateful)
     d.Set("stats_id", o.StatsID)
     d.Set("stats_logging_enabled", o.StatsLoggingEnabled)
@@ -365,20 +409,29 @@ func resourceDomainFIPAclTemplateEntryUpdate(d *schema.ResourceData, m interface
     if attr, ok := d.GetOk("action"); ok {
         o.Action = attr.(string)
     }
+    if attr, ok := d.GetOk("action_details"); ok {
+        o.ActionDetails = attr.(interface{})
+    }
     if attr, ok := d.GetOk("address_override"); ok {
         o.AddressOverride = attr.(string)
-    }
-    if attr, ok := d.GetOk("web_filter_id"); ok {
-        o.WebFilterID = attr.(string)
-    }
-    if attr, ok := d.GetOk("web_filter_type"); ok {
-        o.WebFilterType = attr.(string)
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
     }
+    if attr, ok := d.GetOk("dest_pg_id"); ok {
+        o.DestPgId = attr.(string)
+    }
+    if attr, ok := d.GetOk("dest_pg_type"); ok {
+        o.DestPgType = attr.(string)
+    }
     if attr, ok := d.GetOk("destination_port"); ok {
         o.DestinationPort = attr.(string)
+    }
+    if attr, ok := d.GetOk("destination_type"); ok {
+        o.DestinationType = attr.(string)
+    }
+    if attr, ok := d.GetOk("destination_value"); ok {
+        o.DestinationValue = attr.(string)
     }
     if attr, ok := d.GetOk("network_id"); ok {
         o.NetworkID = attr.(string)
@@ -401,8 +454,20 @@ func resourceDomainFIPAclTemplateEntryUpdate(d *schema.ResourceData, m interface
     if attr, ok := d.GetOk("policy_state"); ok {
         o.PolicyState = attr.(string)
     }
+    if attr, ok := d.GetOk("source_pg_id"); ok {
+        o.SourcePgId = attr.(string)
+    }
+    if attr, ok := d.GetOk("source_pg_type"); ok {
+        o.SourcePgType = attr.(string)
+    }
     if attr, ok := d.GetOk("source_port"); ok {
         o.SourcePort = attr.(string)
+    }
+    if attr, ok := d.GetOk("source_type"); ok {
+        o.SourceType = attr.(string)
+    }
+    if attr, ok := d.GetOk("source_value"); ok {
+        o.SourceValue = attr.(string)
     }
     if attr, ok := d.GetOk("priority"); ok {
         o.Priority = attr.(int)

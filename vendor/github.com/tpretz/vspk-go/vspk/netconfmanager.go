@@ -37,17 +37,13 @@ type NetconfManagersParent interface {
 
 // NetconfManager represents the model of a netconfmanager
 type NetconfManager struct {
-	ID              string `json:"ID,omitempty"`
-	ParentID        string `json:"parentID,omitempty"`
-	ParentType      string `json:"parentType,omitempty"`
-	Owner           string `json:"owner,omitempty"`
-	Name            string `json:"name,omitempty"`
-	LastUpdatedBy   string `json:"lastUpdatedBy,omitempty"`
-	Release         string `json:"release,omitempty"`
-	EntityScope     string `json:"entityScope,omitempty"`
-	AssocEntityType string `json:"assocEntityType,omitempty"`
-	Status          string `json:"status,omitempty"`
-	ExternalID      string `json:"externalID,omitempty"`
+	ID         string `json:"ID,omitempty"`
+	ParentID   string `json:"parentID,omitempty"`
+	ParentType string `json:"parentType,omitempty"`
+	Owner      string `json:"owner,omitempty"`
+	Name       string `json:"name,omitempty"`
+	Release    string `json:"release,omitempty"`
+	Status     string `json:"status,omitempty"`
 }
 
 // NewNetconfManager returns a new *NetconfManager
@@ -92,20 +88,6 @@ func (o *NetconfManager) Delete() *bambou.Error {
 	return bambou.CurrentSession().DeleteEntity(o)
 }
 
-// Metadatas retrieves the list of child Metadatas of the NetconfManager
-func (o *NetconfManager) Metadatas(info *bambou.FetchingInfo) (MetadatasList, *bambou.Error) {
-
-	var list MetadatasList
-	err := bambou.CurrentSession().FetchChildren(o, MetadataIdentity, &list, info)
-	return list, err
-}
-
-// CreateMetadata creates a new child Metadata under the NetconfManager
-func (o *NetconfManager) CreateMetadata(child *Metadata) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
-}
-
 // NetconfSessions retrieves the list of child NetconfSessions of the NetconfManager
 func (o *NetconfManager) NetconfSessions(info *bambou.FetchingInfo) (NetconfSessionsList, *bambou.Error) {
 
@@ -116,28 +98,6 @@ func (o *NetconfManager) NetconfSessions(info *bambou.FetchingInfo) (NetconfSess
 
 // CreateNetconfSession creates a new child NetconfSession under the NetconfManager
 func (o *NetconfManager) CreateNetconfSession(child *NetconfSession) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
-}
-
-// Alarms retrieves the list of child Alarms of the NetconfManager
-func (o *NetconfManager) Alarms(info *bambou.FetchingInfo) (AlarmsList, *bambou.Error) {
-
-	var list AlarmsList
-	err := bambou.CurrentSession().FetchChildren(o, AlarmIdentity, &list, info)
-	return list, err
-}
-
-// GlobalMetadatas retrieves the list of child GlobalMetadatas of the NetconfManager
-func (o *NetconfManager) GlobalMetadatas(info *bambou.FetchingInfo) (GlobalMetadatasList, *bambou.Error) {
-
-	var list GlobalMetadatasList
-	err := bambou.CurrentSession().FetchChildren(o, GlobalMetadataIdentity, &list, info)
-	return list, err
-}
-
-// CreateGlobalMetadata creates a new child GlobalMetadata under the NetconfManager
-func (o *NetconfManager) CreateGlobalMetadata(child *GlobalMetadata) *bambou.Error {
 
 	return bambou.CurrentSession().CreateChild(o, child)
 }

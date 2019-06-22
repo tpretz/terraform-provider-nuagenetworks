@@ -15,11 +15,6 @@ func resourceUplinkConnection() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -51,11 +46,6 @@ func resourceUplinkConnection() *schema.Resource {
             "password": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-            },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
             },
             "gateway": &schema.Schema{
                 Type:     schema.TypeString,
@@ -90,18 +80,15 @@ func resourceUplinkConnection() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "vlan": &schema.Schema{
-                Type:     schema.TypeInt,
+            "vlan_id": &schema.Schema{
+                Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "underlay_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
                 Default: true,
-            },
-            "underlay_id": &schema.Schema{
-                Type:     schema.TypeInt,
-                Optional: true,
             },
             "inherited": &schema.Schema{
                 Type:     schema.TypeBool,
@@ -118,11 +105,6 @@ func resourceUplinkConnection() *schema.Resource {
                 Optional: true,
                 Default: "AUTOMATIC",
             },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "mode": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -134,7 +116,7 @@ func resourceUplinkConnection() *schema.Resource {
                 Default: "PRIMARY",
             },
             "role_order": &schema.Schema{
-                Type:     schema.TypeInt,
+                Type:     schema.TypeString,
                 Optional: true,
                 Computed: true,
             },
@@ -146,7 +128,7 @@ func resourceUplinkConnection() *schema.Resource {
             "download_rate_limit": &schema.Schema{
                 Type:     schema.TypeFloat,
                 Optional: true,
-                Default: 8.0,
+                Default: 8,
             },
             "uplink_id": &schema.Schema{
                 Type:     schema.TypeInt,
@@ -172,10 +154,6 @@ func resourceUplinkConnection() *schema.Resource {
                 Type:     schema.TypeBool,
                 Optional: true,
                 Default: false,
-            },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
             },
             "parent_vlan_template": &schema.Schema{
                 Type:     schema.TypeString,
@@ -232,14 +210,8 @@ func resourceUplinkConnectionCreate(d *schema.ResourceData, m interface{}) error
     if attr, ok := d.GetOk("netmask"); ok {
         o.Netmask = attr.(string)
     }
-    if attr, ok := d.GetOk("vlan"); ok {
-        o.Vlan = attr.(int)
-    }
     if attr, ok := d.GetOk("underlay_enabled"); ok {
         o.UnderlayEnabled = attr.(bool)
-    }
-    if attr, ok := d.GetOk("underlay_id"); ok {
-        o.UnderlayID = attr.(int)
     }
     if attr, ok := d.GetOk("installer_managed"); ok {
         o.InstallerManaged = attr.(bool)
@@ -273,9 +245,6 @@ func resourceUplinkConnectionCreate(d *schema.ResourceData, m interface{}) error
     }
     if attr, ok := d.GetOk("auxiliary_link"); ok {
         o.AuxiliaryLink = attr.(bool)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
     if attr, ok := d.GetOk("parent_vlan_template"); ok {
         parent := &vspk.VLANTemplate{ID: attr.(string)}
@@ -313,7 +282,6 @@ func resourceUplinkConnectionRead(d *schema.ResourceData, m interface{}) error {
     d.Set("dns_address", o.DNSAddress)
     d.Set("dns_address_v6", o.DNSAddressV6)
     d.Set("password", o.Password)
-    d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("gateway", o.Gateway)
     d.Set("gateway_v6", o.GatewayV6)
     d.Set("address", o.Address)
@@ -322,13 +290,11 @@ func resourceUplinkConnectionRead(d *schema.ResourceData, m interface{}) error {
     d.Set("advertisement_criteria", o.AdvertisementCriteria)
     d.Set("secondary_address", o.SecondaryAddress)
     d.Set("netmask", o.Netmask)
-    d.Set("vlan", o.Vlan)
+    d.Set("vlan_id", o.VlanId)
     d.Set("underlay_enabled", o.UnderlayEnabled)
-    d.Set("underlay_id", o.UnderlayID)
     d.Set("inherited", o.Inherited)
     d.Set("installer_managed", o.InstallerManaged)
     d.Set("interface_connection_type", o.InterfaceConnectionType)
-    d.Set("entity_scope", o.EntityScope)
     d.Set("mode", o.Mode)
     d.Set("role", o.Role)
     d.Set("role_order", o.RoleOrder)
@@ -340,7 +306,6 @@ func resourceUplinkConnectionRead(d *schema.ResourceData, m interface{}) error {
     d.Set("associated_bgp_neighbor_id", o.AssociatedBGPNeighborID)
     d.Set("associated_underlay_name", o.AssociatedUnderlayName)
     d.Set("auxiliary_link", o.AuxiliaryLink)
-    d.Set("external_id", o.ExternalID)
     
     d.Set("id", o.Identifier())
     d.Set("parent_id", o.ParentID)
@@ -397,14 +362,8 @@ func resourceUplinkConnectionUpdate(d *schema.ResourceData, m interface{}) error
     if attr, ok := d.GetOk("netmask"); ok {
         o.Netmask = attr.(string)
     }
-    if attr, ok := d.GetOk("vlan"); ok {
-        o.Vlan = attr.(int)
-    }
     if attr, ok := d.GetOk("underlay_enabled"); ok {
         o.UnderlayEnabled = attr.(bool)
-    }
-    if attr, ok := d.GetOk("underlay_id"); ok {
-        o.UnderlayID = attr.(int)
     }
     if attr, ok := d.GetOk("installer_managed"); ok {
         o.InstallerManaged = attr.(bool)
@@ -438,9 +397,6 @@ func resourceUplinkConnectionUpdate(d *schema.ResourceData, m interface{}) error
     }
     if attr, ok := d.GetOk("auxiliary_link"); ok {
         o.AuxiliaryLink = attr.(bool)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
 
     o.Save()

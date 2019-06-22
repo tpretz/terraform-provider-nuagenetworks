@@ -109,9 +109,8 @@ func dataSourceRedundantPort() *schema.Resource {
 }
 
 
-func dataSourceRedundantPortRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceRedundantPortRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredRedundantPorts := vspk.RedundantPortsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -130,7 +129,7 @@ func dataSourceRedundantPortRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.NSRedundantGatewayGroup{ID: d.Get("parent_ns_redundant_gateway_group").(string)}
     filteredRedundantPorts, err = parent.RedundantPorts(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     RedundantPort := &vspk.RedundantPort{}
@@ -173,5 +172,5 @@ func dataSourceRedundantPortRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(RedundantPort.Identifier())
     
-    return nil
+    return
 }

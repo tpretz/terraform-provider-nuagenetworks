@@ -15,11 +15,6 @@ func resourceGatewaySecuredData() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -57,11 +52,6 @@ func resourceGatewaySecuredData() *schema.Resource {
                 Optional: true,
             },
             "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "associated_enterprise_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
                 Computed: true,
@@ -127,7 +117,6 @@ func resourceGatewaySecuredDataRead(d *schema.ResourceData, m interface{}) error
     d.Set("keyserver_cert_serial_number", o.KeyserverCertSerialNumber)
     d.Set("signed_data", o.SignedData)
     d.Set("entity_scope", o.EntityScope)
-    d.Set("associated_enterprise_id", o.AssociatedEnterpriseID)
     d.Set("external_id", o.ExternalID)
     
     d.Set("id", o.Identifier())

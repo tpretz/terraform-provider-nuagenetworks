@@ -43,11 +43,9 @@ type GatewayRedundantPort struct {
 	Owner                       string `json:"owner,omitempty"`
 	VLANRange                   string `json:"VLANRange,omitempty"`
 	Name                        string `json:"name,omitempty"`
-	LastUpdatedBy               string `json:"lastUpdatedBy,omitempty"`
 	PermittedAction             string `json:"permittedAction,omitempty"`
 	Description                 string `json:"description,omitempty"`
 	PhysicalName                string `json:"physicalName,omitempty"`
-	EntityScope                 string `json:"entityScope,omitempty"`
 	PortPeer1ID                 string `json:"portPeer1ID,omitempty"`
 	PortPeer2ID                 string `json:"portPeer2ID,omitempty"`
 	PortType                    string `json:"portType,omitempty"`
@@ -55,7 +53,6 @@ type GatewayRedundantPort struct {
 	UserMnemonic                string `json:"userMnemonic,omitempty"`
 	AssociatedEgressQOSPolicyID string `json:"associatedEgressQOSPolicyID,omitempty"`
 	Status                      string `json:"status,omitempty"`
-	ExternalID                  string `json:"externalID,omitempty"`
 }
 
 // NewGatewayRedundantPort returns a new *GatewayRedundantPort
@@ -100,34 +97,6 @@ func (o *GatewayRedundantPort) Delete() *bambou.Error {
 	return bambou.CurrentSession().DeleteEntity(o)
 }
 
-// Permissions retrieves the list of child Permissions of the GatewayRedundantPort
-func (o *GatewayRedundantPort) Permissions(info *bambou.FetchingInfo) (PermissionsList, *bambou.Error) {
-
-	var list PermissionsList
-	err := bambou.CurrentSession().FetchChildren(o, PermissionIdentity, &list, info)
-	return list, err
-}
-
-// CreatePermission creates a new child Permission under the GatewayRedundantPort
-func (o *GatewayRedundantPort) CreatePermission(child *Permission) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
-}
-
-// Metadatas retrieves the list of child Metadatas of the GatewayRedundantPort
-func (o *GatewayRedundantPort) Metadatas(info *bambou.FetchingInfo) (MetadatasList, *bambou.Error) {
-
-	var list MetadatasList
-	err := bambou.CurrentSession().FetchChildren(o, MetadataIdentity, &list, info)
-	return list, err
-}
-
-// CreateMetadata creates a new child Metadata under the GatewayRedundantPort
-func (o *GatewayRedundantPort) CreateMetadata(child *Metadata) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
-}
-
 // VLANs retrieves the list of child VLANs of the GatewayRedundantPort
 func (o *GatewayRedundantPort) VLANs(info *bambou.FetchingInfo) (VLANsList, *bambou.Error) {
 
@@ -138,42 +107,6 @@ func (o *GatewayRedundantPort) VLANs(info *bambou.FetchingInfo) (VLANsList, *bam
 
 // CreateVLAN creates a new child VLAN under the GatewayRedundantPort
 func (o *GatewayRedundantPort) CreateVLAN(child *VLAN) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
-}
-
-// Alarms retrieves the list of child Alarms of the GatewayRedundantPort
-func (o *GatewayRedundantPort) Alarms(info *bambou.FetchingInfo) (AlarmsList, *bambou.Error) {
-
-	var list AlarmsList
-	err := bambou.CurrentSession().FetchChildren(o, AlarmIdentity, &list, info)
-	return list, err
-}
-
-// GlobalMetadatas retrieves the list of child GlobalMetadatas of the GatewayRedundantPort
-func (o *GatewayRedundantPort) GlobalMetadatas(info *bambou.FetchingInfo) (GlobalMetadatasList, *bambou.Error) {
-
-	var list GlobalMetadatasList
-	err := bambou.CurrentSession().FetchChildren(o, GlobalMetadataIdentity, &list, info)
-	return list, err
-}
-
-// CreateGlobalMetadata creates a new child GlobalMetadata under the GatewayRedundantPort
-func (o *GatewayRedundantPort) CreateGlobalMetadata(child *GlobalMetadata) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
-}
-
-// EnterprisePermissions retrieves the list of child EnterprisePermissions of the GatewayRedundantPort
-func (o *GatewayRedundantPort) EnterprisePermissions(info *bambou.FetchingInfo) (EnterprisePermissionsList, *bambou.Error) {
-
-	var list EnterprisePermissionsList
-	err := bambou.CurrentSession().FetchChildren(o, EnterprisePermissionIdentity, &list, info)
-	return list, err
-}
-
-// CreateEnterprisePermission creates a new child EnterprisePermission under the GatewayRedundantPort
-func (o *GatewayRedundantPort) CreateEnterprisePermission(child *EnterprisePermission) *bambou.Error {
 
 	return bambou.CurrentSession().CreateChild(o, child)
 }

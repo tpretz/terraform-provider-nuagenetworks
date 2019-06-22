@@ -15,11 +15,6 @@ func resourceCTranslationMap() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -39,21 +34,6 @@ func resourceCTranslationMap() *schema.Resource {
                 Type:     schema.TypeString,
                 Required: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "associated_domain_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "customer_alias_ip": &schema.Schema{
                 Type:     schema.TypeString,
                 Required: true,
@@ -61,10 +41,6 @@ func resourceCTranslationMap() *schema.Resource {
             "customer_ip": &schema.Schema{
                 Type:     schema.TypeString,
                 Required: true,
-            },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
             },
             "parent_csnat_pool": &schema.Schema{
                 Type:     schema.TypeString,
@@ -81,9 +57,6 @@ func resourceCTranslationMapCreate(d *schema.ResourceData, m interface{}) error 
         MappingType: d.Get("mapping_type").(string),
         CustomerAliasIP: d.Get("customer_alias_ip").(string),
         CustomerIP: d.Get("customer_ip").(string),
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
     parent := &vspk.CSNATPool{ID: d.Get("parent_csnat_pool").(string)}
     err := parent.CreateCTranslationMap(o)
@@ -109,12 +82,8 @@ func resourceCTranslationMapRead(d *schema.ResourceData, m interface{}) error {
     }
 
     d.Set("mapping_type", o.MappingType)
-    d.Set("last_updated_by", o.LastUpdatedBy)
-    d.Set("entity_scope", o.EntityScope)
-    d.Set("associated_domain_id", o.AssociatedDomainID)
     d.Set("customer_alias_ip", o.CustomerAliasIP)
     d.Set("customer_ip", o.CustomerIP)
-    d.Set("external_id", o.ExternalID)
     
     d.Set("id", o.Identifier())
     d.Set("parent_id", o.ParentID)
@@ -138,9 +107,6 @@ func resourceCTranslationMapUpdate(d *schema.ResourceData, m interface{}) error 
     o.CustomerAliasIP = d.Get("customer_alias_ip").(string)
     o.CustomerIP = d.Get("customer_ip").(string)
     
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
-    }
 
     o.Save()
 

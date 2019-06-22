@@ -41,26 +41,22 @@ type NSGatewaySummary struct {
 	ParentID            string  `json:"parentID,omitempty"`
 	ParentType          string  `json:"parentType,omitempty"`
 	Owner               string  `json:"owner,omitempty"`
-	NSGVersion          string  `json:"NSGVersion,omitempty"`
 	MajorAlarmsCount    int     `json:"majorAlarmsCount,omitempty"`
-	LastUpdatedBy       string  `json:"lastUpdatedBy,omitempty"`
 	GatewayID           string  `json:"gatewayID,omitempty"`
 	GatewayName         string  `json:"gatewayName,omitempty"`
-	GatewayType         string  `json:"gatewayType,omitempty"`
 	Latitude            float64 `json:"latitude,omitempty"`
 	Address             string  `json:"address,omitempty"`
-	TimezoneID          string  `json:"timezoneID,omitempty"`
+	TimeZoneID          string  `json:"timeZoneID,omitempty"`
 	MinorAlarmsCount    int     `json:"minorAlarmsCount,omitempty"`
-	InfoAlarmsCount     int     `json:"infoAlarmsCount,omitempty"`
+	InfoAlarmsCount     string  `json:"infoAlarmsCount,omitempty"`
 	EnterpriseID        string  `json:"enterpriseID,omitempty"`
-	EntityScope         string  `json:"entityScope,omitempty"`
 	Locality            string  `json:"locality,omitempty"`
 	Longitude           float64 `json:"longitude,omitempty"`
 	BootstrapStatus     string  `json:"bootstrapStatus,omitempty"`
 	Country             string  `json:"country,omitempty"`
 	CriticalAlarmsCount int     `json:"criticalAlarmsCount,omitempty"`
+	NsgVersion          string  `json:"nsgVersion,omitempty"`
 	State               string  `json:"state,omitempty"`
-	ExternalID          string  `json:"externalID,omitempty"`
 	SystemID            string  `json:"systemID,omitempty"`
 }
 
@@ -104,32 +100,4 @@ func (o *NSGatewaySummary) Save() *bambou.Error {
 func (o *NSGatewaySummary) Delete() *bambou.Error {
 
 	return bambou.CurrentSession().DeleteEntity(o)
-}
-
-// Metadatas retrieves the list of child Metadatas of the NSGatewaySummary
-func (o *NSGatewaySummary) Metadatas(info *bambou.FetchingInfo) (MetadatasList, *bambou.Error) {
-
-	var list MetadatasList
-	err := bambou.CurrentSession().FetchChildren(o, MetadataIdentity, &list, info)
-	return list, err
-}
-
-// CreateMetadata creates a new child Metadata under the NSGatewaySummary
-func (o *NSGatewaySummary) CreateMetadata(child *Metadata) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
-}
-
-// GlobalMetadatas retrieves the list of child GlobalMetadatas of the NSGatewaySummary
-func (o *NSGatewaySummary) GlobalMetadatas(info *bambou.FetchingInfo) (GlobalMetadatasList, *bambou.Error) {
-
-	var list GlobalMetadatasList
-	err := bambou.CurrentSession().FetchChildren(o, GlobalMetadataIdentity, &list, info)
-	return list, err
-}
-
-// CreateGlobalMetadata creates a new child GlobalMetadata under the NSGatewaySummary
-func (o *NSGatewaySummary) CreateGlobalMetadata(child *GlobalMetadata) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
 }

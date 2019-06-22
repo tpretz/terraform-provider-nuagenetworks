@@ -15,11 +15,6 @@ func resourceVirtualFirewallPolicy() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -174,6 +169,13 @@ func resourceVirtualFirewallPolicyCreate(d *schema.ResourceData, m interface{}) 
     }
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)
+    }
+    if attr, ok := d.GetOk("parent_me"); ok {
+        parent := &vspk.Me{ID: attr.(string)}
+        err := parent.CreateVirtualFirewallPolicy(o)
+        if err != nil {
+            return err
+        }
     }
     if attr, ok := d.GetOk("parent_domain"); ok {
         parent := &vspk.Domain{ID: attr.(string)}

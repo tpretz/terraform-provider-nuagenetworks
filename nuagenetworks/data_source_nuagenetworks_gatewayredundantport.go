@@ -32,10 +32,6 @@ func dataSourceGatewayRedundantPort() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "permitted_action": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -45,10 +41,6 @@ func dataSourceGatewayRedundantPort() *schema.Resource {
                 Computed: true,
             },
             "physical_name": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -80,10 +72,6 @@ func dataSourceGatewayRedundantPort() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "parent_redundancy_group": &schema.Schema{
                 Type:     schema.TypeString,
                 Required: true,
@@ -93,9 +81,8 @@ func dataSourceGatewayRedundantPort() *schema.Resource {
 }
 
 
-func dataSourceGatewayRedundantPortRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceGatewayRedundantPortRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredGatewayRedundantPorts := vspk.GatewayRedundantPortsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -114,7 +101,7 @@ func dataSourceGatewayRedundantPortRead(d *schema.ResourceData, m interface{}) e
     parent := &vspk.RedundancyGroup{ID: d.Get("parent_redundancy_group").(string)}
     filteredGatewayRedundantPorts, err = parent.GatewayRedundantPorts(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     GatewayRedundantPort := &vspk.GatewayRedundantPort{}
@@ -132,11 +119,9 @@ func dataSourceGatewayRedundantPortRead(d *schema.ResourceData, m interface{}) e
 
     d.Set("vlan_range", GatewayRedundantPort.VLANRange)
     d.Set("name", GatewayRedundantPort.Name)
-    d.Set("last_updated_by", GatewayRedundantPort.LastUpdatedBy)
     d.Set("permitted_action", GatewayRedundantPort.PermittedAction)
     d.Set("description", GatewayRedundantPort.Description)
     d.Set("physical_name", GatewayRedundantPort.PhysicalName)
-    d.Set("entity_scope", GatewayRedundantPort.EntityScope)
     d.Set("port_peer1_id", GatewayRedundantPort.PortPeer1ID)
     d.Set("port_peer2_id", GatewayRedundantPort.PortPeer2ID)
     d.Set("port_type", GatewayRedundantPort.PortType)
@@ -144,7 +129,6 @@ func dataSourceGatewayRedundantPortRead(d *schema.ResourceData, m interface{}) e
     d.Set("user_mnemonic", GatewayRedundantPort.UserMnemonic)
     d.Set("associated_egress_qos_policy_id", GatewayRedundantPort.AssociatedEgressQOSPolicyID)
     d.Set("status", GatewayRedundantPort.Status)
-    d.Set("external_id", GatewayRedundantPort.ExternalID)
     
     d.Set("id", GatewayRedundantPort.Identifier())
     d.Set("parent_id", GatewayRedundantPort.ParentID)
@@ -153,5 +137,5 @@ func dataSourceGatewayRedundantPortRead(d *schema.ResourceData, m interface{}) e
 
     d.SetId(GatewayRedundantPort.Identifier())
     
-    return nil
+    return
 }

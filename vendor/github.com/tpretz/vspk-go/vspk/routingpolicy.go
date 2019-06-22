@@ -46,18 +46,13 @@ type RoutingPolicy struct {
 	Description      string `json:"description,omitempty"`
 	EntityScope      string `json:"entityScope,omitempty"`
 	PolicyDefinition string `json:"policyDefinition,omitempty"`
-	ContentType      string `json:"contentType,omitempty"`
-	RoutingProtocol  string `json:"routingProtocol,omitempty"`
 	ExternalID       string `json:"externalID,omitempty"`
 }
 
 // NewRoutingPolicy returns a new *RoutingPolicy
 func NewRoutingPolicy() *RoutingPolicy {
 
-	return &RoutingPolicy{
-		ContentType:     "DEFAULT",
-		RoutingProtocol: "ROUTING",
-	}
+	return &RoutingPolicy{}
 }
 
 // Identity returns the Identity of the object.

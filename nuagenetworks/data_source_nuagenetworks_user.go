@@ -95,9 +95,8 @@ func dataSourceUser() *schema.Resource {
 }
 
 
-func dataSourceUserRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceUserRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredUsers := vspk.UsersList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -117,19 +116,19 @@ func dataSourceUserRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredUsers, err = parent.Users(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_group"); ok {
         parent := &vspk.Group{ID: attr.(string)}
         filteredUsers, err = parent.Users(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredUsers, err = parent.Users(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -168,5 +167,5 @@ func dataSourceUserRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(User.Identifier())
     
-    return nil
+    return
 }

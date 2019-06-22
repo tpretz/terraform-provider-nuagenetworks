@@ -15,11 +15,6 @@ func resourceSubnet() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -38,7 +33,6 @@ func resourceSubnet() *schema.Resource {
             "pat_enabled": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                Default: "INHERITED",
             },
             "dhcp_relay_status": &schema.Schema{
                 Type:     schema.TypeString,
@@ -60,11 +54,6 @@ func resourceSubnet() *schema.Resource {
             "ipv6_gateway": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-            },
-            "evpn_enabled": &schema.Schema{
-                Type:     schema.TypeBool,
-                Optional: true,
-                Default: true,
             },
             "maintenance_mode": &schema.Schema{
                 Type:     schema.TypeString,
@@ -94,12 +83,16 @@ func resourceSubnet() *schema.Resource {
             },
             "address": &schema.Schema{
                 Type:     schema.TypeString,
-                Optional: true,
+                Required: true,
             },
             "advertise": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
                 Default: true,
+            },
+            "default_action": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
             },
             "template_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -120,7 +113,12 @@ func resourceSubnet() *schema.Resource {
             },
             "netmask": &schema.Schema{
                 Type:     schema.TypeString,
+                Required: true,
+            },
+            "flow_collection_enabled": &schema.Schema{
+                Type:     schema.TypeString,
                 Optional: true,
+                Default: "INHERITED",
             },
             "vn_id": &schema.Schema{
                 Type:     schema.TypeInt,
@@ -129,7 +127,6 @@ func resourceSubnet() *schema.Resource {
             "encryption": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                Default: "INHERITED",
             },
             "underlay": &schema.Schema{
                 Type:     schema.TypeBool,
@@ -139,12 +136,6 @@ func resourceSubnet() *schema.Resource {
             "underlay_enabled": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                Default: "INHERITED",
-            },
-            "ingress_replication_enabled": &schema.Schema{
-                Type:     schema.TypeBool,
-                Optional: true,
-                Default: false,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -157,10 +148,6 @@ func resourceSubnet() *schema.Resource {
             },
             "policy_group_id": &schema.Schema{
                 Type:     schema.TypeInt,
-                Optional: true,
-            },
-            "domain_service_label": &schema.Schema{
-                Type:     schema.TypeString,
                 Optional: true,
             },
             "route_distinguisher": &schema.Schema{
@@ -182,7 +169,6 @@ func resourceSubnet() *schema.Resource {
             "use_global_mac": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                Default: "ENTERPRISE_DEFAULT",
             },
             "associated_multicast_channel_map_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -209,10 +195,6 @@ func resourceSubnet() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "customer_id": &schema.Schema{
-                Type:     schema.TypeInt,
-                Optional: true,
-            },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -235,6 +217,8 @@ func resourceSubnetCreate(d *schema.ResourceData, m interface{}) error {
     // Initialize Subnet object
     o := &vspk.Subnet{
         Name: d.Get("name").(string),
+        Address: d.Get("address").(string),
+        Netmask: d.Get("netmask").(string),
     }
     if attr, ok := d.GetOk("pat_enabled"); ok {
         o.PATEnabled = attr.(string)
@@ -254,9 +238,6 @@ func resourceSubnetCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("ipv6_gateway"); ok {
         o.IPv6Gateway = attr.(string)
     }
-    if attr, ok := d.GetOk("evpn_enabled"); ok {
-        o.EVPNEnabled = attr.(bool)
-    }
     if attr, ok := d.GetOk("maintenance_mode"); ok {
         o.MaintenanceMode = attr.(string)
     }
@@ -269,11 +250,11 @@ func resourceSubnetCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("access_restriction_enabled"); ok {
         o.AccessRestrictionEnabled = attr.(bool)
     }
-    if attr, ok := d.GetOk("address"); ok {
-        o.Address = attr.(string)
-    }
     if attr, ok := d.GetOk("advertise"); ok {
         o.Advertise = attr.(bool)
+    }
+    if attr, ok := d.GetOk("default_action"); ok {
+        o.DefaultAction = attr.(string)
     }
     if attr, ok := d.GetOk("template_id"); ok {
         o.TemplateID = attr.(string)
@@ -287,8 +268,8 @@ func resourceSubnetCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("resource_type"); ok {
         o.ResourceType = attr.(string)
     }
-    if attr, ok := d.GetOk("netmask"); ok {
-        o.Netmask = attr.(string)
+    if attr, ok := d.GetOk("flow_collection_enabled"); ok {
+        o.FlowCollectionEnabled = attr.(string)
     }
     if attr, ok := d.GetOk("vn_id"); ok {
         o.VnId = attr.(int)
@@ -299,17 +280,11 @@ func resourceSubnetCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("underlay_enabled"); ok {
         o.UnderlayEnabled = attr.(string)
     }
-    if attr, ok := d.GetOk("ingress_replication_enabled"); ok {
-        o.IngressReplicationEnabled = attr.(bool)
-    }
     if attr, ok := d.GetOk("entity_state"); ok {
         o.EntityState = attr.(string)
     }
     if attr, ok := d.GetOk("policy_group_id"); ok {
         o.PolicyGroupID = attr.(int)
-    }
-    if attr, ok := d.GetOk("domain_service_label"); ok {
-        o.DomainServiceLabel = attr.(string)
     }
     if attr, ok := d.GetOk("route_distinguisher"); ok {
         o.RouteDistinguisher = attr.(string)
@@ -343,9 +318,6 @@ func resourceSubnetCreate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("multicast"); ok {
         o.Multicast = attr.(string)
-    }
-    if attr, ok := d.GetOk("customer_id"); ok {
-        o.CustomerID = attr.(int)
     }
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)
@@ -385,7 +357,6 @@ func resourceSubnetRead(d *schema.ResourceData, m interface{}) error {
     d.Set("ip_type", o.IPType)
     d.Set("ipv6_address", o.IPv6Address)
     d.Set("ipv6_gateway", o.IPv6Gateway)
-    d.Set("evpn_enabled", o.EVPNEnabled)
     d.Set("maintenance_mode", o.MaintenanceMode)
     d.Set("name", o.Name)
     d.Set("last_updated_by", o.LastUpdatedBy)
@@ -394,20 +365,20 @@ func resourceSubnetRead(d *schema.ResourceData, m interface{}) error {
     d.Set("access_restriction_enabled", o.AccessRestrictionEnabled)
     d.Set("address", o.Address)
     d.Set("advertise", o.Advertise)
+    d.Set("default_action", o.DefaultAction)
     d.Set("template_id", o.TemplateID)
     d.Set("service_id", o.ServiceID)
     d.Set("description", o.Description)
     d.Set("resource_type", o.ResourceType)
     d.Set("netmask", o.Netmask)
+    d.Set("flow_collection_enabled", o.FlowCollectionEnabled)
     d.Set("vn_id", o.VnId)
     d.Set("encryption", o.Encryption)
     d.Set("underlay", o.Underlay)
     d.Set("underlay_enabled", o.UnderlayEnabled)
-    d.Set("ingress_replication_enabled", o.IngressReplicationEnabled)
     d.Set("entity_scope", o.EntityScope)
     d.Set("entity_state", o.EntityState)
     d.Set("policy_group_id", o.PolicyGroupID)
-    d.Set("domain_service_label", o.DomainServiceLabel)
     d.Set("route_distinguisher", o.RouteDistinguisher)
     d.Set("route_target", o.RouteTarget)
     d.Set("split_subnet", o.SplitSubnet)
@@ -419,7 +390,6 @@ func resourceSubnetRead(d *schema.ResourceData, m interface{}) error {
     d.Set("subnet_vlanid", o.SubnetVLANID)
     d.Set("multi_home_enabled", o.MultiHomeEnabled)
     d.Set("multicast", o.Multicast)
-    d.Set("customer_id", o.CustomerID)
     d.Set("external_id", o.ExternalID)
     d.Set("dynamic_ipv6_address", o.DynamicIpv6Address)
     
@@ -442,6 +412,8 @@ func resourceSubnetUpdate(d *schema.ResourceData, m interface{}) error {
     }
     
     o.Name = d.Get("name").(string)
+    o.Address = d.Get("address").(string)
+    o.Netmask = d.Get("netmask").(string)
     
     if attr, ok := d.GetOk("pat_enabled"); ok {
         o.PATEnabled = attr.(string)
@@ -461,9 +433,6 @@ func resourceSubnetUpdate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("ipv6_gateway"); ok {
         o.IPv6Gateway = attr.(string)
     }
-    if attr, ok := d.GetOk("evpn_enabled"); ok {
-        o.EVPNEnabled = attr.(bool)
-    }
     if attr, ok := d.GetOk("maintenance_mode"); ok {
         o.MaintenanceMode = attr.(string)
     }
@@ -476,11 +445,11 @@ func resourceSubnetUpdate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("access_restriction_enabled"); ok {
         o.AccessRestrictionEnabled = attr.(bool)
     }
-    if attr, ok := d.GetOk("address"); ok {
-        o.Address = attr.(string)
-    }
     if attr, ok := d.GetOk("advertise"); ok {
         o.Advertise = attr.(bool)
+    }
+    if attr, ok := d.GetOk("default_action"); ok {
+        o.DefaultAction = attr.(string)
     }
     if attr, ok := d.GetOk("template_id"); ok {
         o.TemplateID = attr.(string)
@@ -494,8 +463,8 @@ func resourceSubnetUpdate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("resource_type"); ok {
         o.ResourceType = attr.(string)
     }
-    if attr, ok := d.GetOk("netmask"); ok {
-        o.Netmask = attr.(string)
+    if attr, ok := d.GetOk("flow_collection_enabled"); ok {
+        o.FlowCollectionEnabled = attr.(string)
     }
     if attr, ok := d.GetOk("vn_id"); ok {
         o.VnId = attr.(int)
@@ -506,17 +475,11 @@ func resourceSubnetUpdate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("underlay_enabled"); ok {
         o.UnderlayEnabled = attr.(string)
     }
-    if attr, ok := d.GetOk("ingress_replication_enabled"); ok {
-        o.IngressReplicationEnabled = attr.(bool)
-    }
     if attr, ok := d.GetOk("entity_state"); ok {
         o.EntityState = attr.(string)
     }
     if attr, ok := d.GetOk("policy_group_id"); ok {
         o.PolicyGroupID = attr.(int)
-    }
-    if attr, ok := d.GetOk("domain_service_label"); ok {
-        o.DomainServiceLabel = attr.(string)
     }
     if attr, ok := d.GetOk("route_distinguisher"); ok {
         o.RouteDistinguisher = attr.(string)
@@ -550,9 +513,6 @@ func resourceSubnetUpdate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("multicast"); ok {
         o.Multicast = attr.(string)
-    }
-    if attr, ok := d.GetOk("customer_id"); ok {
-        o.CustomerID = attr.(int)
     }
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)

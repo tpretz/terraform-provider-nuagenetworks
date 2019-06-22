@@ -15,11 +15,6 @@ func resourceNSGUpgradeProfile() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -37,7 +32,7 @@ func resourceNSGUpgradeProfile() *schema.Resource {
             },
             "name": &schema.Schema{
                 Type:     schema.TypeString,
-                Required: true,
+                Optional: true,
             },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
@@ -61,11 +56,6 @@ func resourceNSGUpgradeProfile() *schema.Resource {
                 Optional: true,
                 Computed: true,
             },
-            "download_rate_limit": &schema.Schema{
-                Type:     schema.TypeInt,
-                Optional: true,
-                Default: 10000,
-            },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -78,17 +68,16 @@ func resourceNSGUpgradeProfileCreate(d *schema.ResourceData, m interface{}) erro
 
     // Initialize NSGUpgradeProfile object
     o := &vspk.NSGUpgradeProfile{
-        Name: d.Get("name").(string),
         MetadataUpgradePath: d.Get("metadata_upgrade_path").(string),
+    }
+    if attr, ok := d.GetOk("name"); ok {
+        o.Name = attr.(string)
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
     }
     if attr, ok := d.GetOk("enterprise_id"); ok {
         o.EnterpriseID = attr.(string)
-    }
-    if attr, ok := d.GetOk("download_rate_limit"); ok {
-        o.DownloadRateLimit = attr.(int)
     }
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)
@@ -122,7 +111,6 @@ func resourceNSGUpgradeProfileRead(d *schema.ResourceData, m interface{}) error 
     d.Set("metadata_upgrade_path", o.MetadataUpgradePath)
     d.Set("enterprise_id", o.EnterpriseID)
     d.Set("entity_scope", o.EntityScope)
-    d.Set("download_rate_limit", o.DownloadRateLimit)
     d.Set("external_id", o.ExternalID)
     
     d.Set("id", o.Identifier())
@@ -143,17 +131,16 @@ func resourceNSGUpgradeProfileUpdate(d *schema.ResourceData, m interface{}) erro
         return err
     }
     
-    o.Name = d.Get("name").(string)
     o.MetadataUpgradePath = d.Get("metadata_upgrade_path").(string)
     
+    if attr, ok := d.GetOk("name"); ok {
+        o.Name = attr.(string)
+    }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
     }
     if attr, ok := d.GetOk("enterprise_id"); ok {
         o.EnterpriseID = attr.(string)
-    }
-    if attr, ok := d.GetOk("download_rate_limit"); ok {
-        o.DownloadRateLimit = attr.(int)
     }
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)

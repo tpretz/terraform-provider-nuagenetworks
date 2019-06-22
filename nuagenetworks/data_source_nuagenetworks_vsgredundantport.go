@@ -36,10 +36,6 @@ func dataSourceVsgRedundantPort() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "peer_link": &schema.Schema{
-                Type:     schema.TypeBool,
-                Computed: true,
-            },
             "permitted_action": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -97,9 +93,8 @@ func dataSourceVsgRedundantPort() *schema.Resource {
 }
 
 
-func dataSourceVsgRedundantPortRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceVsgRedundantPortRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredVsgRedundantPorts := vspk.VsgRedundantPortsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -118,7 +113,7 @@ func dataSourceVsgRedundantPortRead(d *schema.ResourceData, m interface{}) error
     parent := &vspk.RedundancyGroup{ID: d.Get("parent_redundancy_group").(string)}
     filteredVsgRedundantPorts, err = parent.VsgRedundantPorts(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     VsgRedundantPort := &vspk.VsgRedundantPort{}
@@ -137,7 +132,6 @@ func dataSourceVsgRedundantPortRead(d *schema.ResourceData, m interface{}) error
     d.Set("vlan_range", VsgRedundantPort.VLANRange)
     d.Set("name", VsgRedundantPort.Name)
     d.Set("last_updated_by", VsgRedundantPort.LastUpdatedBy)
-    d.Set("peer_link", VsgRedundantPort.PeerLink)
     d.Set("permitted_action", VsgRedundantPort.PermittedAction)
     d.Set("description", VsgRedundantPort.Description)
     d.Set("physical_name", VsgRedundantPort.PhysicalName)
@@ -158,5 +152,5 @@ func dataSourceVsgRedundantPortRead(d *schema.ResourceData, m interface{}) error
 
     d.SetId(VsgRedundantPort.Identifier())
     
-    return nil
+    return
 }

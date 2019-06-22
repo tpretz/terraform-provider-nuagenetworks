@@ -45,7 +45,6 @@ type OverlayMirrorDestinationTemplate struct {
 	LastUpdatedBy     string `json:"lastUpdatedBy,omitempty"`
 	RedundancyEnabled bool   `json:"redundancyEnabled"`
 	Description       string `json:"description,omitempty"`
-	DestinationType   string `json:"destinationType,omitempty"`
 	EndPointType      string `json:"endPointType,omitempty"`
 	EntityScope       string `json:"entityScope,omitempty"`
 	TriggerType       string `json:"triggerType,omitempty"`

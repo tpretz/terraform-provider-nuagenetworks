@@ -15,11 +15,6 @@ func resourceEgressQOSPolicy() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -41,7 +36,7 @@ func resourceEgressQOSPolicy() *schema.Resource {
             },
             "parent_queue_associated_rate_limiter_id": &schema.Schema{
                 Type:     schema.TypeString,
-                Required: true,
+                Optional: true,
             },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
@@ -97,7 +92,7 @@ func resourceEgressQOSPolicy() *schema.Resource {
             },
             "queue3_forwarding_classes": &schema.Schema{
                 Type:     schema.TypeList,
-                Required: true,
+                Optional: true,
                 Elem:     &schema.Schema{Type: schema.TypeString},
             },
             "queue4_associated_rate_limiter_id": &schema.Schema{
@@ -126,8 +121,9 @@ func resourceEgressQOSPolicyCreate(d *schema.ResourceData, m interface{}) error 
     // Initialize EgressQOSPolicy object
     o := &vspk.EgressQOSPolicy{
         Name: d.Get("name").(string),
-        ParentQueueAssociatedRateLimiterID: d.Get("parent_queue_associated_rate_limiter_id").(string),
-        Queue3ForwardingClasses: d.Get("queue3_forwarding_classes").([]interface{}),
+    }
+    if attr, ok := d.GetOk("parent_queue_associated_rate_limiter_id"); ok {
+        o.ParentQueueAssociatedRateLimiterID = attr.(string)
     }
     if attr, ok := d.GetOk("default_service_class"); ok {
         o.DefaultServiceClass = attr.(string)
@@ -158,6 +154,9 @@ func resourceEgressQOSPolicyCreate(d *schema.ResourceData, m interface{}) error 
     }
     if attr, ok := d.GetOk("queue3_associated_rate_limiter_id"); ok {
         o.Queue3AssociatedRateLimiterID = attr.(string)
+    }
+    if attr, ok := d.GetOk("queue3_forwarding_classes"); ok {
+        o.Queue3ForwardingClasses = attr.([]interface{})
     }
     if attr, ok := d.GetOk("queue4_associated_rate_limiter_id"); ok {
         o.Queue4AssociatedRateLimiterID = attr.(string)
@@ -238,9 +237,10 @@ func resourceEgressQOSPolicyUpdate(d *schema.ResourceData, m interface{}) error 
     }
     
     o.Name = d.Get("name").(string)
-    o.ParentQueueAssociatedRateLimiterID = d.Get("parent_queue_associated_rate_limiter_id").(string)
-    o.Queue3ForwardingClasses = d.Get("queue3_forwarding_classes").([]interface{})
     
+    if attr, ok := d.GetOk("parent_queue_associated_rate_limiter_id"); ok {
+        o.ParentQueueAssociatedRateLimiterID = attr.(string)
+    }
     if attr, ok := d.GetOk("default_service_class"); ok {
         o.DefaultServiceClass = attr.(string)
     }
@@ -270,6 +270,9 @@ func resourceEgressQOSPolicyUpdate(d *schema.ResourceData, m interface{}) error 
     }
     if attr, ok := d.GetOk("queue3_associated_rate_limiter_id"); ok {
         o.Queue3AssociatedRateLimiterID = attr.(string)
+    }
+    if attr, ok := d.GetOk("queue3_forwarding_classes"); ok {
+        o.Queue3ForwardingClasses = attr.([]interface{})
     }
     if attr, ok := d.GetOk("queue4_associated_rate_limiter_id"); ok {
         o.Queue4AssociatedRateLimiterID = attr.(string)

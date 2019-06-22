@@ -53,9 +53,8 @@ func dataSourceIKESubnet() *schema.Resource {
 }
 
 
-func dataSourceIKESubnetRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceIKESubnetRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredIKESubnets := vspk.IKESubnetsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -74,7 +73,7 @@ func dataSourceIKESubnetRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.IKEGateway{ID: d.Get("parent_ike_gateway").(string)}
     filteredIKESubnets, err = parent.IKESubnets(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     IKESubnet := &vspk.IKESubnet{}
@@ -103,5 +102,5 @@ func dataSourceIKESubnetRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(IKESubnet.Identifier())
     
-    return nil
+    return
 }

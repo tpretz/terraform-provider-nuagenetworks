@@ -46,6 +46,7 @@ type NSPortTemplate struct {
 	LastUpdatedBy               string `json:"lastUpdatedBy,omitempty"`
 	Description                 string `json:"description,omitempty"`
 	PhysicalName                string `json:"physicalName,omitempty"`
+	InfrastructureProfileID     string `json:"infrastructureProfileID,omitempty"`
 	EntityScope                 string `json:"entityScope,omitempty"`
 	PortType                    string `json:"portType,omitempty"`
 	Speed                       string `json:"speed,omitempty"`

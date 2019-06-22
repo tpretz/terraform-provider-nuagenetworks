@@ -118,9 +118,8 @@ func dataSourceNSRedundantGatewayGroup() *schema.Resource {
 }
 
 
-func dataSourceNSRedundantGatewayGroupRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceNSRedundantGatewayGroupRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredNSRedundantGatewayGroups := vspk.NSRedundantGatewayGroupsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -140,13 +139,13 @@ func dataSourceNSRedundantGatewayGroupRead(d *schema.ResourceData, m interface{}
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredNSRedundantGatewayGroups, err = parent.NSRedundantGatewayGroups(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredNSRedundantGatewayGroups, err = parent.NSRedundantGatewayGroups(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -192,5 +191,5 @@ func dataSourceNSRedundantGatewayGroupRead(d *schema.ResourceData, m interface{}
 
     d.SetId(NSRedundantGatewayGroup.Identifier())
     
-    return nil
+    return
 }

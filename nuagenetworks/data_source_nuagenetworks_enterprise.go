@@ -52,10 +52,6 @@ func dataSourceEnterprise() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "web_filter_enabled": &schema.Schema{
-                Type:     schema.TypeBool,
-                Computed: true,
-            },
             "receive_multi_cast_list_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -97,10 +93,6 @@ func dataSourceEnterprise() *schema.Resource {
                 Computed: true,
                 Elem:     &schema.Schema{Type: schema.TypeString},
             },
-            "allowed_forwarding_mode": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "floating_ips_quota": &schema.Schema{
                 Type:     schema.TypeInt,
                 Computed: true,
@@ -131,10 +123,6 @@ func dataSourceEnterprise() *schema.Resource {
             },
             "local_as": &schema.Schema{
                 Type:     schema.TypeInt,
-                Computed: true,
-            },
-            "use_global_mac": &schema.Schema{
-                Type:     schema.TypeBool,
                 Computed: true,
             },
             "associated_enterprise_security_id": &schema.Schema{
@@ -174,9 +162,8 @@ func dataSourceEnterprise() *schema.Resource {
 }
 
 
-func dataSourceEnterpriseRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceEnterpriseRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredEnterprises := vspk.EnterprisesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -196,13 +183,13 @@ func dataSourceEnterpriseRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.EnterpriseProfile{ID: attr.(string)}
         filteredEnterprises, err = parent.Enterprises(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredEnterprises, err = parent.Enterprises(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -226,7 +213,6 @@ func dataSourceEnterpriseRead(d *schema.ResourceData, m interface{}) error {
     d.Set("vnf_management_enabled", Enterprise.VNFManagementEnabled)
     d.Set("name", Enterprise.Name)
     d.Set("last_updated_by", Enterprise.LastUpdatedBy)
-    d.Set("web_filter_enabled", Enterprise.WebFilterEnabled)
     d.Set("receive_multi_cast_list_id", Enterprise.ReceiveMultiCastListID)
     d.Set("send_multi_cast_list_id", Enterprise.SendMultiCastListID)
     d.Set("description", Enterprise.Description)
@@ -237,7 +223,6 @@ func dataSourceEnterpriseRead(d *schema.ResourceData, m interface{}) error {
     d.Set("allow_gateway_management", Enterprise.AllowGatewayManagement)
     d.Set("allow_trusted_forwarding_class", Enterprise.AllowTrustedForwardingClass)
     d.Set("allowed_forwarding_classes", Enterprise.AllowedForwardingClasses)
-    d.Set("allowed_forwarding_mode", Enterprise.AllowedForwardingMode)
     d.Set("floating_ips_quota", Enterprise.FloatingIPsQuota)
     d.Set("floating_ips_used", Enterprise.FloatingIPsUsed)
     d.Set("flow_collection_enabled", Enterprise.FlowCollectionEnabled)
@@ -246,7 +231,6 @@ func dataSourceEnterpriseRead(d *schema.ResourceData, m interface{}) error {
     d.Set("enterprise_profile_id", Enterprise.EnterpriseProfileID)
     d.Set("entity_scope", Enterprise.EntityScope)
     d.Set("local_as", Enterprise.LocalAS)
-    d.Set("use_global_mac", Enterprise.UseGlobalMAC)
     d.Set("associated_enterprise_security_id", Enterprise.AssociatedEnterpriseSecurityID)
     d.Set("associated_group_key_encryption_profile_id", Enterprise.AssociatedGroupKeyEncryptionProfileID)
     d.Set("associated_key_server_monitor_id", Enterprise.AssociatedKeyServerMonitorID)
@@ -262,5 +246,5 @@ func dataSourceEnterpriseRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(Enterprise.Identifier())
     
-    return nil
+    return
 }

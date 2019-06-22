@@ -70,9 +70,8 @@ func dataSourceZFBAutoAssignment() *schema.Resource {
 }
 
 
-func dataSourceZFBAutoAssignmentRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceZFBAutoAssignmentRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredZFBAutoAssignments := vspk.ZFBAutoAssignmentsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -91,7 +90,7 @@ func dataSourceZFBAutoAssignmentRead(d *schema.ResourceData, m interface{}) erro
     parent := m.(*vspk.Me)
     filteredZFBAutoAssignments, err = parent.ZFBAutoAssignments(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     ZFBAutoAssignment := &vspk.ZFBAutoAssignment{}
@@ -125,5 +124,5 @@ func dataSourceZFBAutoAssignmentRead(d *schema.ResourceData, m interface{}) erro
 
     d.SetId(ZFBAutoAssignment.Identifier())
     
-    return nil
+    return
 }

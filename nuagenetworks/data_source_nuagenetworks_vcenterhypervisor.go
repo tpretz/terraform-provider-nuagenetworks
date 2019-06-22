@@ -36,10 +36,6 @@ func dataSourceVCenterHypervisor() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "arp_reply": &schema.Schema{
-                Type:     schema.TypeBool,
-                Computed: true,
-            },
             "vrs_agent_moid": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -253,10 +249,6 @@ func dataSourceVCenterHypervisor() *schema.Resource {
                 Computed: true,
             },
             "nfs_mount_path": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "agency_moid": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -592,9 +584,8 @@ func dataSourceVCenterHypervisor() *schema.Resource {
 }
 
 
-func dataSourceVCenterHypervisorRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceVCenterHypervisorRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredVCenterHypervisors := vspk.VCenterHypervisorsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -614,19 +605,19 @@ func dataSourceVCenterHypervisorRead(d *schema.ResourceData, m interface{}) erro
         parent := &vspk.VCenterDataCenter{ID: attr.(string)}
         filteredVCenterHypervisors, err = parent.VCenterHypervisors(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vcenter_cluster"); ok {
         parent := &vspk.VCenterCluster{ID: attr.(string)}
         filteredVCenterHypervisors, err = parent.VCenterHypervisors(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredVCenterHypervisors, err = parent.VCenterHypervisors(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -646,7 +637,6 @@ func dataSourceVCenterHypervisorRead(d *schema.ResourceData, m interface{}) erro
     d.Set("vcenter_ip", VCenterHypervisor.VCenterIP)
     d.Set("vcenter_password", VCenterHypervisor.VCenterPassword)
     d.Set("vcenter_user", VCenterHypervisor.VCenterUser)
-    d.Set("arp_reply", VCenterHypervisor.ARPReply)
     d.Set("vrs_agent_moid", VCenterHypervisor.VRSAgentMOID)
     d.Set("vrs_agent_name", VCenterHypervisor.VRSAgentName)
     d.Set("vrs_configuration_time_limit", VCenterHypervisor.VRSConfigurationTimeLimit)
@@ -701,7 +691,6 @@ func dataSourceVCenterHypervisorRead(d *schema.ResourceData, m interface{}) erro
     d.Set("revertive_timer", VCenterHypervisor.RevertiveTimer)
     d.Set("nfs_log_server", VCenterHypervisor.NfsLogServer)
     d.Set("nfs_mount_path", VCenterHypervisor.NfsMountPath)
-    d.Set("agency_moid", VCenterHypervisor.AgencyMoid)
     d.Set("mgmt_dns1", VCenterHypervisor.MgmtDNS1)
     d.Set("mgmt_dns2", VCenterHypervisor.MgmtDNS2)
     d.Set("mgmt_gateway", VCenterHypervisor.MgmtGateway)
@@ -789,5 +778,5 @@ func dataSourceVCenterHypervisorRead(d *schema.ResourceData, m interface{}) erro
 
     d.SetId(VCenterHypervisor.Identifier())
     
-    return nil
+    return
 }

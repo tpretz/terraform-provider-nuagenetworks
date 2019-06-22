@@ -15,11 +15,6 @@ func resourceBridgeInterface() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -40,6 +35,10 @@ func resourceBridgeInterface() *schema.Resource {
                 Optional: true,
             },
             "vport_name": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+            },
+            "ipv6_address": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
@@ -132,6 +131,9 @@ func resourceBridgeInterfaceCreate(d *schema.ResourceData, m interface{}) error 
     if attr, ok := d.GetOk("vport_name"); ok {
         o.VPortName = attr.(string)
     }
+    if attr, ok := d.GetOk("ipv6_address"); ok {
+        o.IPv6Address = attr.(string)
+    }
     if attr, ok := d.GetOk("ipv6_gateway"); ok {
         o.IPv6Gateway = attr.(string)
     }
@@ -202,6 +204,7 @@ func resourceBridgeInterfaceRead(d *schema.ResourceData, m interface{}) error {
 
     d.Set("vport_id", o.VPortID)
     d.Set("vport_name", o.VPortName)
+    d.Set("ipv6_address", o.IPv6Address)
     d.Set("ipv6_gateway", o.IPv6Gateway)
     d.Set("name", o.Name)
     d.Set("last_updated_by", o.LastUpdatedBy)
@@ -244,6 +247,9 @@ func resourceBridgeInterfaceUpdate(d *schema.ResourceData, m interface{}) error 
     }
     if attr, ok := d.GetOk("vport_name"); ok {
         o.VPortName = attr.(string)
+    }
+    if attr, ok := d.GetOk("ipv6_address"); ok {
+        o.IPv6Address = attr.(string)
     }
     if attr, ok := d.GetOk("ipv6_gateway"); ok {
         o.IPv6Gateway = attr.(string)

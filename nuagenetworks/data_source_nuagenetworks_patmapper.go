@@ -49,9 +49,8 @@ func dataSourcePATMapper() *schema.Resource {
 }
 
 
-func dataSourcePATMapperRead(d *schema.ResourceData, m interface{}) error {
+func dataSourcePATMapperRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredPATMappers := vspk.PATMappersList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -70,7 +69,7 @@ func dataSourcePATMapperRead(d *schema.ResourceData, m interface{}) error {
     parent := m.(*vspk.Me)
     filteredPATMappers, err = parent.PATMappers(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     PATMapper := &vspk.PATMapper{}
@@ -99,5 +98,5 @@ func dataSourcePATMapperRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(PATMapper.Identifier())
     
-    return nil
+    return
 }

@@ -24,16 +24,8 @@ func dataSourceNetworkPerformanceBinding() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "read_only": &schema.Schema{
                 Type:     schema.TypeBool,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
                 Computed: true,
             },
             "priority": &schema.Schema{
@@ -41,10 +33,6 @@ func dataSourceNetworkPerformanceBinding() *schema.Resource {
                 Computed: true,
             },
             "associated_network_measurement_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -68,9 +56,8 @@ func dataSourceNetworkPerformanceBinding() *schema.Resource {
 }
 
 
-func dataSourceNetworkPerformanceBindingRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceNetworkPerformanceBindingRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredNetworkPerformanceBindings := vspk.NetworkPerformanceBindingsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -90,19 +77,19 @@ func dataSourceNetworkPerformanceBindingRead(d *schema.ResourceData, m interface
         parent := &vspk.Domain{ID: attr.(string)}
         filteredNetworkPerformanceBindings, err = parent.NetworkPerformanceBindings(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredNetworkPerformanceBindings, err = parent.NetworkPerformanceBindings(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_network_performance_measurement"); ok {
         parent := &vspk.NetworkPerformanceMeasurement{ID: attr.(string)}
         filteredNetworkPerformanceBindings, err = parent.NetworkPerformanceBindings(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -119,12 +106,9 @@ func dataSourceNetworkPerformanceBindingRead(d *schema.ResourceData, m interface
     
     NetworkPerformanceBinding = filteredNetworkPerformanceBindings[0]
 
-    d.Set("last_updated_by", NetworkPerformanceBinding.LastUpdatedBy)
     d.Set("read_only", NetworkPerformanceBinding.ReadOnly)
-    d.Set("entity_scope", NetworkPerformanceBinding.EntityScope)
     d.Set("priority", NetworkPerformanceBinding.Priority)
     d.Set("associated_network_measurement_id", NetworkPerformanceBinding.AssociatedNetworkMeasurementID)
-    d.Set("external_id", NetworkPerformanceBinding.ExternalID)
     
     d.Set("id", NetworkPerformanceBinding.Identifier())
     d.Set("parent_id", NetworkPerformanceBinding.ParentID)
@@ -133,5 +117,5 @@ func dataSourceNetworkPerformanceBindingRead(d *schema.ResourceData, m interface
 
     d.SetId(NetworkPerformanceBinding.Identifier())
     
-    return nil
+    return
 }

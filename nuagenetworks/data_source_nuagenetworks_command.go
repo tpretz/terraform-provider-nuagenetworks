@@ -52,14 +52,6 @@ func dataSourceCommand() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "progress": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "assoc_entity_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "associated_param": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -90,16 +82,15 @@ func dataSourceCommand() *schema.Resource {
             },
             "parent_ns_gateway": &schema.Schema{
                 Type:     schema.TypeString,
-                Optional: true,
+                Required: true,
             },
         },
     }
 }
 
 
-func dataSourceCommandRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceCommandRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredCommands := vspk.CommandsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -115,18 +106,10 @@ func dataSourceCommandRead(d *schema.ResourceData, m interface{}) error {
            
         }
     }
-    if attr, ok := d.GetOk("parent_ns_gateway"); ok {
-        parent := &vspk.NSGateway{ID: attr.(string)}
-        filteredCommands, err = parent.Commands(fetchFilter)
-        if err != nil {
-            return err
-        }
-    } else {
-        parent := m.(*vspk.Me)
-        filteredCommands, err = parent.Commands(fetchFilter)
-        if err != nil {
-            return err
-        }
+    parent := &vspk.NSGateway{ID: d.Get("parent_ns_gateway").(string)}
+    filteredCommands, err = parent.Commands(fetchFilter)
+    if err != nil {
+        return
     }
 
     Command := &vspk.Command{}
@@ -149,8 +132,6 @@ func dataSourceCommandRead(d *schema.ResourceData, m interface{}) error {
     d.Set("entity_scope", Command.EntityScope)
     d.Set("command", Command.Command)
     d.Set("command_information", Command.CommandInformation)
-    d.Set("progress", Command.Progress)
-    d.Set("assoc_entity_type", Command.AssocEntityType)
     d.Set("associated_param", Command.AssociatedParam)
     d.Set("associated_param_type", Command.AssociatedParamType)
     d.Set("status", Command.Status)
@@ -166,5 +147,5 @@ func dataSourceCommandRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(Command.Identifier())
     
-    return nil
+    return
 }

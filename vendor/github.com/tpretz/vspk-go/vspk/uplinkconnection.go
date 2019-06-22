@@ -45,7 +45,6 @@ type UplinkConnection struct {
 	DNSAddress              string  `json:"DNSAddress,omitempty"`
 	DNSAddressV6            string  `json:"DNSAddressV6,omitempty"`
 	Password                string  `json:"password,omitempty"`
-	LastUpdatedBy           string  `json:"lastUpdatedBy,omitempty"`
 	Gateway                 string  `json:"gateway,omitempty"`
 	GatewayV6               string  `json:"gatewayV6,omitempty"`
 	Address                 string  `json:"address,omitempty"`
@@ -54,16 +53,14 @@ type UplinkConnection struct {
 	AdvertisementCriteria   string  `json:"advertisementCriteria,omitempty"`
 	SecondaryAddress        string  `json:"secondaryAddress,omitempty"`
 	Netmask                 string  `json:"netmask,omitempty"`
-	Vlan                    int     `json:"vlan,omitempty"`
+	VlanId                  string  `json:"vlanId,omitempty"`
 	UnderlayEnabled         bool    `json:"underlayEnabled"`
-	UnderlayID              int     `json:"underlayID,omitempty"`
 	Inherited               bool    `json:"inherited"`
 	InstallerManaged        bool    `json:"installerManaged"`
 	InterfaceConnectionType string  `json:"interfaceConnectionType,omitempty"`
-	EntityScope             string  `json:"entityScope,omitempty"`
 	Mode                    string  `json:"mode,omitempty"`
 	Role                    string  `json:"role,omitempty"`
-	RoleOrder               int     `json:"roleOrder,omitempty"`
+	RoleOrder               string  `json:"roleOrder,omitempty"`
 	PortName                string  `json:"portName,omitempty"`
 	DownloadRateLimit       float64 `json:"downloadRateLimit,omitempty"`
 	UplinkID                int     `json:"uplinkID,omitempty"`
@@ -72,7 +69,6 @@ type UplinkConnection struct {
 	AssociatedBGPNeighborID string  `json:"associatedBGPNeighborID,omitempty"`
 	AssociatedUnderlayName  string  `json:"associatedUnderlayName,omitempty"`
 	AuxiliaryLink           bool    `json:"auxiliaryLink"`
-	ExternalID              string  `json:"externalID,omitempty"`
 }
 
 // NewUplinkConnection returns a new *UplinkConnection
@@ -87,7 +83,7 @@ func NewUplinkConnection() *UplinkConnection {
 		InterfaceConnectionType: "AUTOMATIC",
 		Mode:              "Dynamic",
 		Role:              "PRIMARY",
-		DownloadRateLimit: 8.0,
+		DownloadRateLimit: 8,
 		AuxiliaryLink:     false,
 	}
 }
@@ -128,20 +124,6 @@ func (o *UplinkConnection) Delete() *bambou.Error {
 	return bambou.CurrentSession().DeleteEntity(o)
 }
 
-// Metadatas retrieves the list of child Metadatas of the UplinkConnection
-func (o *UplinkConnection) Metadatas(info *bambou.FetchingInfo) (MetadatasList, *bambou.Error) {
-
-	var list MetadatasList
-	err := bambou.CurrentSession().FetchChildren(o, MetadataIdentity, &list, info)
-	return list, err
-}
-
-// CreateMetadata creates a new child Metadata under the UplinkConnection
-func (o *UplinkConnection) CreateMetadata(child *Metadata) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
-}
-
 // BFDSessions retrieves the list of child BFDSessions of the UplinkConnection
 func (o *UplinkConnection) BFDSessions(info *bambou.FetchingInfo) (BFDSessionsList, *bambou.Error) {
 
@@ -156,18 +138,12 @@ func (o *UplinkConnection) CreateBFDSession(child *BFDSession) *bambou.Error {
 	return bambou.CurrentSession().CreateChild(o, child)
 }
 
-// GlobalMetadatas retrieves the list of child GlobalMetadatas of the UplinkConnection
-func (o *UplinkConnection) GlobalMetadatas(info *bambou.FetchingInfo) (GlobalMetadatasList, *bambou.Error) {
+// Underlays retrieves the list of child Underlays of the UplinkConnection
+func (o *UplinkConnection) Underlays(info *bambou.FetchingInfo) (UnderlaysList, *bambou.Error) {
 
-	var list GlobalMetadatasList
-	err := bambou.CurrentSession().FetchChildren(o, GlobalMetadataIdentity, &list, info)
+	var list UnderlaysList
+	err := bambou.CurrentSession().FetchChildren(o, UnderlayIdentity, &list, info)
 	return list, err
-}
-
-// CreateGlobalMetadata creates a new child GlobalMetadata under the UplinkConnection
-func (o *UplinkConnection) CreateGlobalMetadata(child *GlobalMetadata) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
 }
 
 // CustomProperties retrieves the list of child CustomProperties of the UplinkConnection

@@ -76,9 +76,8 @@ func dataSourceEnterpriseNetwork() *schema.Resource {
 }
 
 
-func dataSourceEnterpriseNetworkRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceEnterpriseNetworkRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredEnterpriseNetworks := vspk.EnterpriseNetworksList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -98,19 +97,19 @@ func dataSourceEnterpriseNetworkRead(d *schema.ResourceData, m interface{}) erro
         parent := &vspk.SaaSApplicationType{ID: attr.(string)}
         filteredEnterpriseNetworks, err = parent.EnterpriseNetworks(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredEnterpriseNetworks, err = parent.EnterpriseNetworks(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_network_macro_group"); ok {
         parent := &vspk.NetworkMacroGroup{ID: attr.(string)}
         filteredEnterpriseNetworks, err = parent.EnterpriseNetworks(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -143,5 +142,5 @@ func dataSourceEnterpriseNetworkRead(d *schema.ResourceData, m interface{}) erro
 
     d.SetId(EnterpriseNetwork.Identifier())
     
-    return nil
+    return
 }

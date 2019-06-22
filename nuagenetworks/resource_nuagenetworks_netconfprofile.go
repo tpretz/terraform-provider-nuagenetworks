@@ -15,11 +15,6 @@ func resourceNetconfProfile() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -37,25 +32,15 @@ func resourceNetconfProfile() *schema.Resource {
             },
             "name": &schema.Schema{
                 Type:     schema.TypeString,
-                Required: true,
+                Optional: true,
             },
             "password": &schema.Schema{
                 Type:     schema.TypeString,
-                Required: true,
-            },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
                 Optional: true,
-                Computed: true,
             },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
             },
             "port": &schema.Schema{
                 Type:     schema.TypeInt,
@@ -63,15 +48,6 @@ func resourceNetconfProfile() *schema.Resource {
                 Default: 830,
             },
             "user_name": &schema.Schema{
-                Type:     schema.TypeString,
-                Required: true,
-            },
-            "assoc_entity_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
@@ -87,9 +63,12 @@ func resourceNetconfProfileCreate(d *schema.ResourceData, m interface{}) error {
 
     // Initialize NetconfProfile object
     o := &vspk.NetconfProfile{
-        Name: d.Get("name").(string),
-        Password: d.Get("password").(string),
-        UserName: d.Get("user_name").(string),
+    }
+    if attr, ok := d.GetOk("name"); ok {
+        o.Name = attr.(string)
+    }
+    if attr, ok := d.GetOk("password"); ok {
+        o.Password = attr.(string)
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
@@ -97,8 +76,8 @@ func resourceNetconfProfileCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("port"); ok {
         o.Port = attr.(int)
     }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
+    if attr, ok := d.GetOk("user_name"); ok {
+        o.UserName = attr.(string)
     }
     if attr, ok := d.GetOk("parent_me"); ok {
         parent := &vspk.Me{ID: attr.(string)}
@@ -134,13 +113,9 @@ func resourceNetconfProfileRead(d *schema.ResourceData, m interface{}) error {
 
     d.Set("name", o.Name)
     d.Set("password", o.Password)
-    d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("description", o.Description)
-    d.Set("entity_scope", o.EntityScope)
     d.Set("port", o.Port)
     d.Set("user_name", o.UserName)
-    d.Set("assoc_entity_type", o.AssocEntityType)
-    d.Set("external_id", o.ExternalID)
     
     d.Set("id", o.Identifier())
     d.Set("parent_id", o.ParentID)
@@ -160,18 +135,21 @@ func resourceNetconfProfileUpdate(d *schema.ResourceData, m interface{}) error {
         return err
     }
     
-    o.Name = d.Get("name").(string)
-    o.Password = d.Get("password").(string)
-    o.UserName = d.Get("user_name").(string)
     
+    if attr, ok := d.GetOk("name"); ok {
+        o.Name = attr.(string)
+    }
+    if attr, ok := d.GetOk("password"); ok {
+        o.Password = attr.(string)
+    }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
     }
     if attr, ok := d.GetOk("port"); ok {
         o.Port = attr.(int)
     }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
+    if attr, ok := d.GetOk("user_name"); ok {
+        o.UserName = attr.(string)
     }
 
     o.Save()

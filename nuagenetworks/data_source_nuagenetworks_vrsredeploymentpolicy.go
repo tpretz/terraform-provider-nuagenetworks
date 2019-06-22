@@ -126,9 +126,8 @@ func dataSourceVRSRedeploymentpolicy() *schema.Resource {
 }
 
 
-func dataSourceVRSRedeploymentpolicyRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceVRSRedeploymentpolicyRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredVRSRedeploymentpolicies := vspk.VRSRedeploymentpoliciesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -148,31 +147,31 @@ func dataSourceVRSRedeploymentpolicyRead(d *schema.ResourceData, m interface{}) 
         parent := &vspk.VCenterHypervisor{ID: attr.(string)}
         filteredVRSRedeploymentpolicies, err = parent.VRSRedeploymentpolicies(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vcenter_data_center"); ok {
         parent := &vspk.VCenterDataCenter{ID: attr.(string)}
         filteredVRSRedeploymentpolicies, err = parent.VRSRedeploymentpolicies(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vcenter_cluster"); ok {
         parent := &vspk.VCenterCluster{ID: attr.(string)}
         filteredVRSRedeploymentpolicies, err = parent.VRSRedeploymentpolicies(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vcenter"); ok {
         parent := &vspk.VCenter{ID: attr.(string)}
         filteredVRSRedeploymentpolicies, err = parent.VRSRedeploymentpolicies(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vcenter_vrs_config"); ok {
         parent := &vspk.VCenterVRSConfig{ID: attr.(string)}
         filteredVRSRedeploymentpolicies, err = parent.VRSRedeploymentpolicies(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -215,5 +214,5 @@ func dataSourceVRSRedeploymentpolicyRead(d *schema.ResourceData, m interface{}) 
 
     d.SetId(VRSRedeploymentpolicy.Identifier())
     
-    return nil
+    return
 }

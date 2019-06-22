@@ -48,10 +48,6 @@ func dataSourceSubnet() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "evpn_enabled": &schema.Schema{
-                Type:     schema.TypeBool,
-                Computed: true,
-            },
             "maintenance_mode": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -84,6 +80,10 @@ func dataSourceSubnet() *schema.Resource {
                 Type:     schema.TypeBool,
                 Computed: true,
             },
+            "default_action": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
             "template_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -104,6 +104,10 @@ func dataSourceSubnet() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
+            "flow_collection_enabled": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
             "vn_id": &schema.Schema{
                 Type:     schema.TypeInt,
                 Computed: true,
@@ -120,10 +124,6 @@ func dataSourceSubnet() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "ingress_replication_enabled": &schema.Schema{
-                Type:     schema.TypeBool,
-                Computed: true,
-            },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -134,10 +134,6 @@ func dataSourceSubnet() *schema.Resource {
             },
             "policy_group_id": &schema.Schema{
                 Type:     schema.TypeInt,
-                Computed: true,
-            },
-            "domain_service_label": &schema.Schema{
-                Type:     schema.TypeString,
                 Computed: true,
             },
             "route_distinguisher": &schema.Schema{
@@ -184,10 +180,6 @@ func dataSourceSubnet() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "customer_id": &schema.Schema{
-                Type:     schema.TypeInt,
-                Computed: true,
-            },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -199,46 +191,40 @@ func dataSourceSubnet() *schema.Resource {
             "parent_domain": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_pat_mapper", "parent_zone", "parent_ns_gateway", "parent_subnet_template", "parent_gateway", "parent_ike_gateway_connection"},
+                ConflictsWith: []string{"parent_pat_mapper", "parent_zone", "parent_ns_gateway", "parent_subnet_template", "parent_ike_gateway_connection"},
             },
             "parent_pat_mapper": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_zone", "parent_ns_gateway", "parent_subnet_template", "parent_gateway", "parent_ike_gateway_connection"},
+                ConflictsWith: []string{"parent_domain", "parent_zone", "parent_ns_gateway", "parent_subnet_template", "parent_ike_gateway_connection"},
             },
             "parent_zone": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_pat_mapper", "parent_ns_gateway", "parent_subnet_template", "parent_gateway", "parent_ike_gateway_connection"},
+                ConflictsWith: []string{"parent_domain", "parent_pat_mapper", "parent_ns_gateway", "parent_subnet_template", "parent_ike_gateway_connection"},
             },
             "parent_ns_gateway": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_pat_mapper", "parent_zone", "parent_subnet_template", "parent_gateway", "parent_ike_gateway_connection"},
+                ConflictsWith: []string{"parent_domain", "parent_pat_mapper", "parent_zone", "parent_subnet_template", "parent_ike_gateway_connection"},
             },
             "parent_subnet_template": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_pat_mapper", "parent_zone", "parent_ns_gateway", "parent_gateway", "parent_ike_gateway_connection"},
-            },
-            "parent_gateway": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_pat_mapper", "parent_zone", "parent_ns_gateway", "parent_subnet_template", "parent_ike_gateway_connection"},
+                ConflictsWith: []string{"parent_domain", "parent_pat_mapper", "parent_zone", "parent_ns_gateway", "parent_ike_gateway_connection"},
             },
             "parent_ike_gateway_connection": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_pat_mapper", "parent_zone", "parent_ns_gateway", "parent_subnet_template", "parent_gateway"},
+                ConflictsWith: []string{"parent_domain", "parent_pat_mapper", "parent_zone", "parent_ns_gateway", "parent_subnet_template"},
             },
         },
     }
 }
 
 
-func dataSourceSubnetRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceSubnetRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredSubnets := vspk.SubnetsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -258,49 +244,43 @@ func dataSourceSubnetRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.Domain{ID: attr.(string)}
         filteredSubnets, err = parent.Subnets(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_pat_mapper"); ok {
         parent := &vspk.PATMapper{ID: attr.(string)}
         filteredSubnets, err = parent.Subnets(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_zone"); ok {
         parent := &vspk.Zone{ID: attr.(string)}
         filteredSubnets, err = parent.Subnets(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_ns_gateway"); ok {
         parent := &vspk.NSGateway{ID: attr.(string)}
         filteredSubnets, err = parent.Subnets(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_subnet_template"); ok {
         parent := &vspk.SubnetTemplate{ID: attr.(string)}
         filteredSubnets, err = parent.Subnets(fetchFilter)
         if err != nil {
-            return err
-        }
-    } else if attr, ok := d.GetOk("parent_gateway"); ok {
-        parent := &vspk.Gateway{ID: attr.(string)}
-        filteredSubnets, err = parent.Subnets(fetchFilter)
-        if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_ike_gateway_connection"); ok {
         parent := &vspk.IKEGatewayConnection{ID: attr.(string)}
         filteredSubnets, err = parent.Subnets(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredSubnets, err = parent.Subnets(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -323,7 +303,6 @@ func dataSourceSubnetRead(d *schema.ResourceData, m interface{}) error {
     d.Set("ip_type", Subnet.IPType)
     d.Set("ipv6_address", Subnet.IPv6Address)
     d.Set("ipv6_gateway", Subnet.IPv6Gateway)
-    d.Set("evpn_enabled", Subnet.EVPNEnabled)
     d.Set("maintenance_mode", Subnet.MaintenanceMode)
     d.Set("name", Subnet.Name)
     d.Set("last_updated_by", Subnet.LastUpdatedBy)
@@ -332,20 +311,20 @@ func dataSourceSubnetRead(d *schema.ResourceData, m interface{}) error {
     d.Set("access_restriction_enabled", Subnet.AccessRestrictionEnabled)
     d.Set("address", Subnet.Address)
     d.Set("advertise", Subnet.Advertise)
+    d.Set("default_action", Subnet.DefaultAction)
     d.Set("template_id", Subnet.TemplateID)
     d.Set("service_id", Subnet.ServiceID)
     d.Set("description", Subnet.Description)
     d.Set("resource_type", Subnet.ResourceType)
     d.Set("netmask", Subnet.Netmask)
+    d.Set("flow_collection_enabled", Subnet.FlowCollectionEnabled)
     d.Set("vn_id", Subnet.VnId)
     d.Set("encryption", Subnet.Encryption)
     d.Set("underlay", Subnet.Underlay)
     d.Set("underlay_enabled", Subnet.UnderlayEnabled)
-    d.Set("ingress_replication_enabled", Subnet.IngressReplicationEnabled)
     d.Set("entity_scope", Subnet.EntityScope)
     d.Set("entity_state", Subnet.EntityState)
     d.Set("policy_group_id", Subnet.PolicyGroupID)
-    d.Set("domain_service_label", Subnet.DomainServiceLabel)
     d.Set("route_distinguisher", Subnet.RouteDistinguisher)
     d.Set("route_target", Subnet.RouteTarget)
     d.Set("split_subnet", Subnet.SplitSubnet)
@@ -357,7 +336,6 @@ func dataSourceSubnetRead(d *schema.ResourceData, m interface{}) error {
     d.Set("subnet_vlanid", Subnet.SubnetVLANID)
     d.Set("multi_home_enabled", Subnet.MultiHomeEnabled)
     d.Set("multicast", Subnet.Multicast)
-    d.Set("customer_id", Subnet.CustomerID)
     d.Set("external_id", Subnet.ExternalID)
     d.Set("dynamic_ipv6_address", Subnet.DynamicIpv6Address)
     
@@ -368,5 +346,5 @@ func dataSourceSubnetRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(Subnet.Identifier())
     
-    return nil
+    return
 }

@@ -24,10 +24,6 @@ func dataSourceVCenterCluster() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "arp_reply": &schema.Schema{
-                Type:     schema.TypeBool,
-                Computed: true,
-            },
             "vrs_configuration_time_limit": &schema.Schema{
                 Type:     schema.TypeInt,
                 Computed: true,
@@ -197,10 +193,6 @@ func dataSourceVCenterCluster() *schema.Resource {
                 Computed: true,
             },
             "nfs_mount_path": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "agency_moid": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -461,9 +453,8 @@ func dataSourceVCenterCluster() *schema.Resource {
 }
 
 
-func dataSourceVCenterClusterRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceVCenterClusterRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredVCenterClusters := vspk.VCenterClustersList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -482,7 +473,7 @@ func dataSourceVCenterClusterRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.VCenterDataCenter{ID: d.Get("parent_vcenter_data_center").(string)}
     filteredVCenterClusters, err = parent.VCenterClusters(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     VCenterCluster := &vspk.VCenterCluster{}
@@ -498,7 +489,6 @@ func dataSourceVCenterClusterRead(d *schema.ResourceData, m interface{}) error {
     
     VCenterCluster = filteredVCenterClusters[0]
 
-    d.Set("arp_reply", VCenterCluster.ARPReply)
     d.Set("vrs_configuration_time_limit", VCenterCluster.VRSConfigurationTimeLimit)
     d.Set("v_require_nuage_metadata", VCenterCluster.VRequireNuageMetadata)
     d.Set("name", VCenterCluster.Name)
@@ -542,7 +532,6 @@ func dataSourceVCenterClusterRead(d *schema.ResourceData, m interface{}) error {
     d.Set("revertive_timer", VCenterCluster.RevertiveTimer)
     d.Set("nfs_log_server", VCenterCluster.NfsLogServer)
     d.Set("nfs_mount_path", VCenterCluster.NfsMountPath)
-    d.Set("agency_moid", VCenterCluster.AgencyMoid)
     d.Set("mgmt_dns1", VCenterCluster.MgmtDNS1)
     d.Set("mgmt_dns2", VCenterCluster.MgmtDNS2)
     d.Set("mgmt_gateway", VCenterCluster.MgmtGateway)
@@ -613,5 +602,5 @@ func dataSourceVCenterClusterRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(VCenterCluster.Identifier())
     
-    return nil
+    return
 }

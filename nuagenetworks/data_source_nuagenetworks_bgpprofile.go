@@ -77,9 +77,8 @@ func dataSourceBGPProfile() *schema.Resource {
 }
 
 
-func dataSourceBGPProfileRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceBGPProfileRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredBGPProfiles := vspk.BGPProfilesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -99,13 +98,13 @@ func dataSourceBGPProfileRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredBGPProfiles, err = parent.BGPProfiles(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredBGPProfiles, err = parent.BGPProfiles(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -141,5 +140,5 @@ func dataSourceBGPProfileRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(BGPProfile.Identifier())
     
-    return nil
+    return
 }

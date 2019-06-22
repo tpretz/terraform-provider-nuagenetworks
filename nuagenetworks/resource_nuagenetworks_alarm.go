@@ -15,11 +15,6 @@ func resourceAlarm() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -68,11 +63,6 @@ func resourceAlarm() *schema.Resource {
                 Type:     schema.TypeInt,
                 Optional: true,
             },
-            "alarmed_object_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "enterprise_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -96,7 +86,18 @@ func resourceAlarm() *schema.Resource {
             },
             "parent_tca": &schema.Schema{
                 Type:     schema.TypeString,
-                Required: true,
+                Optional: true,
+                ConflictsWith: []string{"parent_shunt_link", "parent_ike_gateway_connection"},
+            },
+            "parent_shunt_link": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+                ConflictsWith: []string{"parent_tca", "parent_ike_gateway_connection"},
+            },
+            "parent_ike_gateway_connection": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+                ConflictsWith: []string{"parent_tca", "parent_shunt_link"},
             },
         },
     }
@@ -138,10 +139,26 @@ func resourceAlarmCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)
     }
-    parent := &vspk.TCA{ID: d.Get("parent_tca").(string)}
-    err := parent.CreateAlarm(o)
-    if err != nil {
-        return err
+    if attr, ok := d.GetOk("parent_tca"); ok {
+        parent := &vspk.TCA{ID: attr.(string)}
+        err := parent.CreateAlarm(o)
+        if err != nil {
+            return err
+        }
+    }
+    if attr, ok := d.GetOk("parent_shunt_link"); ok {
+        parent := &vspk.ShuntLink{ID: attr.(string)}
+        err := parent.CreateAlarm(o)
+        if err != nil {
+            return err
+        }
+    }
+    if attr, ok := d.GetOk("parent_ike_gateway_connection"); ok {
+        parent := &vspk.IKEGatewayConnection{ID: attr.(string)}
+        err := parent.CreateAlarm(o)
+        if err != nil {
+            return err
+        }
     }
     
     
@@ -169,7 +186,6 @@ func resourceAlarmRead(d *schema.ResourceData, m interface{}) error {
     d.Set("description", o.Description)
     d.Set("severity", o.Severity)
     d.Set("timestamp", o.Timestamp)
-    d.Set("alarmed_object_id", o.AlarmedObjectID)
     d.Set("enterprise_id", o.EnterpriseID)
     d.Set("entity_scope", o.EntityScope)
     d.Set("error_condition", o.ErrorCondition)

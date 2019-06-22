@@ -68,9 +68,8 @@ func dataSourceVPNConnection() *schema.Resource {
 }
 
 
-func dataSourceVPNConnectionRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceVPNConnectionRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredVPNConnections := vspk.VPNConnectionsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -90,19 +89,19 @@ func dataSourceVPNConnectionRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.SharedNetworkResource{ID: attr.(string)}
         filteredVPNConnections, err = parent.VPNConnections(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_domain"); ok {
         parent := &vspk.Domain{ID: attr.(string)}
         filteredVPNConnections, err = parent.VPNConnections(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredVPNConnections, err = parent.VPNConnections(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -133,5 +132,5 @@ func dataSourceVPNConnectionRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(VPNConnection.Identifier())
     
-    return nil
+    return
 }

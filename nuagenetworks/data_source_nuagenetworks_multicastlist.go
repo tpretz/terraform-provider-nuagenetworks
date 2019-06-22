@@ -55,9 +55,8 @@ func dataSourceMultiCastList() *schema.Resource {
 }
 
 
-func dataSourceMultiCastListRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceMultiCastListRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredMultiCastLists := vspk.MultiCastListsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -77,13 +76,13 @@ func dataSourceMultiCastListRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.EnterpriseProfile{ID: attr.(string)}
         filteredMultiCastLists, err = parent.MultiCastLists(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredMultiCastLists, err = parent.MultiCastLists(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -112,5 +111,5 @@ func dataSourceMultiCastListRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(MultiCastList.Identifier())
     
-    return nil
+    return
 }

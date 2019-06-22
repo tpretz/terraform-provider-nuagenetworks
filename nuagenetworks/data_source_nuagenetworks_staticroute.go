@@ -52,10 +52,6 @@ func dataSourceStaticRoute() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "black_hole_enabled": &schema.Schema{
-                Type:     schema.TypeBool,
-                Computed: true,
-            },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -63,11 +59,6 @@ func dataSourceStaticRoute() *schema.Resource {
             "route_distinguisher": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
-            },
-            "associated_gateway_ids": &schema.Schema{
-                Type:     schema.TypeList,
-                Computed: true,
-                Elem:     &schema.Schema{Type: schema.TypeString},
             },
             "associated_subnet_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -84,41 +75,35 @@ func dataSourceStaticRoute() *schema.Resource {
             "parent_shared_network_resource": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_container_interface", "parent_l2_domain"},
+                ConflictsWith: []string{"parent_domain", "parent_vm_interface", "parent_host_interface", "parent_container_interface"},
             },
             "parent_domain": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_shared_network_resource", "parent_vm_interface", "parent_host_interface", "parent_container_interface", "parent_l2_domain"},
+                ConflictsWith: []string{"parent_shared_network_resource", "parent_vm_interface", "parent_host_interface", "parent_container_interface"},
             },
             "parent_vm_interface": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_shared_network_resource", "parent_domain", "parent_host_interface", "parent_container_interface", "parent_l2_domain"},
+                ConflictsWith: []string{"parent_shared_network_resource", "parent_domain", "parent_host_interface", "parent_container_interface"},
             },
             "parent_host_interface": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_shared_network_resource", "parent_domain", "parent_vm_interface", "parent_container_interface", "parent_l2_domain"},
+                ConflictsWith: []string{"parent_shared_network_resource", "parent_domain", "parent_vm_interface", "parent_container_interface"},
             },
             "parent_container_interface": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_shared_network_resource", "parent_domain", "parent_vm_interface", "parent_host_interface", "parent_l2_domain"},
-            },
-            "parent_l2_domain": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_shared_network_resource", "parent_domain", "parent_vm_interface", "parent_host_interface", "parent_container_interface"},
+                ConflictsWith: []string{"parent_shared_network_resource", "parent_domain", "parent_vm_interface", "parent_host_interface"},
             },
         },
     }
 }
 
 
-func dataSourceStaticRouteRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceStaticRouteRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredStaticRoutes := vspk.StaticRoutesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -138,43 +123,37 @@ func dataSourceStaticRouteRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.SharedNetworkResource{ID: attr.(string)}
         filteredStaticRoutes, err = parent.StaticRoutes(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_domain"); ok {
         parent := &vspk.Domain{ID: attr.(string)}
         filteredStaticRoutes, err = parent.StaticRoutes(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vm_interface"); ok {
         parent := &vspk.VMInterface{ID: attr.(string)}
         filteredStaticRoutes, err = parent.StaticRoutes(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_host_interface"); ok {
         parent := &vspk.HostInterface{ID: attr.(string)}
         filteredStaticRoutes, err = parent.StaticRoutes(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_container_interface"); ok {
         parent := &vspk.ContainerInterface{ID: attr.(string)}
         filteredStaticRoutes, err = parent.StaticRoutes(fetchFilter)
         if err != nil {
-            return err
-        }
-    } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
-        parent := &vspk.L2Domain{ID: attr.(string)}
-        filteredStaticRoutes, err = parent.StaticRoutes(fetchFilter)
-        if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredStaticRoutes, err = parent.StaticRoutes(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -198,10 +177,8 @@ func dataSourceStaticRouteRead(d *schema.ResourceData, m interface{}) error {
     d.Set("address", StaticRoute.Address)
     d.Set("netmask", StaticRoute.Netmask)
     d.Set("next_hop_ip", StaticRoute.NextHopIp)
-    d.Set("black_hole_enabled", StaticRoute.BlackHoleEnabled)
     d.Set("entity_scope", StaticRoute.EntityScope)
     d.Set("route_distinguisher", StaticRoute.RouteDistinguisher)
-    d.Set("associated_gateway_ids", StaticRoute.AssociatedGatewayIDs)
     d.Set("associated_subnet_id", StaticRoute.AssociatedSubnetID)
     d.Set("external_id", StaticRoute.ExternalID)
     d.Set("type", StaticRoute.Type)
@@ -213,5 +190,5 @@ func dataSourceStaticRouteRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(StaticRoute.Identifier())
     
-    return nil
+    return
 }

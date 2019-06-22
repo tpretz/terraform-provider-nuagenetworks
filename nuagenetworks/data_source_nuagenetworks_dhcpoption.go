@@ -112,9 +112,8 @@ func dataSourceDHCPOption() *schema.Resource {
 }
 
 
-func dataSourceDHCPOptionRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceDHCPOptionRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredDHCPOptions := vspk.DHCPOptionsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -134,61 +133,61 @@ func dataSourceDHCPOptionRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.SharedNetworkResource{ID: attr.(string)}
         filteredDHCPOptions, err = parent.DHCPOptions(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_domain"); ok {
         parent := &vspk.Domain{ID: attr.(string)}
         filteredDHCPOptions, err = parent.DHCPOptions(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vm_interface"); ok {
         parent := &vspk.VMInterface{ID: attr.(string)}
         filteredDHCPOptions, err = parent.DHCPOptions(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_host_interface"); ok {
         parent := &vspk.HostInterface{ID: attr.(string)}
         filteredDHCPOptions, err = parent.DHCPOptions(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_container_interface"); ok {
         parent := &vspk.ContainerInterface{ID: attr.(string)}
         filteredDHCPOptions, err = parent.DHCPOptions(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredDHCPOptions, err = parent.DHCPOptions(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_bridge_interface"); ok {
         parent := &vspk.BridgeInterface{ID: attr.(string)}
         filteredDHCPOptions, err = parent.DHCPOptions(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_subnet"); ok {
         parent := &vspk.Subnet{ID: attr.(string)}
         filteredDHCPOptions, err = parent.DHCPOptions(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_zone"); ok {
         parent := &vspk.Zone{ID: attr.(string)}
         filteredDHCPOptions, err = parent.DHCPOptions(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredDHCPOptions, err = parent.DHCPOptions(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -221,5 +220,5 @@ func dataSourceDHCPOptionRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(DHCPOption.Identifier())
     
-    return nil
+    return
 }

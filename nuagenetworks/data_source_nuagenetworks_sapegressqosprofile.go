@@ -28,23 +28,7 @@ func dataSourceSAPEgressQoSProfile() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "description": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "assoc_entity_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -63,9 +47,8 @@ func dataSourceSAPEgressQoSProfile() *schema.Resource {
 }
 
 
-func dataSourceSAPEgressQoSProfileRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceSAPEgressQoSProfileRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredSAPEgressQoSProfiles := vspk.SAPEgressQoSProfilesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -85,13 +68,13 @@ func dataSourceSAPEgressQoSProfileRead(d *schema.ResourceData, m interface{}) er
         parent := &vspk.RedundancyGroup{ID: attr.(string)}
         filteredSAPEgressQoSProfiles, err = parent.SAPEgressQoSProfiles(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_gateway"); ok {
         parent := &vspk.Gateway{ID: attr.(string)}
         filteredSAPEgressQoSProfiles, err = parent.SAPEgressQoSProfiles(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -109,11 +92,7 @@ func dataSourceSAPEgressQoSProfileRead(d *schema.ResourceData, m interface{}) er
     SAPEgressQoSProfile = filteredSAPEgressQoSProfiles[0]
 
     d.Set("name", SAPEgressQoSProfile.Name)
-    d.Set("last_updated_by", SAPEgressQoSProfile.LastUpdatedBy)
     d.Set("description", SAPEgressQoSProfile.Description)
-    d.Set("entity_scope", SAPEgressQoSProfile.EntityScope)
-    d.Set("assoc_entity_type", SAPEgressQoSProfile.AssocEntityType)
-    d.Set("external_id", SAPEgressQoSProfile.ExternalID)
     
     d.Set("id", SAPEgressQoSProfile.Identifier())
     d.Set("parent_id", SAPEgressQoSProfile.ParentID)
@@ -122,5 +101,5 @@ func dataSourceSAPEgressQoSProfileRead(d *schema.ResourceData, m interface{}) er
 
     d.SetId(SAPEgressQoSProfile.Identifier())
     
-    return nil
+    return
 }

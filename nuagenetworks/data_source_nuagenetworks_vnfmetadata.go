@@ -28,27 +28,11 @@ func dataSourceVNFMetadata() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
             "blob": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "assoc_entity_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -67,9 +51,8 @@ func dataSourceVNFMetadata() *schema.Resource {
 }
 
 
-func dataSourceVNFMetadataRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceVNFMetadataRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredVNFMetadatas := vspk.VNFMetadatasList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -89,19 +72,19 @@ func dataSourceVNFMetadataRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredVNFMetadatas, err = parent.VNFMetadatas(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vnf"); ok {
         parent := &vspk.VNF{ID: attr.(string)}
         filteredVNFMetadatas, err = parent.VNFMetadatas(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredVNFMetadatas, err = parent.VNFMetadatas(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -119,12 +102,8 @@ func dataSourceVNFMetadataRead(d *schema.ResourceData, m interface{}) error {
     VNFMetadata = filteredVNFMetadatas[0]
 
     d.Set("name", VNFMetadata.Name)
-    d.Set("last_updated_by", VNFMetadata.LastUpdatedBy)
     d.Set("description", VNFMetadata.Description)
     d.Set("blob", VNFMetadata.Blob)
-    d.Set("entity_scope", VNFMetadata.EntityScope)
-    d.Set("assoc_entity_type", VNFMetadata.AssocEntityType)
-    d.Set("external_id", VNFMetadata.ExternalID)
     
     d.Set("id", VNFMetadata.Identifier())
     d.Set("parent_id", VNFMetadata.ParentID)
@@ -133,5 +112,5 @@ func dataSourceVNFMetadataRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(VNFMetadata.Identifier())
     
-    return nil
+    return
 }

@@ -28,10 +28,6 @@ func dataSourceSSHKey() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -40,15 +36,7 @@ func dataSourceSSHKey() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "public_key": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -61,9 +49,8 @@ func dataSourceSSHKey() *schema.Resource {
 }
 
 
-func dataSourceSSHKeyRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceSSHKeyRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredSSHKeys := vspk.SSHKeysList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -82,7 +69,7 @@ func dataSourceSSHKeyRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.InfrastructureAccessProfile{ID: d.Get("parent_infrastructure_access_profile").(string)}
     filteredSSHKeys, err = parent.SSHKeys(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     SSHKey := &vspk.SSHKey{}
@@ -99,12 +86,9 @@ func dataSourceSSHKeyRead(d *schema.ResourceData, m interface{}) error {
     SSHKey = filteredSSHKeys[0]
 
     d.Set("name", SSHKey.Name)
-    d.Set("last_updated_by", SSHKey.LastUpdatedBy)
     d.Set("description", SSHKey.Description)
     d.Set("key_type", SSHKey.KeyType)
-    d.Set("entity_scope", SSHKey.EntityScope)
     d.Set("public_key", SSHKey.PublicKey)
-    d.Set("external_id", SSHKey.ExternalID)
     
     d.Set("id", SSHKey.Identifier())
     d.Set("parent_id", SSHKey.ParentID)
@@ -113,5 +97,5 @@ func dataSourceSSHKeyRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(SSHKey.Identifier())
     
-    return nil
+    return
 }

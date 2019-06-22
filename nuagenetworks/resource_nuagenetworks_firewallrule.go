@@ -15,11 +15,6 @@ func resourceFirewallRule() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -55,11 +50,6 @@ func resourceFirewallRule() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "action": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -68,19 +58,35 @@ func resourceFirewallRule() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "web_filter_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
-            "web_filter_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
+            "dest_network": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+            },
+            "dest_pg_id": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+            },
+            "dest_pg_type": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+            },
+            "destination_ipv6_value": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+            },
             "destination_port": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+            },
+            "destination_type": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+            },
+            "destination_value": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
@@ -104,11 +110,6 @@ func resourceFirewallRule() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "location_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -121,31 +122,45 @@ func resourceFirewallRule() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
+            "source_ipv6_value": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+            },
+            "source_network": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+            },
+            "source_pg_id": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+            },
+            "source_pg_type": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+            },
             "source_port": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
+            "source_type": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+            },
+            "source_value": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+            },
             "priority": &schema.Schema{
-                Type:     schema.TypeInt,
-                Optional: true,
-            },
-            "protocol": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "associated_live_template_id": &schema.Schema{
+            "associated_application_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "associated_traffic_type": &schema.Schema{
+            "associated_application_object_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                Computed: true,
-            },
-            "associated_traffic_type_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
             },
             "associatedfirewall_aclid": &schema.Schema{
                 Type:     schema.TypeString,
@@ -165,10 +180,6 @@ func resourceFirewallRule() *schema.Resource {
                 Optional: true,
             },
             "ether_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
@@ -206,17 +217,29 @@ func resourceFirewallRuleCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("address_override"); ok {
         o.AddressOverride = attr.(string)
     }
-    if attr, ok := d.GetOk("web_filter_id"); ok {
-        o.WebFilterID = attr.(string)
-    }
-    if attr, ok := d.GetOk("web_filter_type"); ok {
-        o.WebFilterType = attr.(string)
-    }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
     }
+    if attr, ok := d.GetOk("dest_network"); ok {
+        o.DestNetwork = attr.(string)
+    }
+    if attr, ok := d.GetOk("dest_pg_id"); ok {
+        o.DestPgId = attr.(string)
+    }
+    if attr, ok := d.GetOk("dest_pg_type"); ok {
+        o.DestPgType = attr.(string)
+    }
+    if attr, ok := d.GetOk("destination_ipv6_value"); ok {
+        o.DestinationIpv6Value = attr.(string)
+    }
     if attr, ok := d.GetOk("destination_port"); ok {
         o.DestinationPort = attr.(string)
+    }
+    if attr, ok := d.GetOk("destination_type"); ok {
+        o.DestinationType = attr.(string)
+    }
+    if attr, ok := d.GetOk("destination_value"); ok {
+        o.DestinationValue = attr.(string)
     }
     if attr, ok := d.GetOk("network_id"); ok {
         o.NetworkID = attr.(string)
@@ -242,17 +265,35 @@ func resourceFirewallRuleCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("domain_name"); ok {
         o.DomainName = attr.(string)
     }
+    if attr, ok := d.GetOk("source_ipv6_value"); ok {
+        o.SourceIpv6Value = attr.(string)
+    }
+    if attr, ok := d.GetOk("source_network"); ok {
+        o.SourceNetwork = attr.(string)
+    }
+    if attr, ok := d.GetOk("source_pg_id"); ok {
+        o.SourcePgId = attr.(string)
+    }
+    if attr, ok := d.GetOk("source_pg_type"); ok {
+        o.SourcePgType = attr.(string)
+    }
     if attr, ok := d.GetOk("source_port"); ok {
         o.SourcePort = attr.(string)
     }
+    if attr, ok := d.GetOk("source_type"); ok {
+        o.SourceType = attr.(string)
+    }
+    if attr, ok := d.GetOk("source_value"); ok {
+        o.SourceValue = attr.(string)
+    }
     if attr, ok := d.GetOk("priority"); ok {
-        o.Priority = attr.(int)
+        o.Priority = attr.(string)
     }
-    if attr, ok := d.GetOk("protocol"); ok {
-        o.Protocol = attr.(string)
+    if attr, ok := d.GetOk("associated_application_id"); ok {
+        o.AssociatedApplicationID = attr.(string)
     }
-    if attr, ok := d.GetOk("associated_live_template_id"); ok {
-        o.AssociatedLiveTemplateID = attr.(string)
+    if attr, ok := d.GetOk("associated_application_object_id"); ok {
+        o.AssociatedApplicationObjectID = attr.(string)
     }
     if attr, ok := d.GetOk("associatedfirewall_aclid"); ok {
         o.AssociatedfirewallACLID = attr.(string)
@@ -268,9 +309,6 @@ func resourceFirewallRuleCreate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("ether_type"); ok {
         o.EtherType = attr.(string)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     err := parent.CreateFirewallRule(o)
@@ -300,34 +338,39 @@ func resourceFirewallRuleRead(d *schema.ResourceData, m interface{}) error {
     d.Set("icmp_type", o.ICMPType)
     d.Set("ipv6_address_override", o.IPv6AddressOverride)
     d.Set("dscp", o.DSCP)
-    d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("action", o.Action)
     d.Set("address_override", o.AddressOverride)
-    d.Set("web_filter_id", o.WebFilterID)
-    d.Set("web_filter_type", o.WebFilterType)
     d.Set("description", o.Description)
+    d.Set("dest_network", o.DestNetwork)
+    d.Set("dest_pg_id", o.DestPgId)
+    d.Set("dest_pg_type", o.DestPgType)
+    d.Set("destination_ipv6_value", o.DestinationIpv6Value)
     d.Set("destination_port", o.DestinationPort)
+    d.Set("destination_type", o.DestinationType)
+    d.Set("destination_value", o.DestinationValue)
     d.Set("network_id", o.NetworkID)
     d.Set("network_type", o.NetworkType)
     d.Set("mirror_destination_id", o.MirrorDestinationID)
     d.Set("flow_logging_enabled", o.FlowLoggingEnabled)
     d.Set("enterprise_name", o.EnterpriseName)
-    d.Set("entity_scope", o.EntityScope)
     d.Set("location_id", o.LocationID)
     d.Set("location_type", o.LocationType)
     d.Set("domain_name", o.DomainName)
+    d.Set("source_ipv6_value", o.SourceIpv6Value)
+    d.Set("source_network", o.SourceNetwork)
+    d.Set("source_pg_id", o.SourcePgId)
+    d.Set("source_pg_type", o.SourcePgType)
     d.Set("source_port", o.SourcePort)
+    d.Set("source_type", o.SourceType)
+    d.Set("source_value", o.SourceValue)
     d.Set("priority", o.Priority)
-    d.Set("protocol", o.Protocol)
-    d.Set("associated_live_template_id", o.AssociatedLiveTemplateID)
-    d.Set("associated_traffic_type", o.AssociatedTrafficType)
-    d.Set("associated_traffic_type_id", o.AssociatedTrafficTypeID)
+    d.Set("associated_application_id", o.AssociatedApplicationID)
+    d.Set("associated_application_object_id", o.AssociatedApplicationObjectID)
     d.Set("associatedfirewall_aclid", o.AssociatedfirewallACLID)
     d.Set("stateful", o.Stateful)
     d.Set("stats_id", o.StatsID)
     d.Set("stats_logging_enabled", o.StatsLoggingEnabled)
     d.Set("ether_type", o.EtherType)
-    d.Set("external_id", o.ExternalID)
     
     d.Set("id", o.Identifier())
     d.Set("parent_id", o.ParentID)
@@ -369,17 +412,29 @@ func resourceFirewallRuleUpdate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("address_override"); ok {
         o.AddressOverride = attr.(string)
     }
-    if attr, ok := d.GetOk("web_filter_id"); ok {
-        o.WebFilterID = attr.(string)
-    }
-    if attr, ok := d.GetOk("web_filter_type"); ok {
-        o.WebFilterType = attr.(string)
-    }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
     }
+    if attr, ok := d.GetOk("dest_network"); ok {
+        o.DestNetwork = attr.(string)
+    }
+    if attr, ok := d.GetOk("dest_pg_id"); ok {
+        o.DestPgId = attr.(string)
+    }
+    if attr, ok := d.GetOk("dest_pg_type"); ok {
+        o.DestPgType = attr.(string)
+    }
+    if attr, ok := d.GetOk("destination_ipv6_value"); ok {
+        o.DestinationIpv6Value = attr.(string)
+    }
     if attr, ok := d.GetOk("destination_port"); ok {
         o.DestinationPort = attr.(string)
+    }
+    if attr, ok := d.GetOk("destination_type"); ok {
+        o.DestinationType = attr.(string)
+    }
+    if attr, ok := d.GetOk("destination_value"); ok {
+        o.DestinationValue = attr.(string)
     }
     if attr, ok := d.GetOk("network_id"); ok {
         o.NetworkID = attr.(string)
@@ -405,17 +460,35 @@ func resourceFirewallRuleUpdate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("domain_name"); ok {
         o.DomainName = attr.(string)
     }
+    if attr, ok := d.GetOk("source_ipv6_value"); ok {
+        o.SourceIpv6Value = attr.(string)
+    }
+    if attr, ok := d.GetOk("source_network"); ok {
+        o.SourceNetwork = attr.(string)
+    }
+    if attr, ok := d.GetOk("source_pg_id"); ok {
+        o.SourcePgId = attr.(string)
+    }
+    if attr, ok := d.GetOk("source_pg_type"); ok {
+        o.SourcePgType = attr.(string)
+    }
     if attr, ok := d.GetOk("source_port"); ok {
         o.SourcePort = attr.(string)
     }
+    if attr, ok := d.GetOk("source_type"); ok {
+        o.SourceType = attr.(string)
+    }
+    if attr, ok := d.GetOk("source_value"); ok {
+        o.SourceValue = attr.(string)
+    }
     if attr, ok := d.GetOk("priority"); ok {
-        o.Priority = attr.(int)
+        o.Priority = attr.(string)
     }
-    if attr, ok := d.GetOk("protocol"); ok {
-        o.Protocol = attr.(string)
+    if attr, ok := d.GetOk("associated_application_id"); ok {
+        o.AssociatedApplicationID = attr.(string)
     }
-    if attr, ok := d.GetOk("associated_live_template_id"); ok {
-        o.AssociatedLiveTemplateID = attr.(string)
+    if attr, ok := d.GetOk("associated_application_object_id"); ok {
+        o.AssociatedApplicationObjectID = attr.(string)
     }
     if attr, ok := d.GetOk("associatedfirewall_aclid"); ok {
         o.AssociatedfirewallACLID = attr.(string)
@@ -431,9 +504,6 @@ func resourceFirewallRuleUpdate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("ether_type"); ok {
         o.EtherType = attr.(string)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
 
     o.Save()

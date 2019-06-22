@@ -36,10 +36,6 @@ func dataSourceVirtualFirewallRule() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "ipv6_address_override": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "dscp": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -49,18 +45,6 @@ func dataSourceVirtualFirewallRule() *schema.Resource {
                 Computed: true,
             },
             "action": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "address_override": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "web_filter_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "web_filter_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -124,23 +108,11 @@ func dataSourceVirtualFirewallRule() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "associated_egress_entry_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "associated_ingress_entry_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "associated_l7_application_signature_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
             "associated_live_entity_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "associated_live_template_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -164,10 +136,6 @@ func dataSourceVirtualFirewallRule() *schema.Resource {
                 Type:     schema.TypeBool,
                 Computed: true,
             },
-            "ether_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "overlay_mirror_destination_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -176,29 +144,17 @@ func dataSourceVirtualFirewallRule() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "parent_domain": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_l2_domain", "parent_virtual_firewall_policy"},
-            },
-            "parent_l2_domain": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_virtual_firewall_policy"},
-            },
             "parent_virtual_firewall_policy": &schema.Schema{
                 Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_domain", "parent_l2_domain"},
+                Required: true,
             },
         },
     }
 }
 
 
-func dataSourceVirtualFirewallRuleRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceVirtualFirewallRuleRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredVirtualFirewallRules := vspk.VirtualFirewallRulesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -214,30 +170,10 @@ func dataSourceVirtualFirewallRuleRead(d *schema.ResourceData, m interface{}) er
            
         }
     }
-    if attr, ok := d.GetOk("parent_domain"); ok {
-        parent := &vspk.Domain{ID: attr.(string)}
-        filteredVirtualFirewallRules, err = parent.VirtualFirewallRules(fetchFilter)
-        if err != nil {
-            return err
-        }
-    } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
-        parent := &vspk.L2Domain{ID: attr.(string)}
-        filteredVirtualFirewallRules, err = parent.VirtualFirewallRules(fetchFilter)
-        if err != nil {
-            return err
-        }
-    } else if attr, ok := d.GetOk("parent_virtual_firewall_policy"); ok {
-        parent := &vspk.VirtualFirewallPolicy{ID: attr.(string)}
-        filteredVirtualFirewallRules, err = parent.VirtualFirewallRules(fetchFilter)
-        if err != nil {
-            return err
-        }
-    } else {
-        parent := m.(*vspk.Me)
-        filteredVirtualFirewallRules, err = parent.VirtualFirewallRules(fetchFilter)
-        if err != nil {
-            return err
-        }
+    parent := &vspk.VirtualFirewallPolicy{ID: d.Get("parent_virtual_firewall_policy").(string)}
+    filteredVirtualFirewallRules, err = parent.VirtualFirewallRules(fetchFilter)
+    if err != nil {
+        return
     }
 
     VirtualFirewallRule := &vspk.VirtualFirewallRule{}
@@ -256,13 +192,9 @@ func dataSourceVirtualFirewallRuleRead(d *schema.ResourceData, m interface{}) er
     d.Set("acl_template_name", VirtualFirewallRule.ACLTemplateName)
     d.Set("icmp_code", VirtualFirewallRule.ICMPCode)
     d.Set("icmp_type", VirtualFirewallRule.ICMPType)
-    d.Set("ipv6_address_override", VirtualFirewallRule.IPv6AddressOverride)
     d.Set("dscp", VirtualFirewallRule.DSCP)
     d.Set("last_updated_by", VirtualFirewallRule.LastUpdatedBy)
     d.Set("action", VirtualFirewallRule.Action)
-    d.Set("address_override", VirtualFirewallRule.AddressOverride)
-    d.Set("web_filter_id", VirtualFirewallRule.WebFilterID)
-    d.Set("web_filter_type", VirtualFirewallRule.WebFilterType)
     d.Set("description", VirtualFirewallRule.Description)
     d.Set("destination_port", VirtualFirewallRule.DestinationPort)
     d.Set("network_id", VirtualFirewallRule.NetworkID)
@@ -278,17 +210,13 @@ func dataSourceVirtualFirewallRuleRead(d *schema.ResourceData, m interface{}) er
     d.Set("source_port", VirtualFirewallRule.SourcePort)
     d.Set("priority", VirtualFirewallRule.Priority)
     d.Set("protocol", VirtualFirewallRule.Protocol)
-    d.Set("associated_egress_entry_id", VirtualFirewallRule.AssociatedEgressEntryID)
-    d.Set("associated_ingress_entry_id", VirtualFirewallRule.AssociatedIngressEntryID)
     d.Set("associated_l7_application_signature_id", VirtualFirewallRule.AssociatedL7ApplicationSignatureID)
     d.Set("associated_live_entity_id", VirtualFirewallRule.AssociatedLiveEntityID)
-    d.Set("associated_live_template_id", VirtualFirewallRule.AssociatedLiveTemplateID)
     d.Set("associated_traffic_type", VirtualFirewallRule.AssociatedTrafficType)
     d.Set("associated_traffic_type_id", VirtualFirewallRule.AssociatedTrafficTypeID)
     d.Set("stateful", VirtualFirewallRule.Stateful)
     d.Set("stats_id", VirtualFirewallRule.StatsID)
     d.Set("stats_logging_enabled", VirtualFirewallRule.StatsLoggingEnabled)
-    d.Set("ether_type", VirtualFirewallRule.EtherType)
     d.Set("overlay_mirror_destination_id", VirtualFirewallRule.OverlayMirrorDestinationID)
     d.Set("external_id", VirtualFirewallRule.ExternalID)
     
@@ -299,5 +227,5 @@ func dataSourceVirtualFirewallRuleRead(d *schema.ResourceData, m interface{}) er
 
     d.SetId(VirtualFirewallRule.Identifier())
     
-    return nil
+    return
 }

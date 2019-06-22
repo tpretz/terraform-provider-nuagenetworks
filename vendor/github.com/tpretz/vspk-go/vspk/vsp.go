@@ -150,6 +150,14 @@ func (o *VSP) VSCs(info *bambou.FetchingInfo) (VSCsList, *bambou.Error) {
 	return list, err
 }
 
+// VSDs retrieves the list of child VSDs of the VSP
+func (o *VSP) VSDs(info *bambou.FetchingInfo) (VSDsList, *bambou.Error) {
+
+	var list VSDsList
+	err := bambou.CurrentSession().FetchChildren(o, VSDIdentity, &list, info)
+	return list, err
+}
+
 // EventLogs retrieves the list of child EventLogs of the VSP
 func (o *VSP) EventLogs(info *bambou.FetchingInfo) (EventLogsList, *bambou.Error) {
 

@@ -40,32 +40,21 @@ func dataSourceInfrastructureConfig() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "associated_entity_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
             "parent_ns_gateway": &schema.Schema{
                 Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_gateway"},
-            },
-            "parent_gateway": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_ns_gateway"},
+                Required: true,
             },
         },
     }
 }
 
 
-func dataSourceInfrastructureConfigRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceInfrastructureConfigRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredInfrastructureConfigs := vspk.InfrastructureConfigsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -81,18 +70,10 @@ func dataSourceInfrastructureConfigRead(d *schema.ResourceData, m interface{}) e
            
         }
     }
-    if attr, ok := d.GetOk("parent_ns_gateway"); ok {
-        parent := &vspk.NSGateway{ID: attr.(string)}
-        filteredInfrastructureConfigs, err = parent.InfrastructureConfigs(fetchFilter)
-        if err != nil {
-            return err
-        }
-    } else if attr, ok := d.GetOk("parent_gateway"); ok {
-        parent := &vspk.Gateway{ID: attr.(string)}
-        filteredInfrastructureConfigs, err = parent.InfrastructureConfigs(fetchFilter)
-        if err != nil {
-            return err
-        }
+    parent := &vspk.NSGateway{ID: d.Get("parent_ns_gateway").(string)}
+    filteredInfrastructureConfigs, err = parent.InfrastructureConfigs(fetchFilter)
+    if err != nil {
+        return
     }
 
     InfrastructureConfig := &vspk.InfrastructureConfig{}
@@ -112,7 +93,6 @@ func dataSourceInfrastructureConfigRead(d *schema.ResourceData, m interface{}) e
     d.Set("entity_scope", InfrastructureConfig.EntityScope)
     d.Set("config", InfrastructureConfig.Config)
     d.Set("config_status", InfrastructureConfig.ConfigStatus)
-    d.Set("associated_entity_type", InfrastructureConfig.AssociatedEntityType)
     d.Set("external_id", InfrastructureConfig.ExternalID)
     
     d.Set("id", InfrastructureConfig.Identifier())
@@ -122,5 +102,5 @@ func dataSourceInfrastructureConfigRead(d *schema.ResourceData, m interface{}) e
 
     d.SetId(InfrastructureConfig.Identifier())
     
-    return nil
+    return
 }

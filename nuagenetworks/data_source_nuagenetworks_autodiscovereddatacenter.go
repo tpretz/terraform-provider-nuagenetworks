@@ -57,9 +57,8 @@ func dataSourceAutodiscovereddatacenter() *schema.Resource {
 }
 
 
-func dataSourceAutodiscovereddatacenterRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceAutodiscovereddatacenterRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredAutodiscovereddatacenters := vspk.AutodiscovereddatacentersList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -78,7 +77,7 @@ func dataSourceAutodiscovereddatacenterRead(d *schema.ResourceData, m interface{
     parent := &vspk.VCenter{ID: d.Get("parent_vcenter").(string)}
     filteredAutodiscovereddatacenters, err = parent.Autodiscovereddatacenters(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     Autodiscovereddatacenter := &vspk.Autodiscovereddatacenter{}
@@ -108,5 +107,5 @@ func dataSourceAutodiscovereddatacenterRead(d *schema.ResourceData, m interface{
 
     d.SetId(Autodiscovereddatacenter.Identifier())
     
-    return nil
+    return
 }

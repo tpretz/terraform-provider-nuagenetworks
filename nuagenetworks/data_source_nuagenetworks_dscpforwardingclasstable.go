@@ -53,9 +53,8 @@ func dataSourceDSCPForwardingClassTable() *schema.Resource {
 }
 
 
-func dataSourceDSCPForwardingClassTableRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceDSCPForwardingClassTableRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredDSCPForwardingClassTables := vspk.DSCPForwardingClassTablesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -74,7 +73,7 @@ func dataSourceDSCPForwardingClassTableRead(d *schema.ResourceData, m interface{
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     filteredDSCPForwardingClassTables, err = parent.DSCPForwardingClassTables(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     DSCPForwardingClassTable := &vspk.DSCPForwardingClassTable{}
@@ -103,5 +102,5 @@ func dataSourceDSCPForwardingClassTableRead(d *schema.ResourceData, m interface{
 
     d.SetId(DSCPForwardingClassTable.Identifier())
     
-    return nil
+    return
 }

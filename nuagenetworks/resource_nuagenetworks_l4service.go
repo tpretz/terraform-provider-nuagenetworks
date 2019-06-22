@@ -15,11 +15,6 @@ func resourceL4Service() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -68,7 +63,7 @@ func resourceL4Service() *schema.Resource {
             },
             "ports": &schema.Schema{
                 Type:     schema.TypeString,
-                Optional: true,
+                Required: true,
             },
             "protocol": &schema.Schema{
                 Type:     schema.TypeString,
@@ -91,6 +86,7 @@ func resourceL4ServiceCreate(d *schema.ResourceData, m interface{}) error {
     // Initialize L4Service object
     o := &vspk.L4Service{
         Name: d.Get("name").(string),
+        Ports: d.Get("ports").(string),
         Protocol: d.Get("protocol").(string),
     }
     if attr, ok := d.GetOk("icmp_code"); ok {
@@ -104,9 +100,6 @@ func resourceL4ServiceCreate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
-    }
-    if attr, ok := d.GetOk("ports"); ok {
-        o.Ports = attr.(string)
     }
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)
@@ -129,9 +122,6 @@ func resourceL4ServiceCreate(d *schema.ResourceData, m interface{}) error {
     
 
     d.SetId(o.Identifier())
-    if attr, ok := d.GetOk("l4servicegroups"); ok {
-        o.AssignL4ServiceGroups(attr.(vspk.L4ServiceGroupsList))
-    }
     return resourceL4ServiceRead(d, m)
 }
 
@@ -176,6 +166,7 @@ func resourceL4ServiceUpdate(d *schema.ResourceData, m interface{}) error {
     }
     
     o.Name = d.Get("name").(string)
+    o.Ports = d.Get("ports").(string)
     o.Protocol = d.Get("protocol").(string)
     
     if attr, ok := d.GetOk("icmp_code"); ok {
@@ -189,9 +180,6 @@ func resourceL4ServiceUpdate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
-    }
-    if attr, ok := d.GetOk("ports"); ok {
-        o.Ports = attr.(string)
     }
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)

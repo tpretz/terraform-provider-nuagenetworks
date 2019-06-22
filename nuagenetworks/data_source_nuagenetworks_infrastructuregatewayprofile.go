@@ -52,14 +52,6 @@ func dataSourceInfrastructureGatewayProfile() *schema.Resource {
                 Type:     schema.TypeBool,
                 Computed: true,
             },
-            "web_filter_download_port": &schema.Schema{
-                Type:     schema.TypeInt,
-                Computed: true,
-            },
-            "web_filter_query_port": &schema.Schema{
-                Type:     schema.TypeInt,
-                Computed: true,
-            },
             "remote_log_mode": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -94,10 +86,6 @@ func dataSourceInfrastructureGatewayProfile() *schema.Resource {
             },
             "controller_less_duration": &schema.Schema{
                 Type:     schema.TypeString,
-                Computed: true,
-            },
-            "controller_less_enabled": &schema.Schema{
-                Type:     schema.TypeBool,
                 Computed: true,
             },
             "controller_less_forwarding_mode": &schema.Schema{
@@ -145,9 +133,8 @@ func dataSourceInfrastructureGatewayProfile() *schema.Resource {
 }
 
 
-func dataSourceInfrastructureGatewayProfileRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceInfrastructureGatewayProfileRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredInfrastructureGatewayProfiles := vspk.InfrastructureGatewayProfilesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -166,7 +153,7 @@ func dataSourceInfrastructureGatewayProfileRead(d *schema.ResourceData, m interf
     parent := m.(*vspk.Me)
     filteredInfrastructureGatewayProfiles, err = parent.InfrastructureGatewayProfiles(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     InfrastructureGatewayProfile := &vspk.InfrastructureGatewayProfile{}
@@ -189,8 +176,6 @@ func dataSourceInfrastructureGatewayProfileRead(d *schema.ResourceData, m interf
     d.Set("datapath_sync_timeout", InfrastructureGatewayProfile.DatapathSyncTimeout)
     d.Set("dead_timer", InfrastructureGatewayProfile.DeadTimer)
     d.Set("dead_timer_enabled", InfrastructureGatewayProfile.DeadTimerEnabled)
-    d.Set("web_filter_download_port", InfrastructureGatewayProfile.WebFilterDownloadPort)
-    d.Set("web_filter_query_port", InfrastructureGatewayProfile.WebFilterQueryPort)
     d.Set("remote_log_mode", InfrastructureGatewayProfile.RemoteLogMode)
     d.Set("remote_log_server_address", InfrastructureGatewayProfile.RemoteLogServerAddress)
     d.Set("remote_log_server_port", InfrastructureGatewayProfile.RemoteLogServerPort)
@@ -200,7 +185,6 @@ func dataSourceInfrastructureGatewayProfileRead(d *schema.ResourceData, m interf
     d.Set("enterprise_id", InfrastructureGatewayProfile.EnterpriseID)
     d.Set("entity_scope", InfrastructureGatewayProfile.EntityScope)
     d.Set("controller_less_duration", InfrastructureGatewayProfile.ControllerLessDuration)
-    d.Set("controller_less_enabled", InfrastructureGatewayProfile.ControllerLessEnabled)
     d.Set("controller_less_forwarding_mode", InfrastructureGatewayProfile.ControllerLessForwardingMode)
     d.Set("controller_less_remote_duration", InfrastructureGatewayProfile.ControllerLessRemoteDuration)
     d.Set("force_immediate_system_sync", InfrastructureGatewayProfile.ForceImmediateSystemSync)
@@ -219,5 +203,5 @@ func dataSourceInfrastructureGatewayProfileRead(d *schema.ResourceData, m interf
 
     d.SetId(InfrastructureGatewayProfile.Identifier())
     
-    return nil
+    return
 }

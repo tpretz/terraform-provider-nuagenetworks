@@ -65,9 +65,8 @@ func dataSourcePublicNetworkMacro() *schema.Resource {
 }
 
 
-func dataSourcePublicNetworkMacroRead(d *schema.ResourceData, m interface{}) error {
+func dataSourcePublicNetworkMacroRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredPublicNetworkMacros := vspk.PublicNetworkMacrosList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -86,7 +85,7 @@ func dataSourcePublicNetworkMacroRead(d *schema.ResourceData, m interface{}) err
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     filteredPublicNetworkMacros, err = parent.PublicNetworkMacros(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     PublicNetworkMacro := &vspk.PublicNetworkMacro{}
@@ -118,5 +117,5 @@ func dataSourcePublicNetworkMacroRead(d *schema.ResourceData, m interface{}) err
 
     d.SetId(PublicNetworkMacro.Identifier())
     
-    return nil
+    return
 }

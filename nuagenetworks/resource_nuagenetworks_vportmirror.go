@@ -15,11 +15,6 @@ func resourceVPortMirror() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -35,6 +30,10 @@ func resourceVPortMirror() *schema.Resource {
                 Optional: true,
                 Computed: true,
             },
+            "vport_name": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+            },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -43,7 +42,6 @@ func resourceVPortMirror() *schema.Resource {
             "network_name": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                Computed: true,
             },
             "mirror_destination_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -52,17 +50,14 @@ func resourceVPortMirror() *schema.Resource {
             "mirror_destination_name": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                Computed: true,
             },
             "mirror_direction": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                Default: "BOTH",
             },
             "enterpise_name": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                Computed: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -72,22 +67,14 @@ func resourceVPortMirror() *schema.Resource {
             "domain_name": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                Computed: true,
             },
             "vport_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                Computed: true,
-            },
-            "vport_name": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
             },
             "attached_network_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -106,11 +93,32 @@ func resourceVPortMirrorCreate(d *schema.ResourceData, m interface{}) error {
     // Initialize VPortMirror object
     o := &vspk.VPortMirror{
     }
+    if attr, ok := d.GetOk("vport_name"); ok {
+        o.VPortName = attr.(string)
+    }
+    if attr, ok := d.GetOk("network_name"); ok {
+        o.NetworkName = attr.(string)
+    }
     if attr, ok := d.GetOk("mirror_destination_id"); ok {
         o.MirrorDestinationID = attr.(string)
     }
+    if attr, ok := d.GetOk("mirror_destination_name"); ok {
+        o.MirrorDestinationName = attr.(string)
+    }
     if attr, ok := d.GetOk("mirror_direction"); ok {
         o.MirrorDirection = attr.(string)
+    }
+    if attr, ok := d.GetOk("enterpise_name"); ok {
+        o.EnterpiseName = attr.(string)
+    }
+    if attr, ok := d.GetOk("domain_name"); ok {
+        o.DomainName = attr.(string)
+    }
+    if attr, ok := d.GetOk("vport_id"); ok {
+        o.VportId = attr.(string)
+    }
+    if attr, ok := d.GetOk("attached_network_type"); ok {
+        o.AttachedNetworkType = attr.(string)
     }
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)
@@ -138,6 +146,7 @@ func resourceVPortMirrorRead(d *schema.ResourceData, m interface{}) error {
         return nil
     }
 
+    d.Set("vport_name", o.VPortName)
     d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("network_name", o.NetworkName)
     d.Set("mirror_destination_id", o.MirrorDestinationID)
@@ -147,7 +156,6 @@ func resourceVPortMirrorRead(d *schema.ResourceData, m interface{}) error {
     d.Set("entity_scope", o.EntityScope)
     d.Set("domain_name", o.DomainName)
     d.Set("vport_id", o.VportId)
-    d.Set("vport_name", o.VportName)
     d.Set("attached_network_type", o.AttachedNetworkType)
     d.Set("external_id", o.ExternalID)
     
@@ -170,11 +178,32 @@ func resourceVPortMirrorUpdate(d *schema.ResourceData, m interface{}) error {
     }
     
     
+    if attr, ok := d.GetOk("vport_name"); ok {
+        o.VPortName = attr.(string)
+    }
+    if attr, ok := d.GetOk("network_name"); ok {
+        o.NetworkName = attr.(string)
+    }
     if attr, ok := d.GetOk("mirror_destination_id"); ok {
         o.MirrorDestinationID = attr.(string)
     }
+    if attr, ok := d.GetOk("mirror_destination_name"); ok {
+        o.MirrorDestinationName = attr.(string)
+    }
     if attr, ok := d.GetOk("mirror_direction"); ok {
         o.MirrorDirection = attr.(string)
+    }
+    if attr, ok := d.GetOk("enterpise_name"); ok {
+        o.EnterpiseName = attr.(string)
+    }
+    if attr, ok := d.GetOk("domain_name"); ok {
+        o.DomainName = attr.(string)
+    }
+    if attr, ok := d.GetOk("vport_id"); ok {
+        o.VportId = attr.(string)
+    }
+    if attr, ok := d.GetOk("attached_network_type"); ok {
+        o.AttachedNetworkType = attr.(string)
     }
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)

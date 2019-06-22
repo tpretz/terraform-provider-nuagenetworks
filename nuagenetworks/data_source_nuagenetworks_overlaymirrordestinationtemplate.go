@@ -40,10 +40,6 @@ func dataSourceOverlayMirrorDestinationTemplate() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "destination_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "end_point_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -69,9 +65,8 @@ func dataSourceOverlayMirrorDestinationTemplate() *schema.Resource {
 }
 
 
-func dataSourceOverlayMirrorDestinationTemplateRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceOverlayMirrorDestinationTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredOverlayMirrorDestinationTemplates := vspk.OverlayMirrorDestinationTemplatesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -90,7 +85,7 @@ func dataSourceOverlayMirrorDestinationTemplateRead(d *schema.ResourceData, m in
     parent := &vspk.L2DomainTemplate{ID: d.Get("parent_l2_domain_template").(string)}
     filteredOverlayMirrorDestinationTemplates, err = parent.OverlayMirrorDestinationTemplates(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     OverlayMirrorDestinationTemplate := &vspk.OverlayMirrorDestinationTemplate{}
@@ -110,7 +105,6 @@ func dataSourceOverlayMirrorDestinationTemplateRead(d *schema.ResourceData, m in
     d.Set("last_updated_by", OverlayMirrorDestinationTemplate.LastUpdatedBy)
     d.Set("redundancy_enabled", OverlayMirrorDestinationTemplate.RedundancyEnabled)
     d.Set("description", OverlayMirrorDestinationTemplate.Description)
-    d.Set("destination_type", OverlayMirrorDestinationTemplate.DestinationType)
     d.Set("end_point_type", OverlayMirrorDestinationTemplate.EndPointType)
     d.Set("entity_scope", OverlayMirrorDestinationTemplate.EntityScope)
     d.Set("trigger_type", OverlayMirrorDestinationTemplate.TriggerType)
@@ -123,5 +117,5 @@ func dataSourceOverlayMirrorDestinationTemplateRead(d *schema.ResourceData, m in
 
     d.SetId(OverlayMirrorDestinationTemplate.Identifier())
     
-    return nil
+    return
 }

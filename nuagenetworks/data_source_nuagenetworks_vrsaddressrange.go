@@ -24,10 +24,6 @@ func dataSourceVRSAddressRange() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "ip_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -78,9 +74,8 @@ func dataSourceVRSAddressRange() *schema.Resource {
 }
 
 
-func dataSourceVRSAddressRangeRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceVRSAddressRangeRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredVRSAddressRanges := vspk.VRSAddressRangesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -100,31 +95,31 @@ func dataSourceVRSAddressRangeRead(d *schema.ResourceData, m interface{}) error 
         parent := &vspk.VCenterHypervisor{ID: attr.(string)}
         filteredVRSAddressRanges, err = parent.VRSAddressRanges(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vcenter_data_center"); ok {
         parent := &vspk.VCenterDataCenter{ID: attr.(string)}
         filteredVRSAddressRanges, err = parent.VRSAddressRanges(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vcenter_cluster"); ok {
         parent := &vspk.VCenterCluster{ID: attr.(string)}
         filteredVRSAddressRanges, err = parent.VRSAddressRanges(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vcenter"); ok {
         parent := &vspk.VCenter{ID: attr.(string)}
         filteredVRSAddressRanges, err = parent.VRSAddressRanges(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vcenter_vrs_config"); ok {
         parent := &vspk.VCenterVRSConfig{ID: attr.(string)}
         filteredVRSAddressRanges, err = parent.VRSAddressRanges(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -141,7 +136,6 @@ func dataSourceVRSAddressRangeRead(d *schema.ResourceData, m interface{}) error 
     
     VRSAddressRange = filteredVRSAddressRanges[0]
 
-    d.Set("ip_type", VRSAddressRange.IPType)
     d.Set("last_updated_by", VRSAddressRange.LastUpdatedBy)
     d.Set("max_address", VRSAddressRange.MaxAddress)
     d.Set("min_address", VRSAddressRange.MinAddress)
@@ -155,5 +149,5 @@ func dataSourceVRSAddressRangeRead(d *schema.ResourceData, m interface{}) error 
 
     d.SetId(VRSAddressRange.Identifier())
     
-    return nil
+    return
 }

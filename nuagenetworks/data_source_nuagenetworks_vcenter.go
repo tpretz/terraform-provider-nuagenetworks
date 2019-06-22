@@ -24,10 +24,6 @@ func dataSourceVCenter() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "arp_reply": &schema.Schema{
-                Type:     schema.TypeBool,
-                Computed: true,
-            },
             "vrs_configuration_time_limit": &schema.Schema{
                 Type:     schema.TypeInt,
                 Computed: true,
@@ -477,9 +473,8 @@ func dataSourceVCenter() *schema.Resource {
 }
 
 
-func dataSourceVCenterRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceVCenterRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredVCenters := vspk.VCentersList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -498,7 +493,7 @@ func dataSourceVCenterRead(d *schema.ResourceData, m interface{}) error {
     parent := m.(*vspk.Me)
     filteredVCenters, err = parent.VCenters(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     VCenter := &vspk.VCenter{}
@@ -514,7 +509,6 @@ func dataSourceVCenterRead(d *schema.ResourceData, m interface{}) error {
     
     VCenter = filteredVCenters[0]
 
-    d.Set("arp_reply", VCenter.ARPReply)
     d.Set("vrs_configuration_time_limit", VCenter.VRSConfigurationTimeLimit)
     d.Set("v_require_nuage_metadata", VCenter.VRequireNuageMetadata)
     d.Set("name", VCenter.Name)
@@ -634,5 +628,5 @@ func dataSourceVCenterRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(VCenter.Identifier())
     
-    return nil
+    return
 }

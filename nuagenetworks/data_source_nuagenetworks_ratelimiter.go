@@ -65,9 +65,8 @@ func dataSourceRateLimiter() *schema.Resource {
 }
 
 
-func dataSourceRateLimiterRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceRateLimiterRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredRateLimiters := vspk.RateLimitersList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -87,13 +86,13 @@ func dataSourceRateLimiterRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredRateLimiters, err = parent.RateLimiters(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredRateLimiters, err = parent.RateLimiters(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -126,5 +125,5 @@ func dataSourceRateLimiterRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(RateLimiter.Identifier())
     
-    return nil
+    return
 }

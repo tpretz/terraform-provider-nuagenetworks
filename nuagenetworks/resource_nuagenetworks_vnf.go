@@ -15,11 +15,6 @@ func resourceVNF() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -71,16 +66,6 @@ func resourceVNF() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "last_user_action": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "memory_mb": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
@@ -93,6 +78,10 @@ func resourceVNF() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
+            "metadata_id": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+            },
             "allowed_actions": &schema.Schema{
                 Type:     schema.TypeList,
                 Optional: true,
@@ -102,11 +91,6 @@ func resourceVNF() *schema.Resource {
             "enterprise_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
             },
             "is_attached_to_descriptor": &schema.Schema{
                 Type:     schema.TypeBool,
@@ -127,10 +111,6 @@ func resourceVNF() *schema.Resource {
             },
             "storage_gb": &schema.Schema{
                 Type:     schema.TypeInt,
-                Optional: true,
-            },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
                 Optional: true,
             },
             "type": &schema.Schema{
@@ -183,6 +163,9 @@ func resourceVNFCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
     }
+    if attr, ok := d.GetOk("metadata_id"); ok {
+        o.MetadataID = attr.(string)
+    }
     if attr, ok := d.GetOk("enterprise_id"); ok {
         o.EnterpriseID = attr.(string)
     }
@@ -200,9 +183,6 @@ func resourceVNFCreate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("storage_gb"); ok {
         o.StorageGB = attr.(int)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     err := parent.CreateVNF(o)
@@ -236,20 +216,17 @@ func resourceVNFRead(d *schema.ResourceData, m interface{}) error {
     d.Set("name", o.Name)
     d.Set("task_state", o.TaskState)
     d.Set("last_known_error", o.LastKnownError)
-    d.Set("last_updated_by", o.LastUpdatedBy)
-    d.Set("last_user_action", o.LastUserAction)
     d.Set("memory_mb", o.MemoryMB)
     d.Set("vendor", o.Vendor)
     d.Set("description", o.Description)
+    d.Set("metadata_id", o.MetadataID)
     d.Set("allowed_actions", o.AllowedActions)
     d.Set("enterprise_id", o.EnterpriseID)
-    d.Set("entity_scope", o.EntityScope)
     d.Set("is_attached_to_descriptor", o.IsAttachedToDescriptor)
     d.Set("associated_vnf_metadata_id", o.AssociatedVNFMetadataID)
     d.Set("associated_vnf_threshold_policy_id", o.AssociatedVNFThresholdPolicyID)
     d.Set("status", o.Status)
     d.Set("storage_gb", o.StorageGB)
-    d.Set("external_id", o.ExternalID)
     d.Set("type", o.Type)
     
     d.Set("id", o.Identifier())
@@ -303,6 +280,9 @@ func resourceVNFUpdate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
     }
+    if attr, ok := d.GetOk("metadata_id"); ok {
+        o.MetadataID = attr.(string)
+    }
     if attr, ok := d.GetOk("enterprise_id"); ok {
         o.EnterpriseID = attr.(string)
     }
@@ -320,9 +300,6 @@ func resourceVNFUpdate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("storage_gb"); ok {
         o.StorageGB = attr.(int)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
 
     o.Save()

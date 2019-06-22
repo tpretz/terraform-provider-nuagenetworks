@@ -15,11 +15,6 @@ func resourceVCenterHypervisor() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -45,10 +40,6 @@ func resourceVCenterHypervisor() *schema.Resource {
             },
             "vcenter_user": &schema.Schema{
                 Type:     schema.TypeString,
-                Optional: true,
-            },
-            "arp_reply": &schema.Schema{
-                Type:     schema.TypeBool,
                 Optional: true,
             },
             "vrs_agent_moid": &schema.Schema{
@@ -278,11 +269,6 @@ func resourceVCenterHypervisor() *schema.Resource {
             "nfs_mount_path": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-            },
-            "agency_moid": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
             },
             "mgmt_dns1": &schema.Schema{
                 Type:     schema.TypeString,
@@ -650,9 +636,6 @@ func resourceVCenterHypervisorCreate(d *schema.ResourceData, m interface{}) erro
     }
     if attr, ok := d.GetOk("vcenter_user"); ok {
         o.VCenterUser = attr.(string)
-    }
-    if attr, ok := d.GetOk("arp_reply"); ok {
-        o.ARPReply = attr.(bool)
     }
     if attr, ok := d.GetOk("vrs_agent_moid"); ok {
         o.VRSAgentMOID = attr.(string)
@@ -1046,7 +1029,6 @@ func resourceVCenterHypervisorRead(d *schema.ResourceData, m interface{}) error 
     d.Set("vcenter_ip", o.VCenterIP)
     d.Set("vcenter_password", o.VCenterPassword)
     d.Set("vcenter_user", o.VCenterUser)
-    d.Set("arp_reply", o.ARPReply)
     d.Set("vrs_agent_moid", o.VRSAgentMOID)
     d.Set("vrs_agent_name", o.VRSAgentName)
     d.Set("vrs_configuration_time_limit", o.VRSConfigurationTimeLimit)
@@ -1101,7 +1083,6 @@ func resourceVCenterHypervisorRead(d *schema.ResourceData, m interface{}) error 
     d.Set("revertive_timer", o.RevertiveTimer)
     d.Set("nfs_log_server", o.NfsLogServer)
     d.Set("nfs_mount_path", o.NfsMountPath)
-    d.Set("agency_moid", o.AgencyMoid)
     d.Set("mgmt_dns1", o.MgmtDNS1)
     d.Set("mgmt_dns2", o.MgmtDNS2)
     d.Set("mgmt_gateway", o.MgmtGateway)
@@ -1220,9 +1201,6 @@ func resourceVCenterHypervisorUpdate(d *schema.ResourceData, m interface{}) erro
     }
     if attr, ok := d.GetOk("vcenter_user"); ok {
         o.VCenterUser = attr.(string)
-    }
-    if attr, ok := d.GetOk("arp_reply"); ok {
-        o.ARPReply = attr.(bool)
     }
     if attr, ok := d.GetOk("vrs_agent_moid"); ok {
         o.VRSAgentMOID = attr.(string)

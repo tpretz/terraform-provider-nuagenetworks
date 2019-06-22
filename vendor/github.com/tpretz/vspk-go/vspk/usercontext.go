@@ -45,15 +45,11 @@ type UserContext struct {
 	AARProbeStatsInterval  int    `json:"AARProbeStatsInterval,omitempty"`
 	VSSFeatureEnabled      bool   `json:"VSSFeatureEnabled"`
 	VSSStatsInterval       int    `json:"VSSStatsInterval,omitempty"`
-	PageSize               int    `json:"pageSize,omitempty"`
-	LastUpdatedBy          string `json:"lastUpdatedBy,omitempty"`
+	PageSize               string `json:"pageSize,omitempty"`
 	FlowCollectionEnabled  bool   `json:"flowCollectionEnabled"`
-	EntityScope            string `json:"entityScope,omitempty"`
 	GoogleMapsAPIKey       string `json:"googleMapsAPIKey,omitempty"`
 	StatisticsEnabled      bool   `json:"statisticsEnabled"`
-	StatsDatabaseProxy     string `json:"statsDatabaseProxy,omitempty"`
 	StatsTSDBServerAddress string `json:"statsTSDBServerAddress,omitempty"`
-	ExternalID             string `json:"externalID,omitempty"`
 }
 
 // NewUserContext returns a new *UserContext
@@ -101,32 +97,4 @@ func (o *UserContext) Save() *bambou.Error {
 func (o *UserContext) Delete() *bambou.Error {
 
 	return bambou.CurrentSession().DeleteEntity(o)
-}
-
-// Metadatas retrieves the list of child Metadatas of the UserContext
-func (o *UserContext) Metadatas(info *bambou.FetchingInfo) (MetadatasList, *bambou.Error) {
-
-	var list MetadatasList
-	err := bambou.CurrentSession().FetchChildren(o, MetadataIdentity, &list, info)
-	return list, err
-}
-
-// CreateMetadata creates a new child Metadata under the UserContext
-func (o *UserContext) CreateMetadata(child *Metadata) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
-}
-
-// GlobalMetadatas retrieves the list of child GlobalMetadatas of the UserContext
-func (o *UserContext) GlobalMetadatas(info *bambou.FetchingInfo) (GlobalMetadatasList, *bambou.Error) {
-
-	var list GlobalMetadatasList
-	err := bambou.CurrentSession().FetchChildren(o, GlobalMetadataIdentity, &list, info)
-	return list, err
-}
-
-// CreateGlobalMetadata creates a new child GlobalMetadata under the UserContext
-func (o *UserContext) CreateGlobalMetadata(child *GlobalMetadata) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
 }

@@ -15,11 +15,6 @@ func resourceCommand() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -69,16 +64,6 @@ func resourceCommand() *schema.Resource {
                 Optional: true,
                 Computed: true,
             },
-            "progress": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "assoc_entity_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "associated_param": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -113,7 +98,7 @@ func resourceCommand() *schema.Resource {
             },
             "parent_ns_gateway": &schema.Schema{
                 Type:     schema.TypeString,
-                Optional: true,
+                Required: true,
             },
         },
     }
@@ -138,19 +123,10 @@ func resourceCommandCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)
     }
-    if attr, ok := d.GetOk("parent_me"); ok {
-        parent := &vspk.Me{ID: attr.(string)}
-        err := parent.CreateCommand(o)
-        if err != nil {
-            return err
-        }
-    }
-    if attr, ok := d.GetOk("parent_ns_gateway"); ok {
-        parent := &vspk.NSGateway{ID: attr.(string)}
-        err := parent.CreateCommand(o)
-        if err != nil {
-            return err
-        }
+    parent := &vspk.NSGateway{ID: d.Get("parent_ns_gateway").(string)}
+    err := parent.CreateCommand(o)
+    if err != nil {
+        return err
     }
     
     
@@ -177,8 +153,6 @@ func resourceCommandRead(d *schema.ResourceData, m interface{}) error {
     d.Set("entity_scope", o.EntityScope)
     d.Set("command", o.Command)
     d.Set("command_information", o.CommandInformation)
-    d.Set("progress", o.Progress)
-    d.Set("assoc_entity_type", o.AssocEntityType)
     d.Set("associated_param", o.AssociatedParam)
     d.Set("associated_param_type", o.AssociatedParamType)
     d.Set("status", o.Status)

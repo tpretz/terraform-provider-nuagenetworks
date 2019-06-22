@@ -97,9 +97,8 @@ func dataSourceVRSMetrics() *schema.Resource {
 }
 
 
-func dataSourceVRSMetricsRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceVRSMetricsRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredVRSMetrics := vspk.VRSMetricsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -118,7 +117,7 @@ func dataSourceVRSMetricsRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.VCenterHypervisor{ID: d.Get("parent_vcenter_hypervisor").(string)}
     filteredVRSMetrics, err = parent.VRSMetrics(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     VRSMetrics := &vspk.VRSMetrics{}
@@ -158,5 +157,5 @@ func dataSourceVRSMetricsRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(VRSMetrics.Identifier())
     
-    return nil
+    return
 }

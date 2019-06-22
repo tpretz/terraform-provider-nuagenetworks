@@ -270,6 +270,12 @@ func (o *VLAN) Ltestatistics(info *bambou.FetchingInfo) (LtestatisticsList, *bam
 	return list, err
 }
 
+// CreateLtestatistics creates a new child Ltestatistics under the VLAN
+func (o *VLAN) CreateLtestatistics(child *Ltestatistics) *bambou.Error {
+
+	return bambou.CurrentSession().CreateChild(o, child)
+}
+
 // EventLogs retrieves the list of child EventLogs of the VLAN
 func (o *VLAN) EventLogs(info *bambou.FetchingInfo) (EventLogsList, *bambou.Error) {
 

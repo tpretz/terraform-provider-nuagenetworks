@@ -48,8 +48,6 @@ type InfrastructureGatewayProfile struct {
 	DatapathSyncTimeout          int    `json:"datapathSyncTimeout,omitempty"`
 	DeadTimer                    string `json:"deadTimer,omitempty"`
 	DeadTimerEnabled             bool   `json:"deadTimerEnabled"`
-	WebFilterDownloadPort        int    `json:"webFilterDownloadPort,omitempty"`
-	WebFilterQueryPort           int    `json:"webFilterQueryPort,omitempty"`
 	RemoteLogMode                string `json:"remoteLogMode,omitempty"`
 	RemoteLogServerAddress       string `json:"remoteLogServerAddress,omitempty"`
 	RemoteLogServerPort          int    `json:"remoteLogServerPort,omitempty"`
@@ -59,7 +57,6 @@ type InfrastructureGatewayProfile struct {
 	EnterpriseID                 string `json:"enterpriseID,omitempty"`
 	EntityScope                  string `json:"entityScope,omitempty"`
 	ControllerLessDuration       string `json:"controllerLessDuration,omitempty"`
-	ControllerLessEnabled        bool   `json:"controllerLessEnabled"`
 	ControllerLessForwardingMode string `json:"controllerLessForwardingMode,omitempty"`
 	ControllerLessRemoteDuration string `json:"controllerLessRemoteDuration,omitempty"`
 	ForceImmediateSystemSync     bool   `json:"forceImmediateSystemSync"`
@@ -78,8 +75,6 @@ func NewInfrastructureGatewayProfile() *InfrastructureGatewayProfile {
 	return &InfrastructureGatewayProfile{
 		DatapathSyncTimeout:          1000,
 		DeadTimerEnabled:             false,
-		WebFilterDownloadPort:        8080,
-		WebFilterQueryPort:           9090,
 		RemoteLogMode:                "DISABLED",
 		RemoteLogServerPort:          514,
 		FlowEvictionThreshold:        2500,
@@ -88,8 +83,8 @@ func NewInfrastructureGatewayProfile() *InfrastructureGatewayProfile {
 		ControllerLessRemoteDuration: "P3DT0H0M",
 		ForceImmediateSystemSync:     false,
 		OpenFlowAuditTimer:           180,
-		UpgradeAction:                "NONE",
-		UseTwoFactor:                 false,
+		UpgradeAction:                "DOWNLOAD_AND_UPGRADE_AT_WINDOW",
+		UseTwoFactor:                 true,
 		StatsCollectorPort:           39090,
 		SystemSyncScheduler:          "0 0 * * *",
 	}

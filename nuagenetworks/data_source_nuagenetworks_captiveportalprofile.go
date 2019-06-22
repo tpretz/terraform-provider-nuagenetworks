@@ -54,16 +54,21 @@ func dataSourceCaptivePortalProfile() *schema.Resource {
             },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,
-                Required: true,
+                Optional: true,
+                ConflictsWith: []string{"parent_ssid_connection"},
+            },
+            "parent_ssid_connection": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+                ConflictsWith: []string{"parent_enterprise"},
             },
         },
     }
 }
 
 
-func dataSourceCaptivePortalProfileRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceCaptivePortalProfileRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredCaptivePortalProfiles := vspk.CaptivePortalProfilesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -79,10 +84,18 @@ func dataSourceCaptivePortalProfileRead(d *schema.ResourceData, m interface{}) e
            
         }
     }
-    parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
-    filteredCaptivePortalProfiles, err = parent.CaptivePortalProfiles(fetchFilter)
-    if err != nil {
-        return err
+    if attr, ok := d.GetOk("parent_enterprise"); ok {
+        parent := &vspk.Enterprise{ID: attr.(string)}
+        filteredCaptivePortalProfiles, err = parent.CaptivePortalProfiles(fetchFilter)
+        if err != nil {
+            return
+        }
+    } else if attr, ok := d.GetOk("parent_ssid_connection"); ok {
+        parent := &vspk.SSIDConnection{ID: attr.(string)}
+        filteredCaptivePortalProfiles, err = parent.CaptivePortalProfiles(fetchFilter)
+        if err != nil {
+            return
+        }
     }
 
     CaptivePortalProfile := &vspk.CaptivePortalProfile{}
@@ -113,5 +126,5 @@ func dataSourceCaptivePortalProfileRead(d *schema.ResourceData, m interface{}) e
 
     d.SetId(CaptivePortalProfile.Identifier())
     
-    return nil
+    return
 }

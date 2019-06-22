@@ -15,11 +15,6 @@ func resourceZFBAutoAssignment() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -37,11 +32,11 @@ func resourceZFBAutoAssignment() *schema.Resource {
             },
             "zfb_match_attribute": &schema.Schema{
                 Type:     schema.TypeString,
-                Required: true,
+                Optional: true,
             },
             "zfb_match_attribute_values": &schema.Schema{
                 Type:     schema.TypeList,
-                Required: true,
+                Optional: true,
                 Elem:     &schema.Schema{Type: schema.TypeString},
             },
             "name": &schema.Schema{
@@ -68,7 +63,7 @@ func resourceZFBAutoAssignment() *schema.Resource {
             },
             "associated_enterprise_id": &schema.Schema{
                 Type:     schema.TypeString,
-                Required: true,
+                Optional: true,
             },
             "associated_enterprise_name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -86,14 +81,20 @@ func resourceZFBAutoAssignmentCreate(d *schema.ResourceData, m interface{}) erro
 
     // Initialize ZFBAutoAssignment object
     o := &vspk.ZFBAutoAssignment{
-        ZFBMatchAttribute: d.Get("zfb_match_attribute").(string),
-        ZFBMatchAttributeValues: d.Get("zfb_match_attribute_values").([]interface{}),
         Name: d.Get("name").(string),
         Priority: d.Get("priority").(int),
-        AssociatedEnterpriseID: d.Get("associated_enterprise_id").(string),
+    }
+    if attr, ok := d.GetOk("zfb_match_attribute"); ok {
+        o.ZFBMatchAttribute = attr.(string)
+    }
+    if attr, ok := d.GetOk("zfb_match_attribute_values"); ok {
+        o.ZFBMatchAttributeValues = attr.([]interface{})
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
+    }
+    if attr, ok := d.GetOk("associated_enterprise_id"); ok {
+        o.AssociatedEnterpriseID = attr.(string)
     }
     if attr, ok := d.GetOk("associated_enterprise_name"); ok {
         o.AssociatedEnterpriseName = attr.(string)
@@ -153,14 +154,20 @@ func resourceZFBAutoAssignmentUpdate(d *schema.ResourceData, m interface{}) erro
         return err
     }
     
-    o.ZFBMatchAttribute = d.Get("zfb_match_attribute").(string)
-    o.ZFBMatchAttributeValues = d.Get("zfb_match_attribute_values").([]interface{})
     o.Name = d.Get("name").(string)
     o.Priority = d.Get("priority").(int)
-    o.AssociatedEnterpriseID = d.Get("associated_enterprise_id").(string)
     
+    if attr, ok := d.GetOk("zfb_match_attribute"); ok {
+        o.ZFBMatchAttribute = attr.(string)
+    }
+    if attr, ok := d.GetOk("zfb_match_attribute_values"); ok {
+        o.ZFBMatchAttributeValues = attr.([]interface{})
+    }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
+    }
+    if attr, ok := d.GetOk("associated_enterprise_id"); ok {
+        o.AssociatedEnterpriseID = attr.(string)
     }
     if attr, ok := d.GetOk("associated_enterprise_name"); ok {
         o.AssociatedEnterpriseName = attr.(string)

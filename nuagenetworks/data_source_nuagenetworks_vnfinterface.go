@@ -56,10 +56,6 @@ func dataSourceVNFInterface() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "gateway": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -69,10 +65,6 @@ func dataSourceVNFInterface() *schema.Resource {
                 Computed: true,
             },
             "network_name": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -104,10 +96,6 @@ func dataSourceVNFInterface() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "type": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -127,9 +115,8 @@ func dataSourceVNFInterface() *schema.Resource {
 }
 
 
-func dataSourceVNFInterfaceRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceVNFInterfaceRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredVNFInterfaces := vspk.VNFInterfacesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -149,13 +136,13 @@ func dataSourceVNFInterfaceRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredVNFInterfaces, err = parent.VNFInterfaces(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vnf"); ok {
         parent := &vspk.VNF{ID: attr.(string)}
         filteredVNFInterfaces, err = parent.VNFInterfaces(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -180,11 +167,9 @@ func dataSourceVNFInterfaceRead(d *schema.ResourceData, m interface{}) error {
     d.Set("ipv6_address", VNFInterface.IPv6Address)
     d.Set("ipv6_gateway", VNFInterface.IPv6Gateway)
     d.Set("name", VNFInterface.Name)
-    d.Set("last_updated_by", VNFInterface.LastUpdatedBy)
     d.Set("gateway", VNFInterface.Gateway)
     d.Set("netmask", VNFInterface.Netmask)
     d.Set("network_name", VNFInterface.NetworkName)
-    d.Set("entity_scope", VNFInterface.EntityScope)
     d.Set("policy_decision_id", VNFInterface.PolicyDecisionID)
     d.Set("domain_id", VNFInterface.DomainID)
     d.Set("domain_name", VNFInterface.DomainName)
@@ -192,7 +177,6 @@ func dataSourceVNFInterfaceRead(d *schema.ResourceData, m interface{}) error {
     d.Set("zone_name", VNFInterface.ZoneName)
     d.Set("attached_network_id", VNFInterface.AttachedNetworkID)
     d.Set("attached_network_type", VNFInterface.AttachedNetworkType)
-    d.Set("external_id", VNFInterface.ExternalID)
     d.Set("type", VNFInterface.Type)
     
     d.Set("id", VNFInterface.Identifier())
@@ -202,5 +186,5 @@ func dataSourceVNFInterfaceRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(VNFInterface.Identifier())
     
-    return nil
+    return
 }

@@ -48,7 +48,19 @@ func dataSourceShuntLink() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "permitted_action": &schema.Schema{
+            "peer1_ip_address": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
+            "peer1_subnet": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
+            "peer2_ip_address": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
+            "peer2_subnet": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -73,9 +85,8 @@ func dataSourceShuntLink() *schema.Resource {
 }
 
 
-func dataSourceShuntLinkRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceShuntLinkRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredShuntLinks := vspk.ShuntLinksList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -94,7 +105,7 @@ func dataSourceShuntLinkRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.NSRedundantGatewayGroup{ID: d.Get("parent_ns_redundant_gateway_group").(string)}
     filteredShuntLinks, err = parent.ShuntLinks(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     ShuntLink := &vspk.ShuntLink{}
@@ -116,7 +127,10 @@ func dataSourceShuntLinkRead(d *schema.ResourceData, m interface{}) error {
     d.Set("last_updated_by", ShuntLink.LastUpdatedBy)
     d.Set("gateway_peer1_id", ShuntLink.GatewayPeer1ID)
     d.Set("gateway_peer2_id", ShuntLink.GatewayPeer2ID)
-    d.Set("permitted_action", ShuntLink.PermittedAction)
+    d.Set("peer1_ip_address", ShuntLink.Peer1IPAddress)
+    d.Set("peer1_subnet", ShuntLink.Peer1Subnet)
+    d.Set("peer2_ip_address", ShuntLink.Peer2IPAddress)
+    d.Set("peer2_subnet", ShuntLink.Peer2Subnet)
     d.Set("description", ShuntLink.Description)
     d.Set("entity_scope", ShuntLink.EntityScope)
     d.Set("external_id", ShuntLink.ExternalID)
@@ -128,5 +142,5 @@ func dataSourceShuntLinkRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(ShuntLink.Identifier())
     
-    return nil
+    return
 }

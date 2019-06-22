@@ -54,9 +54,8 @@ func dataSourceBulkStatistics() *schema.Resource {
 }
 
 
-func dataSourceBulkStatisticsRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceBulkStatisticsRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredBulkStatistics := vspk.BulkStatisticsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -75,7 +74,7 @@ func dataSourceBulkStatisticsRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.PATNATPool{ID: d.Get("parent_patnat_pool").(string)}
     filteredBulkStatistics, err = parent.BulkStatistics(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     BulkStatistics := &vspk.BulkStatistics{}
@@ -104,5 +103,5 @@ func dataSourceBulkStatisticsRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(BulkStatistics.Identifier())
     
-    return nil
+    return
 }

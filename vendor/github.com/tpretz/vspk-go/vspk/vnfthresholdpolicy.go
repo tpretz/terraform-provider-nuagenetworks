@@ -43,16 +43,12 @@ type VNFThresholdPolicy struct {
 	Owner            string `json:"owner,omitempty"`
 	CPUThreshold     int    `json:"CPUThreshold,omitempty"`
 	Name             string `json:"name,omitempty"`
-	LastUpdatedBy    string `json:"lastUpdatedBy,omitempty"`
 	Action           string `json:"action,omitempty"`
 	MemoryThreshold  int    `json:"memoryThreshold,omitempty"`
 	Description      string `json:"description,omitempty"`
 	MinOccurrence    int    `json:"minOccurrence,omitempty"`
-	EntityScope      string `json:"entityScope,omitempty"`
 	MonitInterval    int    `json:"monitInterval,omitempty"`
-	AssocEntityType  string `json:"assocEntityType,omitempty"`
 	StorageThreshold int    `json:"storageThreshold,omitempty"`
-	ExternalID       string `json:"externalID,omitempty"`
 }
 
 // NewVNFThresholdPolicy returns a new *VNFThresholdPolicy
@@ -102,32 +98,4 @@ func (o *VNFThresholdPolicy) Save() *bambou.Error {
 func (o *VNFThresholdPolicy) Delete() *bambou.Error {
 
 	return bambou.CurrentSession().DeleteEntity(o)
-}
-
-// Metadatas retrieves the list of child Metadatas of the VNFThresholdPolicy
-func (o *VNFThresholdPolicy) Metadatas(info *bambou.FetchingInfo) (MetadatasList, *bambou.Error) {
-
-	var list MetadatasList
-	err := bambou.CurrentSession().FetchChildren(o, MetadataIdentity, &list, info)
-	return list, err
-}
-
-// CreateMetadata creates a new child Metadata under the VNFThresholdPolicy
-func (o *VNFThresholdPolicy) CreateMetadata(child *Metadata) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
-}
-
-// GlobalMetadatas retrieves the list of child GlobalMetadatas of the VNFThresholdPolicy
-func (o *VNFThresholdPolicy) GlobalMetadatas(info *bambou.FetchingInfo) (GlobalMetadatasList, *bambou.Error) {
-
-	var list GlobalMetadatasList
-	err := bambou.CurrentSession().FetchChildren(o, GlobalMetadataIdentity, &list, info)
-	return list, err
-}
-
-// CreateGlobalMetadata creates a new child GlobalMetadata under the VNFThresholdPolicy
-func (o *VNFThresholdPolicy) CreateGlobalMetadata(child *GlobalMetadata) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
 }

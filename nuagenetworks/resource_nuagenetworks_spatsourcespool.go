@@ -15,11 +15,6 @@ func resourceSPATSourcesPool() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -44,24 +39,10 @@ func resourceSPATSourcesPool() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "address_list": &schema.Schema{
                 Type:     schema.TypeList,
                 Optional: true,
                 Elem:     &schema.Schema{Type: schema.TypeString},
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
             },
             "parent_domain": &schema.Schema{
                 Type:     schema.TypeString,
@@ -84,9 +65,6 @@ func resourceSPATSourcesPoolCreate(d *schema.ResourceData, m interface{}) error 
     }
     if attr, ok := d.GetOk("address_list"); ok {
         o.AddressList = attr.([]interface{})
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
     parent := &vspk.Domain{ID: d.Get("parent_domain").(string)}
     err := parent.CreateSPATSourcesPool(o)
@@ -113,10 +91,7 @@ func resourceSPATSourcesPoolRead(d *schema.ResourceData, m interface{}) error {
 
     d.Set("name", o.Name)
     d.Set("family", o.Family)
-    d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("address_list", o.AddressList)
-    d.Set("entity_scope", o.EntityScope)
-    d.Set("external_id", o.ExternalID)
     
     d.Set("id", o.Identifier())
     d.Set("parent_id", o.ParentID)
@@ -145,9 +120,6 @@ func resourceSPATSourcesPoolUpdate(d *schema.ResourceData, m interface{}) error 
     }
     if attr, ok := d.GetOk("address_list"); ok {
         o.AddressList = attr.([]interface{})
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
 
     o.Save()

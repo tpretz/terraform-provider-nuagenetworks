@@ -46,22 +46,15 @@ func dataSourceL4ServiceGroup() *schema.Resource {
             },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_l4_service"},
-            },
-            "parent_l4_service": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_enterprise"},
+                Required: true,
             },
         },
     }
 }
 
 
-func dataSourceL4ServiceGroupRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceL4ServiceGroupRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredL4ServiceGroups := vspk.L4ServiceGroupsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -77,18 +70,10 @@ func dataSourceL4ServiceGroupRead(d *schema.ResourceData, m interface{}) error {
            
         }
     }
-    if attr, ok := d.GetOk("parent_enterprise"); ok {
-        parent := &vspk.Enterprise{ID: attr.(string)}
-        filteredL4ServiceGroups, err = parent.L4ServiceGroups(fetchFilter)
-        if err != nil {
-            return err
-        }
-    } else if attr, ok := d.GetOk("parent_l4_service"); ok {
-        parent := &vspk.L4Service{ID: attr.(string)}
-        filteredL4ServiceGroups, err = parent.L4ServiceGroups(fetchFilter)
-        if err != nil {
-            return err
-        }
+    parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
+    filteredL4ServiceGroups, err = parent.L4ServiceGroups(fetchFilter)
+    if err != nil {
+        return
     }
 
     L4ServiceGroup := &vspk.L4ServiceGroup{}
@@ -117,5 +102,5 @@ func dataSourceL4ServiceGroupRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(L4ServiceGroup.Identifier())
     
-    return nil
+    return
 }

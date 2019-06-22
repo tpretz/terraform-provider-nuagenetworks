@@ -15,11 +15,6 @@ func resourceEnterpriseProfile() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -56,11 +51,6 @@ func resourceEnterpriseProfile() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
                 Computed: true,
-            },
-            "web_filter_enabled": &schema.Schema{
-                Type:     schema.TypeBool,
-                Optional: true,
-                Default: false,
             },
             "receive_multi_cast_list_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -134,9 +124,6 @@ func resourceEnterpriseProfileCreate(d *schema.ResourceData, m interface{}) erro
     if attr, ok := d.GetOk("vnf_management_enabled"); ok {
         o.VNFManagementEnabled = attr.(bool)
     }
-    if attr, ok := d.GetOk("web_filter_enabled"); ok {
-        o.WebFilterEnabled = attr.(bool)
-    }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
     }
@@ -192,7 +179,6 @@ func resourceEnterpriseProfileRead(d *schema.ResourceData, m interface{}) error 
     d.Set("vnf_management_enabled", o.VNFManagementEnabled)
     d.Set("name", o.Name)
     d.Set("last_updated_by", o.LastUpdatedBy)
-    d.Set("web_filter_enabled", o.WebFilterEnabled)
     d.Set("receive_multi_cast_list_id", o.ReceiveMultiCastListID)
     d.Set("send_multi_cast_list_id", o.SendMultiCastListID)
     d.Set("description", o.Description)
@@ -234,9 +220,6 @@ func resourceEnterpriseProfileUpdate(d *schema.ResourceData, m interface{}) erro
     }
     if attr, ok := d.GetOk("vnf_management_enabled"); ok {
         o.VNFManagementEnabled = attr.(bool)
-    }
-    if attr, ok := d.GetOk("web_filter_enabled"); ok {
-        o.WebFilterEnabled = attr.(bool)
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)

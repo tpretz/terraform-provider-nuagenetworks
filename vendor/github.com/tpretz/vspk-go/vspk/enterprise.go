@@ -48,7 +48,6 @@ type Enterprise struct {
 	VNFManagementEnabled                   bool          `json:"VNFManagementEnabled"`
 	Name                                   string        `json:"name,omitempty"`
 	LastUpdatedBy                          string        `json:"lastUpdatedBy,omitempty"`
-	WebFilterEnabled                       bool          `json:"webFilterEnabled"`
 	ReceiveMultiCastListID                 string        `json:"receiveMultiCastListID,omitempty"`
 	SendMultiCastListID                    string        `json:"sendMultiCastListID,omitempty"`
 	Description                            string        `json:"description,omitempty"`
@@ -59,7 +58,6 @@ type Enterprise struct {
 	AllowGatewayManagement                 bool          `json:"allowGatewayManagement"`
 	AllowTrustedForwardingClass            bool          `json:"allowTrustedForwardingClass"`
 	AllowedForwardingClasses               []interface{} `json:"allowedForwardingClasses,omitempty"`
-	AllowedForwardingMode                  string        `json:"allowedForwardingMode,omitempty"`
 	FloatingIPsQuota                       int           `json:"floatingIPsQuota,omitempty"`
 	FloatingIPsUsed                        int           `json:"floatingIPsUsed,omitempty"`
 	FlowCollectionEnabled                  string        `json:"flowCollectionEnabled,omitempty"`
@@ -68,7 +66,6 @@ type Enterprise struct {
 	EnterpriseProfileID                    string        `json:"enterpriseProfileID,omitempty"`
 	EntityScope                            string        `json:"entityScope,omitempty"`
 	LocalAS                                int           `json:"localAS,omitempty"`
-	UseGlobalMAC                           bool          `json:"useGlobalMAC"`
 	AssociatedEnterpriseSecurityID         string        `json:"associatedEnterpriseSecurityID,omitempty"`
 	AssociatedGroupKeyEncryptionProfileID  string        `json:"associatedGroupKeyEncryptionProfileID,omitempty"`
 	AssociatedKeyServerMonitorID           string        `json:"associatedKeyServerMonitorID,omitempty"`
@@ -83,12 +80,10 @@ func NewEnterprise() *Enterprise {
 
 	return &Enterprise{
 		VNFManagementEnabled:                   false,
-		WebFilterEnabled:                       false,
-		DictionaryVersion:                      2,
+		DictionaryVersion:                      1,
 		VirtualFirewallRulesEnabled:            false,
 		FlowCollectionEnabled:                  "DISABLED",
 		EnableApplicationPerformanceManagement: false,
-		UseGlobalMAC:                           false,
 	}
 }
 
@@ -262,14 +257,6 @@ func (o *Enterprise) CreateGateway(child *Gateway) *bambou.Error {
 	return bambou.CurrentSession().CreateChild(o, child)
 }
 
-// GatewaysLocations retrieves the list of child GatewaysLocations of the Enterprise
-func (o *Enterprise) GatewaysLocations(info *bambou.FetchingInfo) (GatewaysLocationsList, *bambou.Error) {
-
-	var list GatewaysLocationsList
-	err := bambou.CurrentSession().FetchChildren(o, GatewaysLocationIdentity, &list, info)
-	return list, err
-}
-
 // GatewayTemplates retrieves the list of child GatewayTemplates of the Enterprise
 func (o *Enterprise) GatewayTemplates(info *bambou.FetchingInfo) (GatewayTemplatesList, *bambou.Error) {
 
@@ -298,34 +285,6 @@ func (o *Enterprise) LDAPConfigurations(info *bambou.FetchingInfo) (LDAPConfigur
 	var list LDAPConfigurationsList
 	err := bambou.CurrentSession().FetchChildren(o, LDAPConfigurationIdentity, &list, info)
 	return list, err
-}
-
-// WebCategories retrieves the list of child WebCategories of the Enterprise
-func (o *Enterprise) WebCategories(info *bambou.FetchingInfo) (WebCategoriesList, *bambou.Error) {
-
-	var list WebCategoriesList
-	err := bambou.CurrentSession().FetchChildren(o, WebCategoryIdentity, &list, info)
-	return list, err
-}
-
-// CreateWebCategory creates a new child WebCategory under the Enterprise
-func (o *Enterprise) CreateWebCategory(child *WebCategory) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
-}
-
-// WebDomainNames retrieves the list of child WebDomainNames of the Enterprise
-func (o *Enterprise) WebDomainNames(info *bambou.FetchingInfo) (WebDomainNamesList, *bambou.Error) {
-
-	var list WebDomainNamesList
-	err := bambou.CurrentSession().FetchChildren(o, WebDomainNameIdentity, &list, info)
-	return list, err
-}
-
-// CreateWebDomainName creates a new child WebDomainName under the Enterprise
-func (o *Enterprise) CreateWebDomainName(child *WebDomainName) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
 }
 
 // RedundancyGroups retrieves the list of child RedundancyGroups of the Enterprise
@@ -910,14 +869,6 @@ func (o *Enterprise) CreateNSGateway(child *NSGateway) *bambou.Error {
 	return bambou.CurrentSession().CreateChild(o, child)
 }
 
-// NSGatewaysCounts retrieves the list of child NSGatewaysCounts of the Enterprise
-func (o *Enterprise) NSGatewaysCounts(info *bambou.FetchingInfo) (NSGatewaysCountsList, *bambou.Error) {
-
-	var list NSGatewaysCountsList
-	err := bambou.CurrentSession().FetchChildren(o, NSGatewaysCountIdentity, &list, info)
-	return list, err
-}
-
 // NSGatewaySummaries retrieves the list of child NSGatewaySummaries of the Enterprise
 func (o *Enterprise) NSGatewaySummaries(info *bambou.FetchingInfo) (NSGatewaySummariesList, *bambou.Error) {
 
@@ -1004,32 +955,4 @@ func (o *Enterprise) EventLogs(info *bambou.FetchingInfo) (EventLogsList, *bambo
 	var list EventLogsList
 	err := bambou.CurrentSession().FetchChildren(o, EventLogIdentity, &list, info)
 	return list, err
-}
-
-// OverlayManagementProfiles retrieves the list of child OverlayManagementProfiles of the Enterprise
-func (o *Enterprise) OverlayManagementProfiles(info *bambou.FetchingInfo) (OverlayManagementProfilesList, *bambou.Error) {
-
-	var list OverlayManagementProfilesList
-	err := bambou.CurrentSession().FetchChildren(o, OverlayManagementProfileIdentity, &list, info)
-	return list, err
-}
-
-// CreateOverlayManagementProfile creates a new child OverlayManagementProfile under the Enterprise
-func (o *Enterprise) CreateOverlayManagementProfile(child *OverlayManagementProfile) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
-}
-
-// SyslogDestinations retrieves the list of child SyslogDestinations of the Enterprise
-func (o *Enterprise) SyslogDestinations(info *bambou.FetchingInfo) (SyslogDestinationsList, *bambou.Error) {
-
-	var list SyslogDestinationsList
-	err := bambou.CurrentSession().FetchChildren(o, SyslogDestinationIdentity, &list, info)
-	return list, err
-}
-
-// CreateSyslogDestination creates a new child SyslogDestination under the Enterprise
-func (o *Enterprise) CreateSyslogDestination(child *SyslogDestination) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
 }

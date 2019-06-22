@@ -60,6 +60,10 @@ func dataSourceLocation() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
+            "associated_entity_id": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
             "associated_entity_name": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -91,9 +95,8 @@ func dataSourceLocation() *schema.Resource {
 }
 
 
-func dataSourceLocationRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceLocationRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredLocations := vspk.LocationsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -113,13 +116,13 @@ func dataSourceLocationRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.NSGateway{ID: attr.(string)}
         filteredLocations, err = parent.Locations(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_gateway"); ok {
         parent := &vspk.Gateway{ID: attr.(string)}
         filteredLocations, err = parent.Locations(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -145,6 +148,7 @@ func dataSourceLocationRead(d *schema.ResourceData, m interface{}) error {
     d.Set("locality", Location.Locality)
     d.Set("longitude", Location.Longitude)
     d.Set("country", Location.Country)
+    d.Set("associated_entity_id", Location.AssociatedEntityID)
     d.Set("associated_entity_name", Location.AssociatedEntityName)
     d.Set("associated_entity_type", Location.AssociatedEntityType)
     d.Set("state", Location.State)
@@ -157,5 +161,5 @@ func dataSourceLocationRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(Location.Identifier())
     
-    return nil
+    return
 }

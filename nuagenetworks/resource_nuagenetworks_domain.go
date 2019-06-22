@@ -15,11 +15,6 @@ func resourceDomain() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -38,7 +33,6 @@ func resourceDomain() *schema.Resource {
             "pat_enabled": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                Default: "DISABLED",
             },
             "ecmp_count": &schema.Schema{
                 Type:     schema.TypeInt,
@@ -72,11 +66,6 @@ func resourceDomain() *schema.Resource {
                 Optional: true,
                 Default: "DISABLED",
             },
-            "vxlanecmp_enabled": &schema.Schema{
-                Type:     schema.TypeBool,
-                Optional: true,
-                Default: false,
-            },
             "label_id": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
@@ -94,6 +83,14 @@ func resourceDomain() *schema.Resource {
                 Type:     schema.TypeInt,
                 Optional: true,
                 Computed: true,
+            },
+            "back_haul_subnet_ip_address": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+            },
+            "back_haul_subnet_mask": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
             },
             "back_haul_vnid": &schema.Schema{
                 Type:     schema.TypeInt,
@@ -141,11 +138,6 @@ func resourceDomain() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "aggregate_flows_enabled": &schema.Schema{
-                Type:     schema.TypeBool,
-                Optional: true,
-                Default: false,
-            },
             "dhcp_server_addresses": &schema.Schema{
                 Type:     schema.TypeList,
                 Optional: true,
@@ -167,17 +159,10 @@ func resourceDomain() *schema.Resource {
             "encryption": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                Default: "DISABLED",
             },
             "underlay_enabled": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                Default: "DISABLED",
-            },
-            "enterprise_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -256,10 +241,6 @@ func resourceDomain() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "external_label": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,
                 Required: true,
@@ -296,14 +277,17 @@ func resourceDomainCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("dpi"); ok {
         o.DPI = attr.(string)
     }
-    if attr, ok := d.GetOk("vxlanecmp_enabled"); ok {
-        o.VXLANECMPEnabled = attr.(bool)
-    }
     if attr, ok := d.GetOk("back_haul_route_distinguisher"); ok {
         o.BackHaulRouteDistinguisher = attr.(string)
     }
     if attr, ok := d.GetOk("back_haul_route_target"); ok {
         o.BackHaulRouteTarget = attr.(string)
+    }
+    if attr, ok := d.GetOk("back_haul_subnet_ip_address"); ok {
+        o.BackHaulSubnetIPAddress = attr.(string)
+    }
+    if attr, ok := d.GetOk("back_haul_subnet_mask"); ok {
+        o.BackHaulSubnetMask = attr.(string)
     }
     if attr, ok := d.GetOk("back_haul_vnid"); ok {
         o.BackHaulVNID = attr.(int)
@@ -325,9 +309,6 @@ func resourceDomainCreate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
-    }
-    if attr, ok := d.GetOk("aggregate_flows_enabled"); ok {
-        o.AggregateFlowsEnabled = attr.(bool)
     }
     if attr, ok := d.GetOk("dhcp_server_addresses"); ok {
         o.DhcpServerAddresses = attr.([]interface{})
@@ -401,9 +382,6 @@ func resourceDomainCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)
     }
-    if attr, ok := d.GetOk("external_label"); ok {
-        o.ExternalLabel = attr.(string)
-    }
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     err := parent.CreateDomain(o)
     if err != nil {
@@ -438,11 +416,12 @@ func resourceDomainRead(d *schema.ResourceData, m interface{}) error {
     d.Set("fip_ignore_default_route", o.FIPIgnoreDefaultRoute)
     d.Set("fip_underlay", o.FIPUnderlay)
     d.Set("dpi", o.DPI)
-    d.Set("vxlanecmp_enabled", o.VXLANECMPEnabled)
     d.Set("label_id", o.LabelID)
     d.Set("back_haul_route_distinguisher", o.BackHaulRouteDistinguisher)
     d.Set("back_haul_route_target", o.BackHaulRouteTarget)
     d.Set("back_haul_service_id", o.BackHaulServiceID)
+    d.Set("back_haul_subnet_ip_address", o.BackHaulSubnetIPAddress)
+    d.Set("back_haul_subnet_mask", o.BackHaulSubnetMask)
     d.Set("back_haul_vnid", o.BackHaulVNID)
     d.Set("maintenance_mode", o.MaintenanceMode)
     d.Set("name", o.Name)
@@ -454,14 +433,12 @@ func resourceDomainRead(d *schema.ResourceData, m interface{}) error {
     d.Set("permitted_action", o.PermittedAction)
     d.Set("service_id", o.ServiceID)
     d.Set("description", o.Description)
-    d.Set("aggregate_flows_enabled", o.AggregateFlowsEnabled)
     d.Set("dhcp_server_addresses", o.DhcpServerAddresses)
     d.Set("global_routing_enabled", o.GlobalRoutingEnabled)
     d.Set("flow_collection_enabled", o.FlowCollectionEnabled)
     d.Set("import_route_target", o.ImportRouteTarget)
     d.Set("encryption", o.Encryption)
     d.Set("underlay_enabled", o.UnderlayEnabled)
-    d.Set("enterprise_id", o.EnterpriseID)
     d.Set("entity_scope", o.EntityScope)
     d.Set("local_as", o.LocalAS)
     d.Set("policy_change_status", o.PolicyChangeStatus)
@@ -481,7 +458,6 @@ func resourceDomainRead(d *schema.ResourceData, m interface{}) error {
     d.Set("customer_id", o.CustomerID)
     d.Set("export_route_target", o.ExportRouteTarget)
     d.Set("external_id", o.ExternalID)
-    d.Set("external_label", o.ExternalLabel)
     
     d.Set("id", o.Identifier())
     d.Set("parent_id", o.ParentID)
@@ -525,14 +501,17 @@ func resourceDomainUpdate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("dpi"); ok {
         o.DPI = attr.(string)
     }
-    if attr, ok := d.GetOk("vxlanecmp_enabled"); ok {
-        o.VXLANECMPEnabled = attr.(bool)
-    }
     if attr, ok := d.GetOk("back_haul_route_distinguisher"); ok {
         o.BackHaulRouteDistinguisher = attr.(string)
     }
     if attr, ok := d.GetOk("back_haul_route_target"); ok {
         o.BackHaulRouteTarget = attr.(string)
+    }
+    if attr, ok := d.GetOk("back_haul_subnet_ip_address"); ok {
+        o.BackHaulSubnetIPAddress = attr.(string)
+    }
+    if attr, ok := d.GetOk("back_haul_subnet_mask"); ok {
+        o.BackHaulSubnetMask = attr.(string)
     }
     if attr, ok := d.GetOk("back_haul_vnid"); ok {
         o.BackHaulVNID = attr.(int)
@@ -554,9 +533,6 @@ func resourceDomainUpdate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
-    }
-    if attr, ok := d.GetOk("aggregate_flows_enabled"); ok {
-        o.AggregateFlowsEnabled = attr.(bool)
     }
     if attr, ok := d.GetOk("dhcp_server_addresses"); ok {
         o.DhcpServerAddresses = attr.([]interface{})
@@ -629,9 +605,6 @@ func resourceDomainUpdate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)
-    }
-    if attr, ok := d.GetOk("external_label"); ok {
-        o.ExternalLabel = attr.(string)
     }
 
     o.Save()

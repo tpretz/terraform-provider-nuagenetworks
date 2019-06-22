@@ -101,9 +101,8 @@ func dataSourceLDAPConfiguration() *schema.Resource {
 }
 
 
-func dataSourceLDAPConfigurationRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceLDAPConfigurationRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredLDAPConfigurations := vspk.LDAPConfigurationsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -122,7 +121,7 @@ func dataSourceLDAPConfigurationRead(d *schema.ResourceData, m interface{}) erro
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     filteredLDAPConfigurations, err = parent.LDAPConfigurations(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     LDAPConfiguration := &vspk.LDAPConfiguration{}
@@ -163,5 +162,5 @@ func dataSourceLDAPConfigurationRead(d *schema.ResourceData, m interface{}) erro
 
     d.SetId(LDAPConfiguration.Identifier())
     
-    return nil
+    return
 }

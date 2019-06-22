@@ -32,10 +32,6 @@ func dataSourceTier() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "description": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "tier_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -69,9 +65,8 @@ func dataSourceTier() *schema.Resource {
 }
 
 
-func dataSourceTierRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceTierRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredTiers := vspk.TiersList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -90,7 +85,7 @@ func dataSourceTierRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.PerformanceMonitor{ID: d.Get("parent_performance_monitor").(string)}
     filteredTiers, err = parent.Tiers(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     Tier := &vspk.Tier{}
@@ -108,7 +103,6 @@ func dataSourceTierRead(d *schema.ResourceData, m interface{}) error {
 
     d.Set("packet_count", Tier.PacketCount)
     d.Set("last_updated_by", Tier.LastUpdatedBy)
-    d.Set("description", Tier.Description)
     d.Set("tier_type", Tier.TierType)
     d.Set("timeout", Tier.Timeout)
     d.Set("entity_scope", Tier.EntityScope)
@@ -123,5 +117,5 @@ func dataSourceTierRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(Tier.Identifier())
     
-    return nil
+    return
 }

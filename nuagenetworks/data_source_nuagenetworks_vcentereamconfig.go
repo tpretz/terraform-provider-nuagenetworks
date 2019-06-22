@@ -65,9 +65,8 @@ func dataSourceVCenterEAMConfig() *schema.Resource {
 }
 
 
-func dataSourceVCenterEAMConfigRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceVCenterEAMConfigRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredVCenterEAMConfigs := vspk.VCenterEAMConfigsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -86,7 +85,7 @@ func dataSourceVCenterEAMConfigRead(d *schema.ResourceData, m interface{}) error
     parent := m.(*vspk.Me)
     filteredVCenterEAMConfigs, err = parent.VCenterEAMConfigs(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     VCenterEAMConfig := &vspk.VCenterEAMConfig{}
@@ -119,5 +118,5 @@ func dataSourceVCenterEAMConfigRead(d *schema.ResourceData, m interface{}) error
 
     d.SetId(VCenterEAMConfig.Identifier())
     
-    return nil
+    return
 }

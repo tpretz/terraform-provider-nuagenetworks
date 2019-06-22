@@ -73,10 +73,6 @@ func dataSourceDomainFIPAclTemplate() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "auto_generate_priority": &schema.Schema{
-                Type:     schema.TypeBool,
-                Computed: true,
-            },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -96,9 +92,8 @@ func dataSourceDomainFIPAclTemplate() *schema.Resource {
 }
 
 
-func dataSourceDomainFIPAclTemplateRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceDomainFIPAclTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredDomainFIPAclTemplates := vspk.DomainFIPAclTemplatesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -118,19 +113,19 @@ func dataSourceDomainFIPAclTemplateRead(d *schema.ResourceData, m interface{}) e
         parent := &vspk.Domain{ID: attr.(string)}
         filteredDomainFIPAclTemplates, err = parent.DomainFIPAclTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_domain_template"); ok {
         parent := &vspk.DomainTemplate{ID: attr.(string)}
         filteredDomainFIPAclTemplates, err = parent.DomainFIPAclTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredDomainFIPAclTemplates, err = parent.DomainFIPAclTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -159,7 +154,6 @@ func dataSourceDomainFIPAclTemplateRead(d *schema.ResourceData, m interface{}) e
     d.Set("priority", DomainFIPAclTemplate.Priority)
     d.Set("priority_type", DomainFIPAclTemplate.PriorityType)
     d.Set("associated_live_entity_id", DomainFIPAclTemplate.AssociatedLiveEntityID)
-    d.Set("auto_generate_priority", DomainFIPAclTemplate.AutoGeneratePriority)
     d.Set("external_id", DomainFIPAclTemplate.ExternalID)
     
     d.Set("id", DomainFIPAclTemplate.Identifier())
@@ -169,5 +163,5 @@ func dataSourceDomainFIPAclTemplateRead(d *schema.ResourceData, m interface{}) e
 
     d.SetId(DomainFIPAclTemplate.Identifier())
     
-    return nil
+    return
 }

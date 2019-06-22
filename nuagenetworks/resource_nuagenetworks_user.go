@@ -15,11 +15,6 @@ func resourceUser() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -95,7 +90,7 @@ func resourceUser() *schema.Resource {
             },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,
-                Optional: true,
+                Required: true,
             },
         },
     }
@@ -132,19 +127,10 @@ func resourceUserCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)
     }
-    if attr, ok := d.GetOk("parent_me"); ok {
-        parent := &vspk.Me{ID: attr.(string)}
-        err := parent.CreateUser(o)
-        if err != nil {
-            return err
-        }
-    }
-    if attr, ok := d.GetOk("parent_enterprise"); ok {
-        parent := &vspk.Enterprise{ID: attr.(string)}
-        err := parent.CreateUser(o)
-        if err != nil {
-            return err
-        }
+    parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
+    err := parent.CreateUser(o)
+    if err != nil {
+        return err
     }
     
     

@@ -28,19 +28,7 @@ func dataSourceTrunk() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "associated_vport_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -59,9 +47,8 @@ func dataSourceTrunk() *schema.Resource {
 }
 
 
-func dataSourceTrunkRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceTrunkRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredTrunks := vspk.TrunksList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -81,13 +68,13 @@ func dataSourceTrunkRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredTrunks, err = parent.Trunks(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredTrunks, err = parent.Trunks(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -105,10 +92,7 @@ func dataSourceTrunkRead(d *schema.ResourceData, m interface{}) error {
     Trunk = filteredTrunks[0]
 
     d.Set("name", Trunk.Name)
-    d.Set("last_updated_by", Trunk.LastUpdatedBy)
-    d.Set("entity_scope", Trunk.EntityScope)
     d.Set("associated_vport_id", Trunk.AssociatedVPortID)
-    d.Set("external_id", Trunk.ExternalID)
     
     d.Set("id", Trunk.Identifier())
     d.Set("parent_id", Trunk.ParentID)
@@ -117,5 +101,5 @@ func dataSourceTrunkRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(Trunk.Identifier())
     
-    return nil
+    return
 }

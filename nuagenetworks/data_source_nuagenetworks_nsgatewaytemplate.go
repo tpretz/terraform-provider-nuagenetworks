@@ -71,21 +71,14 @@ func dataSourceNSGatewayTemplate() *schema.Resource {
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_infrastructure_access_profile"},
-            },
-            "parent_infrastructure_access_profile": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_enterprise"},
             },
         },
     }
 }
 
 
-func dataSourceNSGatewayTemplateRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceNSGatewayTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredNSGatewayTemplates := vspk.NSGatewayTemplatesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -105,19 +98,13 @@ func dataSourceNSGatewayTemplateRead(d *schema.ResourceData, m interface{}) erro
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredNSGatewayTemplates, err = parent.NSGatewayTemplates(fetchFilter)
         if err != nil {
-            return err
-        }
-    } else if attr, ok := d.GetOk("parent_infrastructure_access_profile"); ok {
-        parent := &vspk.InfrastructureAccessProfile{ID: attr.(string)}
-        filteredNSGatewayTemplates, err = parent.NSGatewayTemplates(fetchFilter)
-        if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredNSGatewayTemplates, err = parent.NSGatewayTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -153,5 +140,5 @@ func dataSourceNSGatewayTemplateRead(d *schema.ResourceData, m interface{}) erro
 
     d.SetId(NSGatewayTemplate.Identifier())
     
-    return nil
+    return
 }

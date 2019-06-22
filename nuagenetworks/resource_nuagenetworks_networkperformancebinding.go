@@ -15,11 +15,6 @@ func resourceNetworkPerformanceBinding() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -35,20 +30,10 @@ func resourceNetworkPerformanceBinding() *schema.Resource {
                 Optional: true,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "read_only": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
                 Default: false,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
             },
             "priority": &schema.Schema{
                 Type:     schema.TypeInt,
@@ -56,10 +41,6 @@ func resourceNetworkPerformanceBinding() *schema.Resource {
                 Computed: true,
             },
             "associated_network_measurement_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
@@ -87,9 +68,6 @@ func resourceNetworkPerformanceBindingCreate(d *schema.ResourceData, m interface
     }
     if attr, ok := d.GetOk("associated_network_measurement_id"); ok {
         o.AssociatedNetworkMeasurementID = attr.(string)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
     if attr, ok := d.GetOk("parent_domain"); ok {
         parent := &vspk.Domain{ID: attr.(string)}
@@ -123,12 +101,9 @@ func resourceNetworkPerformanceBindingRead(d *schema.ResourceData, m interface{}
         return nil
     }
 
-    d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("read_only", o.ReadOnly)
-    d.Set("entity_scope", o.EntityScope)
     d.Set("priority", o.Priority)
     d.Set("associated_network_measurement_id", o.AssociatedNetworkMeasurementID)
-    d.Set("external_id", o.ExternalID)
     
     d.Set("id", o.Identifier())
     d.Set("parent_id", o.ParentID)
@@ -154,9 +129,6 @@ func resourceNetworkPerformanceBindingUpdate(d *schema.ResourceData, m interface
     }
     if attr, ok := d.GetOk("associated_network_measurement_id"); ok {
         o.AssociatedNetworkMeasurementID = attr.(string)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
 
     o.Save()

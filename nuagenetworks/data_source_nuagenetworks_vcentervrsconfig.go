@@ -24,19 +24,7 @@ func dataSourceVCenterVRSConfig() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "arp_reply": &schema.Schema{
-                Type:     schema.TypeBool,
-                Computed: true,
-            },
-            "vrs_configuration_time_limit": &schema.Schema{
-                Type:     schema.TypeInt,
-                Computed: true,
-            },
             "v_require_nuage_metadata": &schema.Schema{
-                Type:     schema.TypeBool,
-                Computed: true,
-            },
-            "manage_vrs_availability": &schema.Schema{
                 Type:     schema.TypeBool,
                 Computed: true,
             },
@@ -64,55 +52,7 @@ func dataSourceVCenterVRSConfig() *schema.Resource {
                 Type:     schema.TypeInt,
                 Computed: true,
             },
-            "secondary_data_uplink_dhcp_enabled": &schema.Schema{
-                Type:     schema.TypeBool,
-                Computed: true,
-            },
-            "secondary_data_uplink_enabled": &schema.Schema{
-                Type:     schema.TypeBool,
-                Computed: true,
-            },
-            "secondary_data_uplink_interface": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "secondary_data_uplink_mtu": &schema.Schema{
-                Type:     schema.TypeInt,
-                Computed: true,
-            },
-            "secondary_data_uplink_primary_controller": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "secondary_data_uplink_secondary_controller": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "secondary_data_uplink_underlay_id": &schema.Schema{
-                Type:     schema.TypeInt,
-                Computed: true,
-            },
-            "secondary_data_uplink_vdf_control_vlan": &schema.Schema{
-                Type:     schema.TypeInt,
-                Computed: true,
-            },
             "secondary_nuage_controller": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "memory_size_in_gb": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "remote_syslog_server_ip": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "remote_syslog_server_port": &schema.Schema{
-                Type:     schema.TypeInt,
-                Computed: true,
-            },
-            "remote_syslog_server_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -125,10 +65,6 @@ func dataSourceVCenterVRSConfig() *schema.Resource {
                 Computed: true,
             },
             "personality": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "destination_mirror_port": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -164,14 +100,6 @@ func dataSourceVCenterVRSConfig() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "revertive_controller_enabled": &schema.Schema{
-                Type:     schema.TypeBool,
-                Computed: true,
-            },
-            "revertive_timer": &schema.Schema{
-                Type:     schema.TypeInt,
-                Computed: true,
-            },
             "nfs_log_server": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -200,18 +128,6 @@ func dataSourceVCenterVRSConfig() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "mirror_network_portgroup": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "disable_gro_on_datapath": &schema.Schema{
-                Type:     schema.TypeBool,
-                Computed: true,
-            },
-            "disable_lro_on_datapath": &schema.Schema{
-                Type:     schema.TypeBool,
-                Computed: true,
-            },
             "site_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -232,16 +148,8 @@ func dataSourceVCenterVRSConfig() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "enable_vrs_resource_reservation": &schema.Schema{
-                Type:     schema.TypeBool,
-                Computed: true,
-            },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
-                Computed: true,
-            },
-            "configured_metrics_push_interval": &schema.Schema{
-                Type:     schema.TypeInt,
                 Computed: true,
             },
             "portgroup_metadata": &schema.Schema{
@@ -250,10 +158,6 @@ func dataSourceVCenterVRSConfig() *schema.Resource {
             },
             "nova_client_version": &schema.Schema{
                 Type:     schema.TypeInt,
-                Computed: true,
-            },
-            "nova_identity_url_version": &schema.Schema{
-                Type:     schema.TypeString,
                 Computed: true,
             },
             "nova_metadata_service_auth_url": &schema.Schema{
@@ -280,52 +184,8 @@ func dataSourceVCenterVRSConfig() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "nova_os_keystone_username": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "nova_project_domain_name": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "nova_project_name": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "nova_region_name": &schema.Schema{
                 Type:     schema.TypeString,
-                Computed: true,
-            },
-            "nova_user_domain_name": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "upgrade_package_password": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "upgrade_package_url": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "upgrade_package_username": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "upgrade_script_time_limit": &schema.Schema{
-                Type:     schema.TypeInt,
-                Computed: true,
-            },
-            "cpu_count": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "primary_data_uplink_underlay_id": &schema.Schema{
-                Type:     schema.TypeInt,
-                Computed: true,
-            },
-            "primary_data_uplink_vdf_control_vlan": &schema.Schema{
-                Type:     schema.TypeInt,
                 Computed: true,
             },
             "primary_nuage_controller": &schema.Schema{
@@ -404,18 +264,6 @@ func dataSourceVCenterVRSConfig() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "ovf_url": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "avrs_enabled": &schema.Schema{
-                Type:     schema.TypeBool,
-                Computed: true,
-            },
-            "avrs_profile": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -425,9 +273,8 @@ func dataSourceVCenterVRSConfig() *schema.Resource {
 }
 
 
-func dataSourceVCenterVRSConfigRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceVCenterVRSConfigRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredVCenterVRSConfigs := vspk.VCenterVRSConfigsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -446,7 +293,7 @@ func dataSourceVCenterVRSConfigRead(d *schema.ResourceData, m interface{}) error
     parent := m.(*vspk.Me)
     filteredVCenterVRSConfigs, err = parent.VCenterVRSConfigs(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     VCenterVRSConfig := &vspk.VCenterVRSConfig{}
@@ -462,33 +309,17 @@ func dataSourceVCenterVRSConfigRead(d *schema.ResourceData, m interface{}) error
     
     VCenterVRSConfig = filteredVCenterVRSConfigs[0]
 
-    d.Set("arp_reply", VCenterVRSConfig.ARPReply)
-    d.Set("vrs_configuration_time_limit", VCenterVRSConfig.VRSConfigurationTimeLimit)
     d.Set("v_require_nuage_metadata", VCenterVRSConfig.VRequireNuageMetadata)
-    d.Set("manage_vrs_availability", VCenterVRSConfig.ManageVRSAvailability)
     d.Set("last_updated_by", VCenterVRSConfig.LastUpdatedBy)
     d.Set("data_dns1", VCenterVRSConfig.DataDNS1)
     d.Set("data_dns2", VCenterVRSConfig.DataDNS2)
     d.Set("data_gateway", VCenterVRSConfig.DataGateway)
     d.Set("data_network_portgroup", VCenterVRSConfig.DataNetworkPortgroup)
     d.Set("datapath_sync_timeout", VCenterVRSConfig.DatapathSyncTimeout)
-    d.Set("secondary_data_uplink_dhcp_enabled", VCenterVRSConfig.SecondaryDataUplinkDHCPEnabled)
-    d.Set("secondary_data_uplink_enabled", VCenterVRSConfig.SecondaryDataUplinkEnabled)
-    d.Set("secondary_data_uplink_interface", VCenterVRSConfig.SecondaryDataUplinkInterface)
-    d.Set("secondary_data_uplink_mtu", VCenterVRSConfig.SecondaryDataUplinkMTU)
-    d.Set("secondary_data_uplink_primary_controller", VCenterVRSConfig.SecondaryDataUplinkPrimaryController)
-    d.Set("secondary_data_uplink_secondary_controller", VCenterVRSConfig.SecondaryDataUplinkSecondaryController)
-    d.Set("secondary_data_uplink_underlay_id", VCenterVRSConfig.SecondaryDataUplinkUnderlayID)
-    d.Set("secondary_data_uplink_vdf_control_vlan", VCenterVRSConfig.SecondaryDataUplinkVDFControlVLAN)
     d.Set("secondary_nuage_controller", VCenterVRSConfig.SecondaryNuageController)
-    d.Set("memory_size_in_gb", VCenterVRSConfig.MemorySizeInGB)
-    d.Set("remote_syslog_server_ip", VCenterVRSConfig.RemoteSyslogServerIP)
-    d.Set("remote_syslog_server_port", VCenterVRSConfig.RemoteSyslogServerPort)
-    d.Set("remote_syslog_server_type", VCenterVRSConfig.RemoteSyslogServerType)
     d.Set("generic_split_activation", VCenterVRSConfig.GenericSplitActivation)
     d.Set("separate_data_network", VCenterVRSConfig.SeparateDataNetwork)
     d.Set("personality", VCenterVRSConfig.Personality)
-    d.Set("destination_mirror_port", VCenterVRSConfig.DestinationMirrorPort)
     d.Set("metadata_server_ip", VCenterVRSConfig.MetadataServerIP)
     d.Set("metadata_server_listen_port", VCenterVRSConfig.MetadataServerListenPort)
     d.Set("metadata_server_port", VCenterVRSConfig.MetadataServerPort)
@@ -497,8 +328,6 @@ func dataSourceVCenterVRSConfigRead(d *schema.ResourceData, m interface{}) error
     d.Set("network_uplink_interface_gateway", VCenterVRSConfig.NetworkUplinkInterfaceGateway)
     d.Set("network_uplink_interface_ip", VCenterVRSConfig.NetworkUplinkInterfaceIp)
     d.Set("network_uplink_interface_netmask", VCenterVRSConfig.NetworkUplinkInterfaceNetmask)
-    d.Set("revertive_controller_enabled", VCenterVRSConfig.RevertiveControllerEnabled)
-    d.Set("revertive_timer", VCenterVRSConfig.RevertiveTimer)
     d.Set("nfs_log_server", VCenterVRSConfig.NfsLogServer)
     d.Set("nfs_mount_path", VCenterVRSConfig.NfsMountPath)
     d.Set("mgmt_dns1", VCenterVRSConfig.MgmtDNS1)
@@ -506,38 +335,21 @@ func dataSourceVCenterVRSConfigRead(d *schema.ResourceData, m interface{}) error
     d.Set("mgmt_gateway", VCenterVRSConfig.MgmtGateway)
     d.Set("mgmt_network_portgroup", VCenterVRSConfig.MgmtNetworkPortgroup)
     d.Set("dhcp_relay_server", VCenterVRSConfig.DhcpRelayServer)
-    d.Set("mirror_network_portgroup", VCenterVRSConfig.MirrorNetworkPortgroup)
-    d.Set("disable_gro_on_datapath", VCenterVRSConfig.DisableGROOnDatapath)
-    d.Set("disable_lro_on_datapath", VCenterVRSConfig.DisableLROOnDatapath)
     d.Set("site_id", VCenterVRSConfig.SiteId)
     d.Set("allow_data_dhcp", VCenterVRSConfig.AllowDataDHCP)
     d.Set("allow_mgmt_dhcp", VCenterVRSConfig.AllowMgmtDHCP)
     d.Set("flow_eviction_threshold", VCenterVRSConfig.FlowEvictionThreshold)
     d.Set("vm_network_portgroup", VCenterVRSConfig.VmNetworkPortgroup)
-    d.Set("enable_vrs_resource_reservation", VCenterVRSConfig.EnableVRSResourceReservation)
     d.Set("entity_scope", VCenterVRSConfig.EntityScope)
-    d.Set("configured_metrics_push_interval", VCenterVRSConfig.ConfiguredMetricsPushInterval)
     d.Set("portgroup_metadata", VCenterVRSConfig.PortgroupMetadata)
     d.Set("nova_client_version", VCenterVRSConfig.NovaClientVersion)
-    d.Set("nova_identity_url_version", VCenterVRSConfig.NovaIdentityURLVersion)
     d.Set("nova_metadata_service_auth_url", VCenterVRSConfig.NovaMetadataServiceAuthUrl)
     d.Set("nova_metadata_service_endpoint", VCenterVRSConfig.NovaMetadataServiceEndpoint)
     d.Set("nova_metadata_service_password", VCenterVRSConfig.NovaMetadataServicePassword)
     d.Set("nova_metadata_service_tenant", VCenterVRSConfig.NovaMetadataServiceTenant)
     d.Set("nova_metadata_service_username", VCenterVRSConfig.NovaMetadataServiceUsername)
     d.Set("nova_metadata_shared_secret", VCenterVRSConfig.NovaMetadataSharedSecret)
-    d.Set("nova_os_keystone_username", VCenterVRSConfig.NovaOSKeystoneUsername)
-    d.Set("nova_project_domain_name", VCenterVRSConfig.NovaProjectDomainName)
-    d.Set("nova_project_name", VCenterVRSConfig.NovaProjectName)
     d.Set("nova_region_name", VCenterVRSConfig.NovaRegionName)
-    d.Set("nova_user_domain_name", VCenterVRSConfig.NovaUserDomainName)
-    d.Set("upgrade_package_password", VCenterVRSConfig.UpgradePackagePassword)
-    d.Set("upgrade_package_url", VCenterVRSConfig.UpgradePackageURL)
-    d.Set("upgrade_package_username", VCenterVRSConfig.UpgradePackageUsername)
-    d.Set("upgrade_script_time_limit", VCenterVRSConfig.UpgradeScriptTimeLimit)
-    d.Set("cpu_count", VCenterVRSConfig.CpuCount)
-    d.Set("primary_data_uplink_underlay_id", VCenterVRSConfig.PrimaryDataUplinkUnderlayID)
-    d.Set("primary_data_uplink_vdf_control_vlan", VCenterVRSConfig.PrimaryDataUplinkVDFControlVLAN)
     d.Set("primary_nuage_controller", VCenterVRSConfig.PrimaryNuageController)
     d.Set("vrs_password", VCenterVRSConfig.VrsPassword)
     d.Set("vrs_user_name", VCenterVRSConfig.VrsUserName)
@@ -557,9 +369,6 @@ func dataSourceVCenterVRSConfigRead(d *schema.ResourceData, m interface{}) error
     d.Set("multicast_send_interface_netmask", VCenterVRSConfig.MulticastSendInterfaceNetmask)
     d.Set("multicast_source_portgroup", VCenterVRSConfig.MulticastSourcePortgroup)
     d.Set("customized_script_url", VCenterVRSConfig.CustomizedScriptURL)
-    d.Set("ovf_url", VCenterVRSConfig.OvfURL)
-    d.Set("avrs_enabled", VCenterVRSConfig.AvrsEnabled)
-    d.Set("avrs_profile", VCenterVRSConfig.AvrsProfile)
     d.Set("external_id", VCenterVRSConfig.ExternalID)
     
     d.Set("id", VCenterVRSConfig.Identifier())
@@ -569,5 +378,5 @@ func dataSourceVCenterVRSConfigRead(d *schema.ResourceData, m interface{}) error
 
     d.SetId(VCenterVRSConfig.Identifier())
     
-    return nil
+    return
 }

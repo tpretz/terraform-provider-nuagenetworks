@@ -297,8 +297,8 @@
 [[projects]]
   name = "github.com/tpretz/vspk-go"
   packages = ["vspk"]
-  revision = "8c6ce05e40847c109c3d93c4a214383b8c672e61"
-  version = "v5.4.1"
+  revision = "7e644669681352cc91cf2dc87ee9de6103038497"
+  version = "v5.3.2"
 
 [[projects]]
   name = "github.com/ulikunitz/xz"
@@ -387,6 +387,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "2911ce23ac849de76186e1f53659b65ce66c188b0bfbd7c81ae01811e9860aef"
+  inputs-digest = "0cde407eaed94c428e3b2b40854497bcbca1720e007dc52abd41633801b0c2f1"
   solver-name = "gps-cdcl"
   solver-version = 1

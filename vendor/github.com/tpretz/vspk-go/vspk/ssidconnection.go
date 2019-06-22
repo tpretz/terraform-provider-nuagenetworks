@@ -43,27 +43,18 @@ type SSIDConnection struct {
 	Owner                            string        `json:"owner,omitempty"`
 	Name                             string        `json:"name,omitempty"`
 	Passphrase                       string        `json:"passphrase,omitempty"`
-	LastUpdatedBy                    string        `json:"lastUpdatedBy,omitempty"`
-	GatewayID                        string        `json:"gatewayID,omitempty"`
-	Readonly                         bool          `json:"readonly"`
 	RedirectOption                   string        `json:"redirectOption,omitempty"`
 	RedirectURL                      string        `json:"redirectURL,omitempty"`
 	GenericConfig                    string        `json:"genericConfig,omitempty"`
-	PermittedAction                  string        `json:"permittedAction,omitempty"`
 	Description                      string        `json:"description,omitempty"`
-	Restricted                       bool          `json:"restricted"`
 	WhiteList                        []interface{} `json:"whiteList,omitempty"`
 	BlackList                        []interface{} `json:"blackList,omitempty"`
-	VlanID                           int           `json:"vlanID,omitempty"`
 	InterfaceName                    string        `json:"interfaceName,omitempty"`
-	EntityScope                      string        `json:"entityScope,omitempty"`
 	VportID                          string        `json:"vportID,omitempty"`
 	BroadcastSSID                    bool          `json:"broadcastSSID"`
 	AssociatedCaptivePortalProfileID string        `json:"associatedCaptivePortalProfileID,omitempty"`
 	AssociatedEgressQOSPolicyID      string        `json:"associatedEgressQOSPolicyID,omitempty"`
-	Status                           string        `json:"status,omitempty"`
 	AuthenticationMode               string        `json:"authenticationMode,omitempty"`
-	ExternalID                       string        `json:"externalID,omitempty"`
 }
 
 // NewSSIDConnection returns a new *SSIDConnection
@@ -72,7 +63,7 @@ func NewSSIDConnection() *SSIDConnection {
 	return &SSIDConnection{
 		RedirectOption:     "ORIGINAL_REQUEST",
 		BroadcastSSID:      true,
-		AuthenticationMode: "WPA2",
+		AuthenticationMode: "OPEN",
 	}
 }
 
@@ -112,18 +103,23 @@ func (o *SSIDConnection) Delete() *bambou.Error {
 	return bambou.CurrentSession().DeleteEntity(o)
 }
 
-// Metadatas retrieves the list of child Metadatas of the SSIDConnection
-func (o *SSIDConnection) Metadatas(info *bambou.FetchingInfo) (MetadatasList, *bambou.Error) {
+// CaptivePortalProfiles retrieves the list of child CaptivePortalProfiles of the SSIDConnection
+func (o *SSIDConnection) CaptivePortalProfiles(info *bambou.FetchingInfo) (CaptivePortalProfilesList, *bambou.Error) {
 
-	var list MetadatasList
-	err := bambou.CurrentSession().FetchChildren(o, MetadataIdentity, &list, info)
+	var list CaptivePortalProfilesList
+	err := bambou.CurrentSession().FetchChildren(o, CaptivePortalProfileIdentity, &list, info)
 	return list, err
 }
 
-// CreateMetadata creates a new child Metadata under the SSIDConnection
-func (o *SSIDConnection) CreateMetadata(child *Metadata) *bambou.Error {
+// AssignCaptivePortalProfiles assigns the list of CaptivePortalProfiles to the SSIDConnection
+func (o *SSIDConnection) AssignCaptivePortalProfiles(children CaptivePortalProfilesList) *bambou.Error {
 
-	return bambou.CurrentSession().CreateChild(o, child)
+	list := []bambou.Identifiable{}
+	for _, c := range children {
+		list = append(list, c)
+	}
+
+	return bambou.CurrentSession().AssignChildren(o, list, CaptivePortalProfileIdentity)
 }
 
 // Alarms retrieves the list of child Alarms of the SSIDConnection
@@ -132,20 +128,6 @@ func (o *SSIDConnection) Alarms(info *bambou.FetchingInfo) (AlarmsList, *bambou.
 	var list AlarmsList
 	err := bambou.CurrentSession().FetchChildren(o, AlarmIdentity, &list, info)
 	return list, err
-}
-
-// GlobalMetadatas retrieves the list of child GlobalMetadatas of the SSIDConnection
-func (o *SSIDConnection) GlobalMetadatas(info *bambou.FetchingInfo) (GlobalMetadatasList, *bambou.Error) {
-
-	var list GlobalMetadatasList
-	err := bambou.CurrentSession().FetchChildren(o, GlobalMetadataIdentity, &list, info)
-	return list, err
-}
-
-// CreateGlobalMetadata creates a new child GlobalMetadata under the SSIDConnection
-func (o *SSIDConnection) CreateGlobalMetadata(child *GlobalMetadata) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
 }
 
 // EventLogs retrieves the list of child EventLogs of the SSIDConnection

@@ -15,11 +15,6 @@ func resourceRoutingPolicy() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -56,16 +51,6 @@ func resourceRoutingPolicy() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "content_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Default: "DEFAULT",
-            },
-            "routing_protocol": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Default: "ROUTING",
-            },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -96,12 +81,6 @@ func resourceRoutingPolicyCreate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("policy_definition"); ok {
         o.PolicyDefinition = attr.(string)
-    }
-    if attr, ok := d.GetOk("content_type"); ok {
-        o.ContentType = attr.(string)
-    }
-    if attr, ok := d.GetOk("routing_protocol"); ok {
-        o.RoutingProtocol = attr.(string)
     }
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)
@@ -143,8 +122,6 @@ func resourceRoutingPolicyRead(d *schema.ResourceData, m interface{}) error {
     d.Set("description", o.Description)
     d.Set("entity_scope", o.EntityScope)
     d.Set("policy_definition", o.PolicyDefinition)
-    d.Set("content_type", o.ContentType)
-    d.Set("routing_protocol", o.RoutingProtocol)
     d.Set("external_id", o.ExternalID)
     
     d.Set("id", o.Identifier())
@@ -173,12 +150,6 @@ func resourceRoutingPolicyUpdate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("policy_definition"); ok {
         o.PolicyDefinition = attr.(string)
-    }
-    if attr, ok := d.GetOk("content_type"); ok {
-        o.ContentType = attr.(string)
-    }
-    if attr, ok := d.GetOk("routing_protocol"); ok {
-        o.RoutingProtocol = attr.(string)
     }
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)

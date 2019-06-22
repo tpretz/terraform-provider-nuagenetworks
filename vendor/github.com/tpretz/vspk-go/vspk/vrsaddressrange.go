@@ -41,7 +41,6 @@ type VRSAddressRange struct {
 	ParentID      string `json:"parentID,omitempty"`
 	ParentType    string `json:"parentType,omitempty"`
 	Owner         string `json:"owner,omitempty"`
-	IPType        string `json:"IPType,omitempty"`
 	LastUpdatedBy string `json:"lastUpdatedBy,omitempty"`
 	MaxAddress    string `json:"maxAddress,omitempty"`
 	MinAddress    string `json:"minAddress,omitempty"`

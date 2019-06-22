@@ -37,51 +37,47 @@ type GatewaysParent interface {
 
 // Gateway represents the model of a gateway
 type Gateway struct {
-	ID                                 string `json:"ID,omitempty"`
-	ParentID                           string `json:"parentID,omitempty"`
-	ParentType                         string `json:"parentType,omitempty"`
-	Owner                              string `json:"owner,omitempty"`
-	MACAddress                         string `json:"MACAddress,omitempty"`
-	ZFBMatchAttribute                  string `json:"ZFBMatchAttribute,omitempty"`
-	ZFBMatchValue                      string `json:"ZFBMatchValue,omitempty"`
-	BIOSReleaseDate                    string `json:"BIOSReleaseDate,omitempty"`
-	BIOSVersion                        string `json:"BIOSVersion,omitempty"`
-	CPUType                            string `json:"CPUType,omitempty"`
-	UUID                               string `json:"UUID,omitempty"`
-	Name                               string `json:"name,omitempty"`
-	Family                             string `json:"family,omitempty"`
-	ManagementID                       string `json:"managementID,omitempty"`
-	LastUpdatedBy                      string `json:"lastUpdatedBy,omitempty"`
-	DatapathID                         string `json:"datapathID,omitempty"`
-	Patches                            string `json:"patches,omitempty"`
-	GatewayConnected                   bool   `json:"gatewayConnected"`
-	GatewayModel                       string `json:"gatewayModel,omitempty"`
-	GatewayVersion                     string `json:"gatewayVersion,omitempty"`
-	RedundancyGroupID                  string `json:"redundancyGroupID,omitempty"`
-	Peer                               string `json:"peer,omitempty"`
-	TemplateID                         string `json:"templateID,omitempty"`
-	Pending                            bool   `json:"pending"`
-	Vendor                             string `json:"vendor,omitempty"`
-	SerialNumber                       string `json:"serialNumber,omitempty"`
-	PermittedAction                    string `json:"permittedAction,omitempty"`
-	Personality                        string `json:"personality,omitempty"`
-	Description                        string `json:"description,omitempty"`
-	Libraries                          string `json:"libraries,omitempty"`
-	EnterpriseID                       string `json:"enterpriseID,omitempty"`
-	EntityScope                        string `json:"entityScope,omitempty"`
-	LocationID                         string `json:"locationID,omitempty"`
-	BootstrapID                        string `json:"bootstrapID,omitempty"`
-	BootstrapStatus                    string `json:"bootstrapStatus,omitempty"`
-	ProductName                        string `json:"productName,omitempty"`
-	UseGatewayVLANVNID                 bool   `json:"useGatewayVLANVNID"`
-	AssociatedGatewaySecurityID        string `json:"associatedGatewaySecurityID,omitempty"`
-	AssociatedGatewaySecurityProfileID string `json:"associatedGatewaySecurityProfileID,omitempty"`
-	AssociatedNSGInfoID                string `json:"associatedNSGInfoID,omitempty"`
-	AssociatedNetconfProfileID         string `json:"associatedNetconfProfileID,omitempty"`
-	Vtep                               string `json:"vtep,omitempty"`
-	AutoDiscGatewayID                  string `json:"autoDiscGatewayID,omitempty"`
-	ExternalID                         string `json:"externalID,omitempty"`
-	SystemID                           string `json:"systemID,omitempty"`
+	ID                          string `json:"ID,omitempty"`
+	ParentID                    string `json:"parentID,omitempty"`
+	ParentType                  string `json:"parentType,omitempty"`
+	Owner                       string `json:"owner,omitempty"`
+	MACAddress                  string `json:"MACAddress,omitempty"`
+	ZFBMatchAttribute           string `json:"ZFBMatchAttribute,omitempty"`
+	ZFBMatchValue               string `json:"ZFBMatchValue,omitempty"`
+	BIOSReleaseDate             string `json:"BIOSReleaseDate,omitempty"`
+	BIOSVersion                 string `json:"BIOSVersion,omitempty"`
+	CPUType                     string `json:"CPUType,omitempty"`
+	UUID                        string `json:"UUID,omitempty"`
+	Name                        string `json:"name,omitempty"`
+	Family                      string `json:"family,omitempty"`
+	ManagementID                string `json:"managementID,omitempty"`
+	LastUpdatedBy               string `json:"lastUpdatedBy,omitempty"`
+	DatapathID                  string `json:"datapathID,omitempty"`
+	GatewayConnected            bool   `json:"gatewayConnected"`
+	GatewayVersion              string `json:"gatewayVersion,omitempty"`
+	RedundancyGroupID           string `json:"redundancyGroupID,omitempty"`
+	Peer                        string `json:"peer,omitempty"`
+	TemplateID                  string `json:"templateID,omitempty"`
+	Pending                     bool   `json:"pending"`
+	SerialNumber                string `json:"serialNumber,omitempty"`
+	PermittedAction             string `json:"permittedAction,omitempty"`
+	Personality                 string `json:"personality,omitempty"`
+	Description                 string `json:"description,omitempty"`
+	Libraries                   string `json:"libraries,omitempty"`
+	EnterpriseID                string `json:"enterpriseID,omitempty"`
+	EntityScope                 string `json:"entityScope,omitempty"`
+	LocationID                  string `json:"locationID,omitempty"`
+	BootstrapID                 string `json:"bootstrapID,omitempty"`
+	BootstrapStatus             string `json:"bootstrapStatus,omitempty"`
+	ProductName                 string `json:"productName,omitempty"`
+	UseGatewayVLANVNID          bool   `json:"useGatewayVLANVNID"`
+	AssociatedGatewaySecurityID string `json:"associatedGatewaySecurityID,omitempty"`
+	AssociatedNSGInfoID         string `json:"associatedNSGInfoID,omitempty"`
+	AssociatedNetconfProfileID  string `json:"associatedNetconfProfileID,omitempty"`
+	Vtep                        string `json:"vtep,omitempty"`
+	AutoDiscGatewayID           string `json:"autoDiscGatewayID,omitempty"`
+	ExternalID                  string `json:"externalID,omitempty"`
+	SystemID                    string `json:"systemID,omitempty"`
 }
 
 // NewGateway returns a new *Gateway
@@ -129,14 +125,6 @@ func (o *Gateway) Delete() *bambou.Error {
 	return bambou.CurrentSession().DeleteEntity(o)
 }
 
-// L2Domains retrieves the list of child L2Domains of the Gateway
-func (o *Gateway) L2Domains(info *bambou.FetchingInfo) (L2DomainsList, *bambou.Error) {
-
-	var list L2DomainsList
-	err := bambou.CurrentSession().FetchChildren(o, L2DomainIdentity, &list, info)
-	return list, err
-}
-
 // MACFilterProfiles retrieves the list of child MACFilterProfiles of the Gateway
 func (o *Gateway) MACFilterProfiles(info *bambou.FetchingInfo) (MACFilterProfilesList, *bambou.Error) {
 
@@ -161,31 +149,12 @@ func (o *Gateway) SAPIngressQoSProfiles(info *bambou.FetchingInfo) (SAPIngressQo
 	return list, err
 }
 
-// GatewaySecurities retrieves the list of child GatewaySecurities of the Gateway
-func (o *Gateway) GatewaySecurities(info *bambou.FetchingInfo) (GatewaySecuritiesList, *bambou.Error) {
-
-	var list GatewaySecuritiesList
-	err := bambou.CurrentSession().FetchChildren(o, GatewaySecurityIdentity, &list, info)
-	return list, err
-}
-
 // PATNATPools retrieves the list of child PATNATPools of the Gateway
 func (o *Gateway) PATNATPools(info *bambou.FetchingInfo) (PATNATPoolsList, *bambou.Error) {
 
 	var list PATNATPoolsList
 	err := bambou.CurrentSession().FetchChildren(o, PATNATPoolIdentity, &list, info)
 	return list, err
-}
-
-// AssignPATNATPools assigns the list of PATNATPools to the Gateway
-func (o *Gateway) AssignPATNATPools(children PATNATPoolsList) *bambou.Error {
-
-	list := []bambou.Identifiable{}
-	for _, c := range children {
-		list = append(list, c)
-	}
-
-	return bambou.CurrentSession().AssignChildren(o, list, PATNATPoolIdentity)
 }
 
 // DeploymentFailures retrieves the list of child DeploymentFailures of the Gateway
@@ -274,14 +243,6 @@ func (o *Gateway) CreateGlobalMetadata(child *GlobalMetadata) *bambou.Error {
 	return bambou.CurrentSession().CreateChild(o, child)
 }
 
-// InfrastructureConfigs retrieves the list of child InfrastructureConfigs of the Gateway
-func (o *Gateway) InfrastructureConfigs(info *bambou.FetchingInfo) (InfrastructureConfigsList, *bambou.Error) {
-
-	var list InfrastructureConfigsList
-	err := bambou.CurrentSession().FetchChildren(o, InfrastructureConfigIdentity, &list, info)
-	return list, err
-}
-
 // IngressProfiles retrieves the list of child IngressProfiles of the Gateway
 func (o *Gateway) IngressProfiles(info *bambou.FetchingInfo) (IngressProfilesList, *bambou.Error) {
 
@@ -332,26 +293,12 @@ func (o *Gateway) Locations(info *bambou.FetchingInfo) (LocationsList, *bambou.E
 	return list, err
 }
 
-// Domains retrieves the list of child Domains of the Gateway
-func (o *Gateway) Domains(info *bambou.FetchingInfo) (DomainsList, *bambou.Error) {
-
-	var list DomainsList
-	err := bambou.CurrentSession().FetchChildren(o, DomainIdentity, &list, info)
-	return list, err
-}
-
 // Bootstraps retrieves the list of child Bootstraps of the Gateway
 func (o *Gateway) Bootstraps(info *bambou.FetchingInfo) (BootstrapsList, *bambou.Error) {
 
 	var list BootstrapsList
 	err := bambou.CurrentSession().FetchChildren(o, BootstrapIdentity, &list, info)
 	return list, err
-}
-
-// CreateBootstrapActivation creates a new child BootstrapActivation under the Gateway
-func (o *Gateway) CreateBootstrapActivation(child *BootstrapActivation) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
 }
 
 // Ports retrieves the list of child Ports of the Gateway
@@ -384,11 +331,11 @@ func (o *Gateway) IPv6FilterProfiles(info *bambou.FetchingInfo) (IPv6FilterProfi
 	return list, err
 }
 
-// Subnets retrieves the list of child Subnets of the Gateway
-func (o *Gateway) Subnets(info *bambou.FetchingInfo) (SubnetsList, *bambou.Error) {
+// NSGInfos retrieves the list of child NSGInfos of the Gateway
+func (o *Gateway) NSGInfos(info *bambou.FetchingInfo) (NSGInfosList, *bambou.Error) {
 
-	var list SubnetsList
-	err := bambou.CurrentSession().FetchChildren(o, SubnetIdentity, &list, info)
+	var list NSGInfosList
+	err := bambou.CurrentSession().FetchChildren(o, NSGInfoIdentity, &list, info)
 	return list, err
 }
 

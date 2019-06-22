@@ -41,15 +41,9 @@ type NetconfSession struct {
 	ParentID              string `json:"parentID,omitempty"`
 	ParentType            string `json:"parentType,omitempty"`
 	Owner                 string `json:"owner,omitempty"`
-	LastUpdatedBy         string `json:"lastUpdatedBy,omitempty"`
-	GatewayModel          string `json:"gatewayModel,omitempty"`
-	GatewayVendor         string `json:"gatewayVendor,omitempty"`
-	GatewayVersion        string `json:"gatewayVersion,omitempty"`
-	EntityScope           string `json:"entityScope,omitempty"`
 	AssociatedGatewayID   string `json:"associatedGatewayID,omitempty"`
 	AssociatedGatewayName string `json:"associatedGatewayName,omitempty"`
 	Status                string `json:"status,omitempty"`
-	ExternalID            string `json:"externalID,omitempty"`
 }
 
 // NewNetconfSession returns a new *NetconfSession
@@ -92,32 +86,4 @@ func (o *NetconfSession) Save() *bambou.Error {
 func (o *NetconfSession) Delete() *bambou.Error {
 
 	return bambou.CurrentSession().DeleteEntity(o)
-}
-
-// Metadatas retrieves the list of child Metadatas of the NetconfSession
-func (o *NetconfSession) Metadatas(info *bambou.FetchingInfo) (MetadatasList, *bambou.Error) {
-
-	var list MetadatasList
-	err := bambou.CurrentSession().FetchChildren(o, MetadataIdentity, &list, info)
-	return list, err
-}
-
-// CreateMetadata creates a new child Metadata under the NetconfSession
-func (o *NetconfSession) CreateMetadata(child *Metadata) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
-}
-
-// GlobalMetadatas retrieves the list of child GlobalMetadatas of the NetconfSession
-func (o *NetconfSession) GlobalMetadatas(info *bambou.FetchingInfo) (GlobalMetadatasList, *bambou.Error) {
-
-	var list GlobalMetadatasList
-	err := bambou.CurrentSession().FetchChildren(o, GlobalMetadataIdentity, &list, info)
-	return list, err
-}
-
-// CreateGlobalMetadata creates a new child GlobalMetadata under the NetconfSession
-func (o *NetconfSession) CreateGlobalMetadata(child *GlobalMetadata) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
 }

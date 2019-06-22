@@ -71,9 +71,8 @@ func dataSourcePolicyGroupTemplate() *schema.Resource {
 }
 
 
-func dataSourcePolicyGroupTemplateRead(d *schema.ResourceData, m interface{}) error {
+func dataSourcePolicyGroupTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredPolicyGroupTemplates := vspk.PolicyGroupTemplatesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -93,13 +92,13 @@ func dataSourcePolicyGroupTemplateRead(d *schema.ResourceData, m interface{}) er
         parent := &vspk.L2DomainTemplate{ID: attr.(string)}
         filteredPolicyGroupTemplates, err = parent.PolicyGroupTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_domain_template"); ok {
         parent := &vspk.DomainTemplate{ID: attr.(string)}
         filteredPolicyGroupTemplates, err = parent.PolicyGroupTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -132,5 +131,5 @@ func dataSourcePolicyGroupTemplateRead(d *schema.ResourceData, m interface{}) er
 
     d.SetId(PolicyGroupTemplate.Identifier())
     
-    return nil
+    return
 }

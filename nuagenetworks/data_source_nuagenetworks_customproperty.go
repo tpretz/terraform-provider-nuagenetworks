@@ -24,23 +24,11 @@ func dataSourceCustomProperty() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "attribute_name": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
             "attribute_value": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -53,9 +41,8 @@ func dataSourceCustomProperty() *schema.Resource {
 }
 
 
-func dataSourceCustomPropertyRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceCustomPropertyRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredCustomProperties := vspk.CustomPropertiesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -74,7 +61,7 @@ func dataSourceCustomPropertyRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.UplinkConnection{ID: d.Get("parent_uplink_connection").(string)}
     filteredCustomProperties, err = parent.CustomProperties(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     CustomProperty := &vspk.CustomProperty{}
@@ -90,11 +77,8 @@ func dataSourceCustomPropertyRead(d *schema.ResourceData, m interface{}) error {
     
     CustomProperty = filteredCustomProperties[0]
 
-    d.Set("last_updated_by", CustomProperty.LastUpdatedBy)
-    d.Set("entity_scope", CustomProperty.EntityScope)
     d.Set("attribute_name", CustomProperty.AttributeName)
     d.Set("attribute_value", CustomProperty.AttributeValue)
-    d.Set("external_id", CustomProperty.ExternalID)
     
     d.Set("id", CustomProperty.Identifier())
     d.Set("parent_id", CustomProperty.ParentID)
@@ -103,5 +87,5 @@ func dataSourceCustomPropertyRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(CustomProperty.Identifier())
     
-    return nil
+    return
 }

@@ -15,11 +15,6 @@ func resourceMultiCastRange() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -34,10 +29,6 @@ func resourceMultiCastRange() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
                 Computed: true,
-            },
-            "ip_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
             },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
@@ -76,9 +67,6 @@ func resourceMultiCastRangeCreate(d *schema.ResourceData, m interface{}) error {
         MaxAddress: d.Get("max_address").(string),
         MinAddress: d.Get("min_address").(string),
     }
-    if attr, ok := d.GetOk("ip_type"); ok {
-        o.IPType = attr.(string)
-    }
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)
     }
@@ -105,7 +93,6 @@ func resourceMultiCastRangeRead(d *schema.ResourceData, m interface{}) error {
         return nil
     }
 
-    d.Set("ip_type", o.IPType)
     d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("max_address", o.MaxAddress)
     d.Set("min_address", o.MinAddress)
@@ -133,9 +120,6 @@ func resourceMultiCastRangeUpdate(d *schema.ResourceData, m interface{}) error {
     o.MaxAddress = d.Get("max_address").(string)
     o.MinAddress = d.Get("min_address").(string)
     
-    if attr, ok := d.GetOk("ip_type"); ok {
-        o.IPType = attr.(string)
-    }
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)
     }

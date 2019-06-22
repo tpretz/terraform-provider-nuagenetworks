@@ -24,10 +24,6 @@ func dataSourceNextHop() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "ip_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -48,10 +44,6 @@ func dataSourceNextHop() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "parent_link": &schema.Schema{
                 Type:     schema.TypeString,
                 Required: true,
@@ -61,9 +53,8 @@ func dataSourceNextHop() *schema.Resource {
 }
 
 
-func dataSourceNextHopRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceNextHopRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredNextHops := vspk.NextHopsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -82,7 +73,7 @@ func dataSourceNextHopRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.Link{ID: d.Get("parent_link").(string)}
     filteredNextHops, err = parent.NextHops(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     NextHop := &vspk.NextHop{}
@@ -98,13 +89,11 @@ func dataSourceNextHopRead(d *schema.ResourceData, m interface{}) error {
     
     NextHop = filteredNextHops[0]
 
-    d.Set("ip_type", NextHop.IPType)
     d.Set("last_updated_by", NextHop.LastUpdatedBy)
     d.Set("entity_scope", NextHop.EntityScope)
     d.Set("route_distinguisher", NextHop.RouteDistinguisher)
     d.Set("ip", NextHop.Ip)
     d.Set("external_id", NextHop.ExternalID)
-    d.Set("type", NextHop.Type)
     
     d.Set("id", NextHop.Identifier())
     d.Set("parent_id", NextHop.ParentID)
@@ -113,5 +102,5 @@ func dataSourceNextHopRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(NextHop.Identifier())
     
-    return nil
+    return
 }

@@ -44,11 +44,6 @@ func dataSourceVSC() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "addresses": &schema.Schema{
-                Type:     schema.TypeList,
-                Computed: true,
-                Elem:     &schema.Schema{Type: schema.TypeString},
-            },
             "peak_cpuusage": &schema.Schema{
                 Type:     schema.TypeFloat,
                 Computed: true,
@@ -129,9 +124,8 @@ func dataSourceVSC() *schema.Resource {
 }
 
 
-func dataSourceVSCRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceVSCRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredVSCs := vspk.VSCsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -150,7 +144,7 @@ func dataSourceVSCRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.VSP{ID: d.Get("parent_vsp").(string)}
     filteredVSCs, err = parent.VSCs(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     VSC := &vspk.VSC{}
@@ -171,7 +165,6 @@ func dataSourceVSCRead(d *schema.ResourceData, m interface{}) error {
     d.Set("last_state_change", VSC.LastStateChange)
     d.Set("last_updated_by", VSC.LastUpdatedBy)
     d.Set("address", VSC.Address)
-    d.Set("addresses", VSC.Addresses)
     d.Set("peak_cpuusage", VSC.PeakCPUUsage)
     d.Set("peak_memory_usage", VSC.PeakMemoryUsage)
     d.Set("description", VSC.Description)
@@ -197,5 +190,5 @@ func dataSourceVSCRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(VSC.Identifier())
     
-    return nil
+    return
 }

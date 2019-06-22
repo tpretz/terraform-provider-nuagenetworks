@@ -24,10 +24,6 @@ func dataSourceVNFDomainMapping() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "segmentation_id": &schema.Schema{
                 Type:     schema.TypeInt,
                 Computed: true,
@@ -36,19 +32,11 @@ func dataSourceVNFDomainMapping() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "associated_ns_gateway_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
             "associated_ns_gateway_name": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -61,9 +49,8 @@ func dataSourceVNFDomainMapping() *schema.Resource {
 }
 
 
-func dataSourceVNFDomainMappingRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceVNFDomainMappingRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredVNFDomainMappings := vspk.VNFDomainMappingsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -82,7 +69,7 @@ func dataSourceVNFDomainMappingRead(d *schema.ResourceData, m interface{}) error
     parent := &vspk.Domain{ID: d.Get("parent_domain").(string)}
     filteredVNFDomainMappings, err = parent.VNFDomainMappings(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     VNFDomainMapping := &vspk.VNFDomainMapping{}
@@ -98,13 +85,10 @@ func dataSourceVNFDomainMappingRead(d *schema.ResourceData, m interface{}) error
     
     VNFDomainMapping = filteredVNFDomainMappings[0]
 
-    d.Set("last_updated_by", VNFDomainMapping.LastUpdatedBy)
     d.Set("segmentation_id", VNFDomainMapping.SegmentationID)
     d.Set("segmentation_type", VNFDomainMapping.SegmentationType)
-    d.Set("entity_scope", VNFDomainMapping.EntityScope)
     d.Set("associated_ns_gateway_id", VNFDomainMapping.AssociatedNSGatewayID)
     d.Set("associated_ns_gateway_name", VNFDomainMapping.AssociatedNSGatewayName)
-    d.Set("external_id", VNFDomainMapping.ExternalID)
     
     d.Set("id", VNFDomainMapping.Identifier())
     d.Set("parent_id", VNFDomainMapping.ParentID)
@@ -113,5 +97,5 @@ func dataSourceVNFDomainMappingRead(d *schema.ResourceData, m interface{}) error
 
     d.SetId(VNFDomainMapping.Identifier())
     
-    return nil
+    return
 }

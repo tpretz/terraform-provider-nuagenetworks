@@ -24,10 +24,6 @@ func dataSourceAutoDiscoverHypervisorFromCluster() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "managed_object_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -68,9 +64,8 @@ func dataSourceAutoDiscoverHypervisorFromCluster() *schema.Resource {
 }
 
 
-func dataSourceAutoDiscoverHypervisorFromClusterRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceAutoDiscoverHypervisorFromClusterRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredAutoDiscoverHypervisorFromClusters := vspk.AutoDiscoverHypervisorFromClustersList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -90,13 +85,13 @@ func dataSourceAutoDiscoverHypervisorFromClusterRead(d *schema.ResourceData, m i
         parent := &vspk.VCenterDataCenter{ID: attr.(string)}
         filteredAutoDiscoverHypervisorFromClusters, err = parent.AutoDiscoverHypervisorFromClusters(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vcenter_cluster"); ok {
         parent := &vspk.VCenterCluster{ID: attr.(string)}
         filteredAutoDiscoverHypervisorFromClusters, err = parent.AutoDiscoverHypervisorFromClusters(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -113,7 +108,6 @@ func dataSourceAutoDiscoverHypervisorFromClusterRead(d *schema.ResourceData, m i
     
     AutoDiscoverHypervisorFromCluster = filteredAutoDiscoverHypervisorFromClusters[0]
 
-    d.Set("managed_object_id", AutoDiscoverHypervisorFromCluster.ManagedObjectID)
     d.Set("last_updated_by", AutoDiscoverHypervisorFromCluster.LastUpdatedBy)
     d.Set("network_list", AutoDiscoverHypervisorFromCluster.NetworkList)
     d.Set("entity_scope", AutoDiscoverHypervisorFromCluster.EntityScope)
@@ -128,5 +122,5 @@ func dataSourceAutoDiscoverHypervisorFromClusterRead(d *schema.ResourceData, m i
 
     d.SetId(AutoDiscoverHypervisorFromCluster.Identifier())
     
-    return nil
+    return
 }

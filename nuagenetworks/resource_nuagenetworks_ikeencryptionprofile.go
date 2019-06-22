@@ -15,11 +15,6 @@ func resourceIKEEncryptionprofile() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -82,11 +77,6 @@ func resourceIKEEncryptionprofile() *schema.Resource {
                 Optional: true,
                 Default: "WINDOW_SIZE_32",
             },
-            "ipsec_sa_replay_window_size_value": &schema.Schema{
-                Type:     schema.TypeInt,
-                Optional: true,
-                Computed: true,
-            },
             "isakmp_authentication_mode": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -131,6 +121,11 @@ func resourceIKEEncryptionprofile() *schema.Resource {
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
+                Optional: true,
+                Computed: true,
+            },
+            "ipsec_sa_replay_window_size_value": &schema.Schema{
+                Type:     schema.TypeInt,
                 Optional: true,
                 Computed: true,
             },
@@ -248,7 +243,6 @@ func resourceIKEEncryptionprofileRead(d *schema.ResourceData, m interface{}) err
     d.Set("ipsec_pre_fragment", o.IPsecPreFragment)
     d.Set("ipsec_sa_lifetime", o.IPsecSALifetime)
     d.Set("ipsec_sa_replay_window_size", o.IPsecSAReplayWindowSize)
-    d.Set("ipsec_sa_replay_window_size_value", o.IPsecSAReplayWindowSizeValue)
     d.Set("isakmp_authentication_mode", o.ISAKMPAuthenticationMode)
     d.Set("isakmp_diffie_helman_group_identifier", o.ISAKMPDiffieHelmanGroupIdentifier)
     d.Set("isakmp_encryption_algorithm", o.ISAKMPEncryptionAlgorithm)
@@ -259,6 +253,7 @@ func resourceIKEEncryptionprofileRead(d *schema.ResourceData, m interface{}) err
     d.Set("sequence", o.Sequence)
     d.Set("description", o.Description)
     d.Set("entity_scope", o.EntityScope)
+    d.Set("ipsec_sa_replay_window_size_value", o.IpsecSAReplayWindowSizeValue)
     d.Set("associated_enterprise_id", o.AssociatedEnterpriseID)
     d.Set("external_id", o.ExternalID)
     

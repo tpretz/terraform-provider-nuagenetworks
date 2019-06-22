@@ -52,6 +52,7 @@ type IngressACLTemplate struct {
 	PolicyState                       string `json:"policyState,omitempty"`
 	Priority                          int    `json:"priority,omitempty"`
 	PriorityType                      string `json:"priorityType,omitempty"`
+	AssocAclTemplateId                string `json:"assocAclTemplateId,omitempty"`
 	AssociatedLiveEntityID            string `json:"associatedLiveEntityID,omitempty"`
 	AssociatedVirtualFirewallPolicyID string `json:"associatedVirtualFirewallPolicyID,omitempty"`
 	AutoGeneratePriority              bool   `json:"autoGeneratePriority"`

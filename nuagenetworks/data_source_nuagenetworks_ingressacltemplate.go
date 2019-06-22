@@ -68,6 +68,10 @@ func dataSourceIngressACLTemplate() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
+            "assoc_acl_template_id": &schema.Schema{
+                Type:     schema.TypeString,
+                Computed: true,
+            },
             "associated_live_entity_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -109,9 +113,8 @@ func dataSourceIngressACLTemplate() *schema.Resource {
 }
 
 
-func dataSourceIngressACLTemplateRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceIngressACLTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredIngressACLTemplates := vspk.IngressACLTemplatesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -131,31 +134,31 @@ func dataSourceIngressACLTemplateRead(d *schema.ResourceData, m interface{}) err
         parent := &vspk.Domain{ID: attr.(string)}
         filteredIngressACLTemplates, err = parent.IngressACLTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredIngressACLTemplates, err = parent.IngressACLTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_l2_domain_template"); ok {
         parent := &vspk.L2DomainTemplate{ID: attr.(string)}
         filteredIngressACLTemplates, err = parent.IngressACLTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_domain_template"); ok {
         parent := &vspk.DomainTemplate{ID: attr.(string)}
         filteredIngressACLTemplates, err = parent.IngressACLTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredIngressACLTemplates, err = parent.IngressACLTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -183,6 +186,7 @@ func dataSourceIngressACLTemplateRead(d *schema.ResourceData, m interface{}) err
     d.Set("policy_state", IngressACLTemplate.PolicyState)
     d.Set("priority", IngressACLTemplate.Priority)
     d.Set("priority_type", IngressACLTemplate.PriorityType)
+    d.Set("assoc_acl_template_id", IngressACLTemplate.AssocAclTemplateId)
     d.Set("associated_live_entity_id", IngressACLTemplate.AssociatedLiveEntityID)
     d.Set("associated_virtual_firewall_policy_id", IngressACLTemplate.AssociatedVirtualFirewallPolicyID)
     d.Set("auto_generate_priority", IngressACLTemplate.AutoGeneratePriority)
@@ -195,5 +199,5 @@ func dataSourceIngressACLTemplateRead(d *schema.ResourceData, m interface{}) err
 
     d.SetId(IngressACLTemplate.Identifier())
     
-    return nil
+    return
 }

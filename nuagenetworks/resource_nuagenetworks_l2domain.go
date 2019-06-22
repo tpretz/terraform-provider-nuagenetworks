@@ -15,11 +15,6 @@ func resourceL2Domain() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -55,11 +50,6 @@ func resourceL2Domain() *schema.Resource {
             "ipv6_gateway": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-            },
-            "vxlanecmp_enabled": &schema.Schema{
-                Type:     schema.TypeBool,
-                Optional: true,
-                Default: false,
             },
             "maintenance_mode": &schema.Schema{
                 Type:     schema.TypeString,
@@ -115,11 +105,6 @@ func resourceL2Domain() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "ingress_replication_enabled": &schema.Schema{
-                Type:     schema.TypeBool,
-                Optional: true,
-                Default: false,
-            },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -153,7 +138,6 @@ func resourceL2Domain() *schema.Resource {
             "use_global_mac": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                Default: "DISABLED",
             },
             "associated_multicast_channel_map_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -173,10 +157,6 @@ func resourceL2Domain() *schema.Resource {
             },
             "multicast": &schema.Schema{
                 Type:     schema.TypeString,
-                Optional: true,
-            },
-            "customer_id": &schema.Schema{
-                Type:     schema.TypeInt,
                 Optional: true,
             },
             "external_id": &schema.Schema{
@@ -217,9 +197,6 @@ func resourceL2DomainCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("ipv6_gateway"); ok {
         o.IPv6Gateway = attr.(string)
     }
-    if attr, ok := d.GetOk("vxlanecmp_enabled"); ok {
-        o.VXLANECMPEnabled = attr.(bool)
-    }
     if attr, ok := d.GetOk("maintenance_mode"); ok {
         o.MaintenanceMode = attr.(string)
     }
@@ -252,9 +229,6 @@ func resourceL2DomainCreate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("encryption"); ok {
         o.Encryption = attr.(string)
-    }
-    if attr, ok := d.GetOk("ingress_replication_enabled"); ok {
-        o.IngressReplicationEnabled = attr.(bool)
     }
     if attr, ok := d.GetOk("entity_state"); ok {
         o.EntityState = attr.(string)
@@ -292,9 +266,6 @@ func resourceL2DomainCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("multicast"); ok {
         o.Multicast = attr.(string)
     }
-    if attr, ok := d.GetOk("customer_id"); ok {
-        o.CustomerID = attr.(int)
-    }
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)
     }
@@ -329,7 +300,6 @@ func resourceL2DomainRead(d *schema.ResourceData, m interface{}) error {
     d.Set("ip_type", o.IPType)
     d.Set("ipv6_address", o.IPv6Address)
     d.Set("ipv6_gateway", o.IPv6Gateway)
-    d.Set("vxlanecmp_enabled", o.VXLANECMPEnabled)
     d.Set("maintenance_mode", o.MaintenanceMode)
     d.Set("name", o.Name)
     d.Set("last_updated_by", o.LastUpdatedBy)
@@ -343,7 +313,6 @@ func resourceL2DomainRead(d *schema.ResourceData, m interface{}) error {
     d.Set("flow_collection_enabled", o.FlowCollectionEnabled)
     d.Set("vn_id", o.VnId)
     d.Set("encryption", o.Encryption)
-    d.Set("ingress_replication_enabled", o.IngressReplicationEnabled)
     d.Set("entity_scope", o.EntityScope)
     d.Set("entity_state", o.EntityState)
     d.Set("policy_change_status", o.PolicyChangeStatus)
@@ -357,7 +326,6 @@ func resourceL2DomainRead(d *schema.ResourceData, m interface{}) error {
     d.Set("associated_underlay_id", o.AssociatedUnderlayID)
     d.Set("stretched", o.Stretched)
     d.Set("multicast", o.Multicast)
-    d.Set("customer_id", o.CustomerID)
     d.Set("external_id", o.ExternalID)
     d.Set("dynamic_ipv6_address", o.DynamicIpv6Address)
     
@@ -396,9 +364,6 @@ func resourceL2DomainUpdate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("ipv6_gateway"); ok {
         o.IPv6Gateway = attr.(string)
     }
-    if attr, ok := d.GetOk("vxlanecmp_enabled"); ok {
-        o.VXLANECMPEnabled = attr.(bool)
-    }
     if attr, ok := d.GetOk("maintenance_mode"); ok {
         o.MaintenanceMode = attr.(string)
     }
@@ -431,9 +396,6 @@ func resourceL2DomainUpdate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("encryption"); ok {
         o.Encryption = attr.(string)
-    }
-    if attr, ok := d.GetOk("ingress_replication_enabled"); ok {
-        o.IngressReplicationEnabled = attr.(bool)
     }
     if attr, ok := d.GetOk("entity_state"); ok {
         o.EntityState = attr.(string)
@@ -470,9 +432,6 @@ func resourceL2DomainUpdate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("multicast"); ok {
         o.Multicast = attr.(string)
-    }
-    if attr, ok := d.GetOk("customer_id"); ok {
-        o.CustomerID = attr.(int)
     }
     if attr, ok := d.GetOk("external_id"); ok {
         o.ExternalID = attr.(string)

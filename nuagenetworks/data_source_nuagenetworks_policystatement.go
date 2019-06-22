@@ -28,19 +28,7 @@ func dataSourcePolicyStatement() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "description": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -53,9 +41,8 @@ func dataSourcePolicyStatement() *schema.Resource {
 }
 
 
-func dataSourcePolicyStatementRead(d *schema.ResourceData, m interface{}) error {
+func dataSourcePolicyStatementRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredPolicyStatements := vspk.PolicyStatementsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -74,7 +61,7 @@ func dataSourcePolicyStatementRead(d *schema.ResourceData, m interface{}) error 
     parent := &vspk.Link{ID: d.Get("parent_link").(string)}
     filteredPolicyStatements, err = parent.PolicyStatements(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     PolicyStatement := &vspk.PolicyStatement{}
@@ -91,10 +78,7 @@ func dataSourcePolicyStatementRead(d *schema.ResourceData, m interface{}) error 
     PolicyStatement = filteredPolicyStatements[0]
 
     d.Set("name", PolicyStatement.Name)
-    d.Set("last_updated_by", PolicyStatement.LastUpdatedBy)
     d.Set("description", PolicyStatement.Description)
-    d.Set("entity_scope", PolicyStatement.EntityScope)
-    d.Set("external_id", PolicyStatement.ExternalID)
     
     d.Set("id", PolicyStatement.Identifier())
     d.Set("parent_id", PolicyStatement.ParentID)
@@ -103,5 +87,5 @@ func dataSourcePolicyStatementRead(d *schema.ResourceData, m interface{}) error 
 
     d.SetId(PolicyStatement.Identifier())
     
-    return nil
+    return
 }

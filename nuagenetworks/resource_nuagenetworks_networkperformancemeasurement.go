@@ -15,11 +15,6 @@ func resourceNetworkPerformanceMeasurement() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -44,11 +39,6 @@ func resourceNetworkPerformanceMeasurement() *schema.Resource {
                 Type:     schema.TypeString,
                 Required: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "read_only": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
@@ -58,16 +48,7 @@ func resourceNetworkPerformanceMeasurement() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "associated_performance_monitor_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
@@ -97,9 +78,6 @@ func resourceNetworkPerformanceMeasurementCreate(d *schema.ResourceData, m inter
     if attr, ok := d.GetOk("associated_performance_monitor_id"); ok {
         o.AssociatedPerformanceMonitorID = attr.(string)
     }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
-    }
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     err := parent.CreateNetworkPerformanceMeasurement(o)
     if err != nil {
@@ -109,6 +87,9 @@ func resourceNetworkPerformanceMeasurementCreate(d *schema.ResourceData, m inter
     
 
     d.SetId(o.Identifier())
+    if attr, ok := d.GetOk("networkperformancebindings"); ok {
+        o.AssignNetworkPerformanceBindings(attr.(vspk.NetworkPerformanceBindingsList))
+    }
     return resourceNetworkPerformanceMeasurementRead(d, m)
 }
 
@@ -125,12 +106,9 @@ func resourceNetworkPerformanceMeasurementRead(d *schema.ResourceData, m interfa
 
     d.Set("npm_type", o.NPMType)
     d.Set("name", o.Name)
-    d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("read_only", o.ReadOnly)
     d.Set("description", o.Description)
-    d.Set("entity_scope", o.EntityScope)
     d.Set("associated_performance_monitor_id", o.AssociatedPerformanceMonitorID)
-    d.Set("external_id", o.ExternalID)
     
     d.Set("id", o.Identifier())
     d.Set("parent_id", o.ParentID)
@@ -163,9 +141,6 @@ func resourceNetworkPerformanceMeasurementUpdate(d *schema.ResourceData, m inter
     }
     if attr, ok := d.GetOk("associated_performance_monitor_id"); ok {
         o.AssociatedPerformanceMonitorID = attr.(string)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
 
     o.Save()

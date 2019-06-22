@@ -41,19 +41,11 @@ func dataSourceUserContext() *schema.Resource {
                 Computed: true,
             },
             "page_size": &schema.Schema{
-                Type:     schema.TypeInt,
-                Computed: true,
-            },
-            "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
             "flow_collection_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
                 Computed: true,
             },
             "google_maps_api_key": &schema.Schema{
@@ -64,15 +56,7 @@ func dataSourceUserContext() *schema.Resource {
                 Type:     schema.TypeBool,
                 Computed: true,
             },
-            "stats_database_proxy": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "stats_tsdb_server_address": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -81,9 +65,8 @@ func dataSourceUserContext() *schema.Resource {
 }
 
 
-func dataSourceUserContextRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceUserContextRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredUserContexts := vspk.UserContextsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -102,7 +85,7 @@ func dataSourceUserContextRead(d *schema.ResourceData, m interface{}) error {
     parent := m.(*vspk.Me)
     filteredUserContexts, err = parent.UserContexts(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     UserContext := &vspk.UserContext{}
@@ -123,14 +106,10 @@ func dataSourceUserContextRead(d *schema.ResourceData, m interface{}) error {
     d.Set("vss_feature_enabled", UserContext.VSSFeatureEnabled)
     d.Set("vss_stats_interval", UserContext.VSSStatsInterval)
     d.Set("page_size", UserContext.PageSize)
-    d.Set("last_updated_by", UserContext.LastUpdatedBy)
     d.Set("flow_collection_enabled", UserContext.FlowCollectionEnabled)
-    d.Set("entity_scope", UserContext.EntityScope)
     d.Set("google_maps_api_key", UserContext.GoogleMapsAPIKey)
     d.Set("statistics_enabled", UserContext.StatisticsEnabled)
-    d.Set("stats_database_proxy", UserContext.StatsDatabaseProxy)
     d.Set("stats_tsdb_server_address", UserContext.StatsTSDBServerAddress)
-    d.Set("external_id", UserContext.ExternalID)
     
     d.Set("id", UserContext.Identifier())
     d.Set("parent_id", UserContext.ParentID)
@@ -139,5 +118,5 @@ func dataSourceUserContextRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(UserContext.Identifier())
     
-    return nil
+    return
 }

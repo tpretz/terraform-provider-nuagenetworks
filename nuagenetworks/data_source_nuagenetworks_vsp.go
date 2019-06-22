@@ -57,9 +57,8 @@ func dataSourceVSP() *schema.Resource {
 }
 
 
-func dataSourceVSPRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceVSPRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredVSPs := vspk.VSPsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -78,7 +77,7 @@ func dataSourceVSPRead(d *schema.ResourceData, m interface{}) error {
     parent := m.(*vspk.Me)
     filteredVSPs, err = parent.VSPs(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     VSP := &vspk.VSP{}
@@ -109,5 +108,5 @@ func dataSourceVSPRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(VSP.Identifier())
     
-    return nil
+    return
 }

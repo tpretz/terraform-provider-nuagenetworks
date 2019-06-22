@@ -73,9 +73,8 @@ func dataSourceKeyServerMonitor() *schema.Resource {
 }
 
 
-func dataSourceKeyServerMonitorRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceKeyServerMonitorRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredKeyServerMonitors := vspk.KeyServerMonitorsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -94,7 +93,7 @@ func dataSourceKeyServerMonitorRead(d *schema.ResourceData, m interface{}) error
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     filteredKeyServerMonitors, err = parent.KeyServerMonitors(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     KeyServerMonitor := &vspk.KeyServerMonitor{}
@@ -128,5 +127,5 @@ func dataSourceKeyServerMonitorRead(d *schema.ResourceData, m interface{}) error
 
     d.SetId(KeyServerMonitor.Identifier())
     
-    return nil
+    return
 }

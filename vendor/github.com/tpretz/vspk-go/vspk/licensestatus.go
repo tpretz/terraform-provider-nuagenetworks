@@ -42,7 +42,6 @@ type LicenseStatus struct {
 	ParentType                   string `json:"parentType,omitempty"`
 	Owner                        string `json:"owner,omitempty"`
 	AccumulateLicensesEnabled    bool   `json:"accumulateLicensesEnabled"`
-	EntityScope                  string `json:"entityScope,omitempty"`
 	TotalLicensedAVRSGsCount     int    `json:"totalLicensedAVRSGsCount,omitempty"`
 	TotalLicensedAVRSsCount      int    `json:"totalLicensedAVRSsCount,omitempty"`
 	TotalLicensedGatewaysCount   int    `json:"totalLicensedGatewaysCount,omitempty"`
@@ -63,7 +62,6 @@ type LicenseStatus struct {
 	TotalLicensedVRSGsCount      int    `json:"totalLicensedVRSGsCount,omitempty"`
 	TotalLicensedVRSsCount       int    `json:"totalLicensedVRSsCount,omitempty"`
 	TotalUsedGatewaysCount       int    `json:"totalUsedGatewaysCount,omitempty"`
-	ExternalID                   string `json:"externalID,omitempty"`
 }
 
 // NewLicenseStatus returns a new *LicenseStatus
@@ -108,32 +106,4 @@ func (o *LicenseStatus) Save() *bambou.Error {
 func (o *LicenseStatus) Delete() *bambou.Error {
 
 	return bambou.CurrentSession().DeleteEntity(o)
-}
-
-// Metadatas retrieves the list of child Metadatas of the LicenseStatus
-func (o *LicenseStatus) Metadatas(info *bambou.FetchingInfo) (MetadatasList, *bambou.Error) {
-
-	var list MetadatasList
-	err := bambou.CurrentSession().FetchChildren(o, MetadataIdentity, &list, info)
-	return list, err
-}
-
-// CreateMetadata creates a new child Metadata under the LicenseStatus
-func (o *LicenseStatus) CreateMetadata(child *Metadata) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
-}
-
-// GlobalMetadatas retrieves the list of child GlobalMetadatas of the LicenseStatus
-func (o *LicenseStatus) GlobalMetadatas(info *bambou.FetchingInfo) (GlobalMetadatasList, *bambou.Error) {
-
-	var list GlobalMetadatasList
-	err := bambou.CurrentSession().FetchChildren(o, GlobalMetadataIdentity, &list, info)
-	return list, err
-}
-
-// CreateGlobalMetadata creates a new child GlobalMetadata under the LicenseStatus
-func (o *LicenseStatus) CreateGlobalMetadata(child *GlobalMetadata) *bambou.Error {
-
-	return bambou.CurrentSession().CreateChild(o, child)
 }

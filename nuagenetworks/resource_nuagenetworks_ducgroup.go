@@ -15,11 +15,6 @@ func resourceDUCGroup() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -39,30 +34,11 @@ func resourceDUCGroup() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "associated_performance_monitor_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-            },
-            "function": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Default: "UBR",
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
             },
@@ -83,12 +59,6 @@ func resourceDUCGroupCreate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("associated_performance_monitor_id"); ok {
         o.AssociatedPerformanceMonitorID = attr.(string)
-    }
-    if attr, ok := d.GetOk("function"); ok {
-        o.Function = attr.(string)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
     parent := m.(*vspk.Me)
     err := parent.CreateDUCGroup(o)
@@ -117,12 +87,8 @@ func resourceDUCGroupRead(d *schema.ResourceData, m interface{}) error {
     }
 
     d.Set("name", o.Name)
-    d.Set("last_updated_by", o.LastUpdatedBy)
     d.Set("description", o.Description)
-    d.Set("entity_scope", o.EntityScope)
     d.Set("associated_performance_monitor_id", o.AssociatedPerformanceMonitorID)
-    d.Set("function", o.Function)
-    d.Set("external_id", o.ExternalID)
     
     d.Set("id", o.Identifier())
     d.Set("parent_id", o.ParentID)
@@ -151,12 +117,6 @@ func resourceDUCGroupUpdate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("associated_performance_monitor_id"); ok {
         o.AssociatedPerformanceMonitorID = attr.(string)
-    }
-    if attr, ok := d.GetOk("function"); ok {
-        o.Function = attr.(string)
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
 
     o.Save()

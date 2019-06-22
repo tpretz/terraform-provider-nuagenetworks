@@ -40,32 +40,21 @@ func dataSourceGatewaySecurity() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "associated_entity_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
             "parent_ns_gateway": &schema.Schema{
                 Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_gateway"},
-            },
-            "parent_gateway": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                ConflictsWith: []string{"parent_ns_gateway"},
+                Required: true,
             },
         },
     }
 }
 
 
-func dataSourceGatewaySecurityRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceGatewaySecurityRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredGatewaySecurities := vspk.GatewaySecuritiesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -81,18 +70,10 @@ func dataSourceGatewaySecurityRead(d *schema.ResourceData, m interface{}) error 
            
         }
     }
-    if attr, ok := d.GetOk("parent_ns_gateway"); ok {
-        parent := &vspk.NSGateway{ID: attr.(string)}
-        filteredGatewaySecurities, err = parent.GatewaySecurities(fetchFilter)
-        if err != nil {
-            return err
-        }
-    } else if attr, ok := d.GetOk("parent_gateway"); ok {
-        parent := &vspk.Gateway{ID: attr.(string)}
-        filteredGatewaySecurities, err = parent.GatewaySecurities(fetchFilter)
-        if err != nil {
-            return err
-        }
+    parent := &vspk.NSGateway{ID: d.Get("parent_ns_gateway").(string)}
+    filteredGatewaySecurities, err = parent.GatewaySecurities(fetchFilter)
+    if err != nil {
+        return
     }
 
     GatewaySecurity := &vspk.GatewaySecurity{}
@@ -112,7 +93,6 @@ func dataSourceGatewaySecurityRead(d *schema.ResourceData, m interface{}) error 
     d.Set("gateway_id", GatewaySecurity.GatewayID)
     d.Set("revision", GatewaySecurity.Revision)
     d.Set("entity_scope", GatewaySecurity.EntityScope)
-    d.Set("associated_entity_type", GatewaySecurity.AssociatedEntityType)
     d.Set("external_id", GatewaySecurity.ExternalID)
     
     d.Set("id", GatewaySecurity.Identifier())
@@ -122,5 +102,5 @@ func dataSourceGatewaySecurityRead(d *schema.ResourceData, m interface{}) error 
 
     d.SetId(GatewaySecurity.Identifier())
     
-    return nil
+    return
 }

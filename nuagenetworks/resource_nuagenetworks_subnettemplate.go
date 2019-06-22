@@ -15,11 +15,6 @@ func resourceSubnetTemplate() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -97,7 +92,6 @@ func resourceSubnetTemplate() *schema.Resource {
             "use_global_mac": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                Default: "ENTERPRISE_DEFAULT",
             },
             "associated_multicast_channel_map_id": &schema.Schema{
                 Type:     schema.TypeString,

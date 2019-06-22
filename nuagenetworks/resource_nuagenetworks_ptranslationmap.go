@@ -15,11 +15,6 @@ func resourcePTranslationMap() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -44,16 +39,6 @@ func resourcePTranslationMap() *schema.Resource {
                 Type:     schema.TypeString,
                 Required: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "provider_alias_ip": &schema.Schema{
                 Type:     schema.TypeString,
                 Required: true,
@@ -61,15 +46,6 @@ func resourcePTranslationMap() *schema.Resource {
             "provider_ip": &schema.Schema{
                 Type:     schema.TypeString,
                 Required: true,
-            },
-            "associated_domain_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
             },
             "parent_psnat_pool": &schema.Schema{
                 Type:     schema.TypeString,
@@ -89,9 +65,6 @@ func resourcePTranslationMapCreate(d *schema.ResourceData, m interface{}) error 
     }
     if attr, ok := d.GetOk("spat_source_list"); ok {
         o.SPATSourceList = attr.([]interface{})
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
     parent := &vspk.PSNATPool{ID: d.Get("parent_psnat_pool").(string)}
     err := parent.CreatePTranslationMap(o)
@@ -118,12 +91,8 @@ func resourcePTranslationMapRead(d *schema.ResourceData, m interface{}) error {
 
     d.Set("spat_source_list", o.SPATSourceList)
     d.Set("mapping_type", o.MappingType)
-    d.Set("last_updated_by", o.LastUpdatedBy)
-    d.Set("entity_scope", o.EntityScope)
     d.Set("provider_alias_ip", o.ProviderAliasIP)
     d.Set("provider_ip", o.ProviderIP)
-    d.Set("associated_domain_id", o.AssociatedDomainID)
-    d.Set("external_id", o.ExternalID)
     
     d.Set("id", o.Identifier())
     d.Set("parent_id", o.ParentID)
@@ -149,9 +118,6 @@ func resourcePTranslationMapUpdate(d *schema.ResourceData, m interface{}) error 
     
     if attr, ok := d.GetOk("spat_source_list"); ok {
         o.SPATSourceList = attr.([]interface{})
-    }
-    if attr, ok := d.GetOk("external_id"); ok {
-        o.ExternalID = attr.(string)
     }
 
     o.Save()

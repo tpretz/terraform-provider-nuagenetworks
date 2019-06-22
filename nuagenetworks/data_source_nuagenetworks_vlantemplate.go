@@ -52,15 +52,7 @@ func dataSourceVLANTemplate() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "associated_ingress_overlay_qo_s_policer_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "associated_ingress_qos_policy_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "associated_ingress_underlay_qo_s_policer_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -99,9 +91,8 @@ func dataSourceVLANTemplate() *schema.Resource {
 }
 
 
-func dataSourceVLANTemplateRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceVLANTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredVLANTemplates := vspk.VLANTemplatesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -121,13 +112,13 @@ func dataSourceVLANTemplateRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.NSPortTemplate{ID: attr.(string)}
         filteredVLANTemplates, err = parent.VLANTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_port_template"); ok {
         parent := &vspk.PortTemplate{ID: attr.(string)}
         filteredVLANTemplates, err = parent.VLANTemplates(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -151,9 +142,7 @@ func dataSourceVLANTemplateRead(d *schema.ResourceData, m interface{}) error {
     d.Set("is_uplink", VLANTemplate.IsUplink)
     d.Set("associated_connection_type", VLANTemplate.AssociatedConnectionType)
     d.Set("associated_egress_qos_policy_id", VLANTemplate.AssociatedEgressQOSPolicyID)
-    d.Set("associated_ingress_overlay_qo_s_policer_id", VLANTemplate.AssociatedIngressOverlayQoSPolicerID)
     d.Set("associated_ingress_qos_policy_id", VLANTemplate.AssociatedIngressQOSPolicyID)
-    d.Set("associated_ingress_underlay_qo_s_policer_id", VLANTemplate.AssociatedIngressUnderlayQoSPolicerID)
     d.Set("associated_uplink_connection_id", VLANTemplate.AssociatedUplinkConnectionID)
     d.Set("associated_vsc_profile_id", VLANTemplate.AssociatedVSCProfileID)
     d.Set("duc_vlan", VLANTemplate.DucVlan)
@@ -167,5 +156,5 @@ func dataSourceVLANTemplateRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(VLANTemplate.Identifier())
     
-    return nil
+    return
 }

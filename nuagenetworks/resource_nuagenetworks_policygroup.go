@@ -15,11 +15,6 @@ func resourcePolicyGroup() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -60,10 +55,6 @@ func resourcePolicyGroup() *schema.Resource {
                 Type:     schema.TypeString,
                 Optional: true,
                 Computed: true,
-            },
-            "entity_state": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
             },
             "policy_group_id": &schema.Schema{
                 Type:     schema.TypeInt,
@@ -120,9 +111,6 @@ func resourcePolicyGroupCreate(d *schema.ResourceData, m interface{}) error {
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
     }
-    if attr, ok := d.GetOk("entity_state"); ok {
-        o.EntityState = attr.(string)
-    }
     if attr, ok := d.GetOk("policy_group_id"); ok {
         o.PolicyGroupID = attr.(int)
     }
@@ -176,7 +164,6 @@ func resourcePolicyGroupRead(d *schema.ResourceData, m interface{}) error {
     d.Set("template_id", o.TemplateID)
     d.Set("description", o.Description)
     d.Set("entity_scope", o.EntityScope)
-    d.Set("entity_state", o.EntityState)
     d.Set("policy_group_id", o.PolicyGroupID)
     d.Set("assoc_policy_group_category_id", o.AssocPolicyGroupCategoryID)
     d.Set("assoc_policy_group_category_name", o.AssocPolicyGroupCategoryName)
@@ -213,9 +200,6 @@ func resourcePolicyGroupUpdate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("description"); ok {
         o.Description = attr.(string)
-    }
-    if attr, ok := d.GetOk("entity_state"); ok {
-        o.EntityState = attr.(string)
     }
     if attr, ok := d.GetOk("policy_group_id"); ok {
         o.PolicyGroupID = attr.(int)

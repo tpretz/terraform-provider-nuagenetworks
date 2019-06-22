@@ -36,10 +36,6 @@ func dataSourceEnterpriseSecuredData() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "seed_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "sek_id": &schema.Schema{
                 Type:     schema.TypeInt,
                 Computed: true,
@@ -69,9 +65,8 @@ func dataSourceEnterpriseSecuredData() *schema.Resource {
 }
 
 
-func dataSourceEnterpriseSecuredDataRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceEnterpriseSecuredDataRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredEnterpriseSecuredDatas := vspk.EnterpriseSecuredDatasList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -90,7 +85,7 @@ func dataSourceEnterpriseSecuredDataRead(d *schema.ResourceData, m interface{}) 
     parent := &vspk.EnterpriseSecurity{ID: d.Get("parent_enterprise_security").(string)}
     filteredEnterpriseSecuredDatas, err = parent.EnterpriseSecuredDatas(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     EnterpriseSecuredData := &vspk.EnterpriseSecuredData{}
@@ -109,7 +104,6 @@ func dataSourceEnterpriseSecuredDataRead(d *schema.ResourceData, m interface{}) 
     d.Set("hash", EnterpriseSecuredData.Hash)
     d.Set("last_updated_by", EnterpriseSecuredData.LastUpdatedBy)
     d.Set("data", EnterpriseSecuredData.Data)
-    d.Set("seed_type", EnterpriseSecuredData.SeedType)
     d.Set("sek_id", EnterpriseSecuredData.SekId)
     d.Set("keyserver_cert_serial_number", EnterpriseSecuredData.KeyserverCertSerialNumber)
     d.Set("signed_hash", EnterpriseSecuredData.SignedHash)
@@ -123,5 +117,5 @@ func dataSourceEnterpriseSecuredDataRead(d *schema.ResourceData, m interface{}) 
 
     d.SetId(EnterpriseSecuredData.Identifier())
     
-    return nil
+    return
 }

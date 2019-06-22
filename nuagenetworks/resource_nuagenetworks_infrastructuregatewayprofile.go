@@ -15,11 +15,6 @@ func resourceInfrastructureGatewayProfile() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -66,16 +61,6 @@ func resourceInfrastructureGatewayProfile() *schema.Resource {
                 Optional: true,
                 Default: false,
             },
-            "web_filter_download_port": &schema.Schema{
-                Type:     schema.TypeInt,
-                Optional: true,
-                Default: 8080,
-            },
-            "web_filter_query_port": &schema.Schema{
-                Type:     schema.TypeInt,
-                Optional: true,
-                Default: 9090,
-            },
             "remote_log_mode": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -117,10 +102,6 @@ func resourceInfrastructureGatewayProfile() *schema.Resource {
                 Optional: true,
                 Default: "P7DT0H0M",
             },
-            "controller_less_enabled": &schema.Schema{
-                Type:     schema.TypeBool,
-                Optional: true,
-            },
             "controller_less_forwarding_mode": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -144,7 +125,7 @@ func resourceInfrastructureGatewayProfile() *schema.Resource {
             "upgrade_action": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                Default: "NONE",
+                Default: "DOWNLOAD_AND_UPGRADE_AT_WINDOW",
             },
             "proxy_dns_name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -153,7 +134,7 @@ func resourceInfrastructureGatewayProfile() *schema.Resource {
             "use_two_factor": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
-                Default: false,
+                Default: true,
             },
             "stats_collector_port": &schema.Schema{
                 Type:     schema.TypeInt,
@@ -195,12 +176,6 @@ func resourceInfrastructureGatewayProfileCreate(d *schema.ResourceData, m interf
     if attr, ok := d.GetOk("dead_timer_enabled"); ok {
         o.DeadTimerEnabled = attr.(bool)
     }
-    if attr, ok := d.GetOk("web_filter_download_port"); ok {
-        o.WebFilterDownloadPort = attr.(int)
-    }
-    if attr, ok := d.GetOk("web_filter_query_port"); ok {
-        o.WebFilterQueryPort = attr.(int)
-    }
     if attr, ok := d.GetOk("remote_log_mode"); ok {
         o.RemoteLogMode = attr.(string)
     }
@@ -224,9 +199,6 @@ func resourceInfrastructureGatewayProfileCreate(d *schema.ResourceData, m interf
     }
     if attr, ok := d.GetOk("controller_less_duration"); ok {
         o.ControllerLessDuration = attr.(string)
-    }
-    if attr, ok := d.GetOk("controller_less_enabled"); ok {
-        o.ControllerLessEnabled = attr.(bool)
     }
     if attr, ok := d.GetOk("controller_less_forwarding_mode"); ok {
         o.ControllerLessForwardingMode = attr.(string)
@@ -285,8 +257,6 @@ func resourceInfrastructureGatewayProfileRead(d *schema.ResourceData, m interfac
     d.Set("datapath_sync_timeout", o.DatapathSyncTimeout)
     d.Set("dead_timer", o.DeadTimer)
     d.Set("dead_timer_enabled", o.DeadTimerEnabled)
-    d.Set("web_filter_download_port", o.WebFilterDownloadPort)
-    d.Set("web_filter_query_port", o.WebFilterQueryPort)
     d.Set("remote_log_mode", o.RemoteLogMode)
     d.Set("remote_log_server_address", o.RemoteLogServerAddress)
     d.Set("remote_log_server_port", o.RemoteLogServerPort)
@@ -296,7 +266,6 @@ func resourceInfrastructureGatewayProfileRead(d *schema.ResourceData, m interfac
     d.Set("enterprise_id", o.EnterpriseID)
     d.Set("entity_scope", o.EntityScope)
     d.Set("controller_less_duration", o.ControllerLessDuration)
-    d.Set("controller_less_enabled", o.ControllerLessEnabled)
     d.Set("controller_less_forwarding_mode", o.ControllerLessForwardingMode)
     d.Set("controller_less_remote_duration", o.ControllerLessRemoteDuration)
     d.Set("force_immediate_system_sync", o.ForceImmediateSystemSync)
@@ -344,12 +313,6 @@ func resourceInfrastructureGatewayProfileUpdate(d *schema.ResourceData, m interf
     if attr, ok := d.GetOk("dead_timer_enabled"); ok {
         o.DeadTimerEnabled = attr.(bool)
     }
-    if attr, ok := d.GetOk("web_filter_download_port"); ok {
-        o.WebFilterDownloadPort = attr.(int)
-    }
-    if attr, ok := d.GetOk("web_filter_query_port"); ok {
-        o.WebFilterQueryPort = attr.(int)
-    }
     if attr, ok := d.GetOk("remote_log_mode"); ok {
         o.RemoteLogMode = attr.(string)
     }
@@ -373,9 +336,6 @@ func resourceInfrastructureGatewayProfileUpdate(d *schema.ResourceData, m interf
     }
     if attr, ok := d.GetOk("controller_less_duration"); ok {
         o.ControllerLessDuration = attr.(string)
-    }
-    if attr, ok := d.GetOk("controller_less_enabled"); ok {
-        o.ControllerLessEnabled = attr.(bool)
     }
     if attr, ok := d.GetOk("controller_less_forwarding_mode"); ok {
         o.ControllerLessForwardingMode = attr.(string)

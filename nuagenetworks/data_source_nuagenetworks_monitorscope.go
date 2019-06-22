@@ -28,10 +28,6 @@ func dataSourceMonitorscope() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "read_only": &schema.Schema{
                 Type:     schema.TypeBool,
                 Computed: true,
@@ -49,37 +45,33 @@ func dataSourceMonitorscope() *schema.Resource {
                 Type:     schema.TypeBool,
                 Computed: true,
             },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "source_nsgs": &schema.Schema{
                 Type:     schema.TypeList,
                 Computed: true,
                 Elem:     &schema.Schema{Type: schema.TypeString},
             },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "parent_application": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_network_performance_measurement"},
+                ConflictsWith: []string{"parent_network_performance_measurement", "parent_ns_gateway"},
             },
             "parent_network_performance_measurement": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
-                ConflictsWith: []string{"parent_application"},
+                ConflictsWith: []string{"parent_application", "parent_ns_gateway"},
+            },
+            "parent_ns_gateway": &schema.Schema{
+                Type:     schema.TypeString,
+                Optional: true,
+                ConflictsWith: []string{"parent_application", "parent_network_performance_measurement"},
             },
         },
     }
 }
 
 
-func dataSourceMonitorscopeRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceMonitorscopeRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredMonitorscopes := vspk.MonitorscopesList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -99,13 +91,19 @@ func dataSourceMonitorscopeRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.Application{ID: attr.(string)}
         filteredMonitorscopes, err = parent.Monitorscopes(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_network_performance_measurement"); ok {
         parent := &vspk.NetworkPerformanceMeasurement{ID: attr.(string)}
         filteredMonitorscopes, err = parent.Monitorscopes(fetchFilter)
         if err != nil {
-            return err
+            return
+        }
+    } else if attr, ok := d.GetOk("parent_ns_gateway"); ok {
+        parent := &vspk.NSGateway{ID: attr.(string)}
+        filteredMonitorscopes, err = parent.Monitorscopes(fetchFilter)
+        if err != nil {
+            return
         }
     }
 
@@ -123,14 +121,11 @@ func dataSourceMonitorscopeRead(d *schema.ResourceData, m interface{}) error {
     Monitorscope = filteredMonitorscopes[0]
 
     d.Set("name", Monitorscope.Name)
-    d.Set("last_updated_by", Monitorscope.LastUpdatedBy)
     d.Set("read_only", Monitorscope.ReadOnly)
     d.Set("destination_nsgs", Monitorscope.DestinationNSGs)
     d.Set("allow_all_destination_nsgs", Monitorscope.AllowAllDestinationNSGs)
     d.Set("allow_all_source_nsgs", Monitorscope.AllowAllSourceNSGs)
-    d.Set("entity_scope", Monitorscope.EntityScope)
     d.Set("source_nsgs", Monitorscope.SourceNSGs)
-    d.Set("external_id", Monitorscope.ExternalID)
     
     d.Set("id", Monitorscope.Identifier())
     d.Set("parent_id", Monitorscope.ParentID)
@@ -139,5 +134,5 @@ func dataSourceMonitorscopeRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(Monitorscope.Identifier())
     
-    return nil
+    return
 }

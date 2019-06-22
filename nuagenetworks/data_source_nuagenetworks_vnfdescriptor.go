@@ -52,20 +52,12 @@ func dataSourceVNFDescriptor() *schema.Resource {
                 Type:     schema.TypeBool,
                 Computed: true,
             },
-            "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "associated_vnf_threshold_policy_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
             "storage_gb": &schema.Schema{
                 Type:     schema.TypeInt,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
-                Type:     schema.TypeString,
                 Computed: true,
             },
             "type": &schema.Schema{
@@ -81,9 +73,8 @@ func dataSourceVNFDescriptor() *schema.Resource {
 }
 
 
-func dataSourceVNFDescriptorRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceVNFDescriptorRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredVNFDescriptors := vspk.VNFDescriptorsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -102,7 +93,7 @@ func dataSourceVNFDescriptorRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.VNFCatalog{ID: d.Get("parent_vnf_catalog").(string)}
     filteredVNFDescriptors, err = parent.VNFDescriptors(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     VNFDescriptor := &vspk.VNFDescriptor{}
@@ -125,10 +116,8 @@ func dataSourceVNFDescriptorRead(d *schema.ResourceData, m interface{}) error {
     d.Set("description", VNFDescriptor.Description)
     d.Set("metadata_id", VNFDescriptor.MetadataID)
     d.Set("visible", VNFDescriptor.Visible)
-    d.Set("entity_scope", VNFDescriptor.EntityScope)
     d.Set("associated_vnf_threshold_policy_id", VNFDescriptor.AssociatedVNFThresholdPolicyID)
     d.Set("storage_gb", VNFDescriptor.StorageGB)
-    d.Set("external_id", VNFDescriptor.ExternalID)
     d.Set("type", VNFDescriptor.Type)
     
     d.Set("id", VNFDescriptor.Identifier())
@@ -138,5 +127,5 @@ func dataSourceVNFDescriptorRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(VNFDescriptor.Identifier())
     
-    return nil
+    return
 }

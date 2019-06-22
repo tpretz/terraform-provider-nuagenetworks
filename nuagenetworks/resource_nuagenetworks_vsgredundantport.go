@@ -15,11 +15,6 @@ func resourceVsgRedundantPort() *schema.Resource {
             State: schema.ImportStatePassthrough,
         },
         Schema: map[string]*schema.Schema{
-            "id": &schema.Schema{
-                Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
             "parent_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
@@ -45,11 +40,6 @@ func resourceVsgRedundantPort() *schema.Resource {
             },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
-                Optional: true,
-                Computed: true,
-            },
-            "peer_link": &schema.Schema{
-                Type:     schema.TypeBool,
                 Optional: true,
                 Computed: true,
             },
@@ -174,7 +164,6 @@ func resourceVsgRedundantPortRead(d *schema.ResourceData, m interface{}) error {
     d.Set("vlan_range", o.VLANRange)
     d.Set("name", o.Name)
     d.Set("last_updated_by", o.LastUpdatedBy)
-    d.Set("peer_link", o.PeerLink)
     d.Set("permitted_action", o.PermittedAction)
     d.Set("description", o.Description)
     d.Set("physical_name", o.PhysicalName)

@@ -32,18 +32,6 @@ func dataSourceSSIDConnection() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "last_updated_by": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "gateway_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "readonly": &schema.Schema{
-                Type:     schema.TypeBool,
-                Computed: true,
-            },
             "redirect_option": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -56,16 +44,8 @@ func dataSourceSSIDConnection() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "permitted_action": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
-                Computed: true,
-            },
-            "restricted": &schema.Schema{
-                Type:     schema.TypeBool,
                 Computed: true,
             },
             "white_list": &schema.Schema{
@@ -78,15 +58,7 @@ func dataSourceSSIDConnection() *schema.Resource {
                 Computed: true,
                 Elem:     &schema.Schema{Type: schema.TypeString},
             },
-            "vlan_id": &schema.Schema{
-                Type:     schema.TypeInt,
-                Computed: true,
-            },
             "interface_name": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -106,15 +78,7 @@ func dataSourceSSIDConnection() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "status": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "authentication_mode": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -127,9 +91,8 @@ func dataSourceSSIDConnection() *schema.Resource {
 }
 
 
-func dataSourceSSIDConnectionRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceSSIDConnectionRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredSSIDConnections := vspk.SSIDConnectionsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -148,7 +111,7 @@ func dataSourceSSIDConnectionRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.WirelessPort{ID: d.Get("parent_wireless_port").(string)}
     filteredSSIDConnections, err = parent.SSIDConnections(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     SSIDConnection := &vspk.SSIDConnection{}
@@ -166,27 +129,18 @@ func dataSourceSSIDConnectionRead(d *schema.ResourceData, m interface{}) error {
 
     d.Set("name", SSIDConnection.Name)
     d.Set("passphrase", SSIDConnection.Passphrase)
-    d.Set("last_updated_by", SSIDConnection.LastUpdatedBy)
-    d.Set("gateway_id", SSIDConnection.GatewayID)
-    d.Set("readonly", SSIDConnection.Readonly)
     d.Set("redirect_option", SSIDConnection.RedirectOption)
     d.Set("redirect_url", SSIDConnection.RedirectURL)
     d.Set("generic_config", SSIDConnection.GenericConfig)
-    d.Set("permitted_action", SSIDConnection.PermittedAction)
     d.Set("description", SSIDConnection.Description)
-    d.Set("restricted", SSIDConnection.Restricted)
     d.Set("white_list", SSIDConnection.WhiteList)
     d.Set("black_list", SSIDConnection.BlackList)
-    d.Set("vlan_id", SSIDConnection.VlanID)
     d.Set("interface_name", SSIDConnection.InterfaceName)
-    d.Set("entity_scope", SSIDConnection.EntityScope)
     d.Set("vport_id", SSIDConnection.VportID)
     d.Set("broadcast_ssid", SSIDConnection.BroadcastSSID)
     d.Set("associated_captive_portal_profile_id", SSIDConnection.AssociatedCaptivePortalProfileID)
     d.Set("associated_egress_qos_policy_id", SSIDConnection.AssociatedEgressQOSPolicyID)
-    d.Set("status", SSIDConnection.Status)
     d.Set("authentication_mode", SSIDConnection.AuthenticationMode)
-    d.Set("external_id", SSIDConnection.ExternalID)
     
     d.Set("id", SSIDConnection.Identifier())
     d.Set("parent_id", SSIDConnection.ParentID)
@@ -195,5 +149,5 @@ func dataSourceSSIDConnectionRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(SSIDConnection.Identifier())
     
-    return nil
+    return
 }

@@ -48,10 +48,6 @@ func dataSourceBGPNeighbor() *schema.Resource {
                 Type:     schema.TypeInt,
                 Computed: true,
             },
-            "peer_configuration": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "peer_ip": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -65,10 +61,6 @@ func dataSourceBGPNeighbor() *schema.Resource {
                 Computed: true,
             },
             "entity_scope": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
-            "domain_service_label": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
             },
@@ -104,9 +96,8 @@ func dataSourceBGPNeighbor() *schema.Resource {
 }
 
 
-func dataSourceBGPNeighborRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceBGPNeighborRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredBGPNeighbors := vspk.BGPNeighborsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -126,25 +117,25 @@ func dataSourceBGPNeighborRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.Subnet{ID: attr.(string)}
         filteredBGPNeighbors, err = parent.BGPNeighbors(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vlan"); ok {
         parent := &vspk.VLAN{ID: attr.(string)}
         filteredBGPNeighbors, err = parent.BGPNeighbors(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredBGPNeighbors, err = parent.BGPNeighbors(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredBGPNeighbors, err = parent.BGPNeighbors(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -167,12 +158,10 @@ func dataSourceBGPNeighborRead(d *schema.ResourceData, m interface{}) error {
     d.Set("name", BGPNeighbor.Name)
     d.Set("dampening_enabled", BGPNeighbor.DampeningEnabled)
     d.Set("peer_as", BGPNeighbor.PeerAS)
-    d.Set("peer_configuration", BGPNeighbor.PeerConfiguration)
     d.Set("peer_ip", BGPNeighbor.PeerIP)
     d.Set("description", BGPNeighbor.Description)
     d.Set("session", BGPNeighbor.Session)
     d.Set("entity_scope", BGPNeighbor.EntityScope)
-    d.Set("domain_service_label", BGPNeighbor.DomainServiceLabel)
     d.Set("associated_export_routing_policy_id", BGPNeighbor.AssociatedExportRoutingPolicyID)
     d.Set("associated_import_routing_policy_id", BGPNeighbor.AssociatedImportRoutingPolicyID)
     d.Set("external_id", BGPNeighbor.ExternalID)
@@ -184,5 +173,5 @@ func dataSourceBGPNeighborRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(BGPNeighbor.Identifier())
     
-    return nil
+    return
 }

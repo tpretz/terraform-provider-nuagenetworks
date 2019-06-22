@@ -48,10 +48,6 @@ func dataSourceRedirectionTarget() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "destination_type": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "virtual_network_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -112,9 +108,8 @@ func dataSourceRedirectionTarget() *schema.Resource {
 }
 
 
-func dataSourceRedirectionTargetRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceRedirectionTargetRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredRedirectionTargets := vspk.RedirectionTargetsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -134,49 +129,49 @@ func dataSourceRedirectionTargetRead(d *schema.ResourceData, m interface{}) erro
         parent := &vspk.Domain{ID: attr.(string)}
         filteredRedirectionTargets, err = parent.RedirectionTargets(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vm_interface"); ok {
         parent := &vspk.VMInterface{ID: attr.(string)}
         filteredRedirectionTargets, err = parent.RedirectionTargets(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_host_interface"); ok {
         parent := &vspk.HostInterface{ID: attr.(string)}
         filteredRedirectionTargets, err = parent.RedirectionTargets(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_container_interface"); ok {
         parent := &vspk.ContainerInterface{ID: attr.(string)}
         filteredRedirectionTargets, err = parent.RedirectionTargets(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredRedirectionTargets, err = parent.RedirectionTargets(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_bridge_interface"); ok {
         parent := &vspk.BridgeInterface{ID: attr.(string)}
         filteredRedirectionTargets, err = parent.RedirectionTargets(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredRedirectionTargets, err = parent.RedirectionTargets(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredRedirectionTargets, err = parent.RedirectionTargets(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -199,7 +194,6 @@ func dataSourceRedirectionTargetRead(d *schema.ResourceData, m interface{}) erro
     d.Set("redundancy_enabled", RedirectionTarget.RedundancyEnabled)
     d.Set("template_id", RedirectionTarget.TemplateID)
     d.Set("description", RedirectionTarget.Description)
-    d.Set("destination_type", RedirectionTarget.DestinationType)
     d.Set("virtual_network_id", RedirectionTarget.VirtualNetworkID)
     d.Set("end_point_type", RedirectionTarget.EndPointType)
     d.Set("entity_scope", RedirectionTarget.EntityScope)
@@ -213,5 +207,5 @@ func dataSourceRedirectionTargetRead(d *schema.ResourceData, m interface{}) erro
 
     d.SetId(RedirectionTarget.Identifier())
     
-    return nil
+    return
 }

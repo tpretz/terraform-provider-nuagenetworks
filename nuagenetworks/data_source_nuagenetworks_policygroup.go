@@ -48,10 +48,6 @@ func dataSourcePolicyGroup() *schema.Resource {
                 Type:     schema.TypeString,
                 Computed: true,
             },
-            "entity_state": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "policy_group_id": &schema.Schema{
                 Type:     schema.TypeInt,
                 Computed: true,
@@ -121,9 +117,8 @@ func dataSourcePolicyGroup() *schema.Resource {
 }
 
 
-func dataSourcePolicyGroupRead(d *schema.ResourceData, m interface{}) error {
+func dataSourcePolicyGroupRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredPolicyGroups := vspk.PolicyGroupsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -143,55 +138,55 @@ func dataSourcePolicyGroupRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.Domain{ID: attr.(string)}
         filteredPolicyGroups, err = parent.PolicyGroups(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vm_interface"); ok {
         parent := &vspk.VMInterface{ID: attr.(string)}
         filteredPolicyGroups, err = parent.PolicyGroups(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_host_interface"); ok {
         parent := &vspk.HostInterface{ID: attr.(string)}
         filteredPolicyGroups, err = parent.PolicyGroups(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_container_interface"); ok {
         parent := &vspk.ContainerInterface{ID: attr.(string)}
         filteredPolicyGroups, err = parent.PolicyGroups(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredPolicyGroups, err = parent.PolicyGroups(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_bridge_interface"); ok {
         parent := &vspk.BridgeInterface{ID: attr.(string)}
         filteredPolicyGroups, err = parent.PolicyGroups(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_policy_group_category"); ok {
         parent := &vspk.PolicyGroupCategory{ID: attr.(string)}
         filteredPolicyGroups, err = parent.PolicyGroups(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredPolicyGroups, err = parent.PolicyGroups(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else {
         parent := m.(*vspk.Me)
         filteredPolicyGroups, err = parent.PolicyGroups(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -214,7 +209,6 @@ func dataSourcePolicyGroupRead(d *schema.ResourceData, m interface{}) error {
     d.Set("template_id", PolicyGroup.TemplateID)
     d.Set("description", PolicyGroup.Description)
     d.Set("entity_scope", PolicyGroup.EntityScope)
-    d.Set("entity_state", PolicyGroup.EntityState)
     d.Set("policy_group_id", PolicyGroup.PolicyGroupID)
     d.Set("assoc_policy_group_category_id", PolicyGroup.AssocPolicyGroupCategoryID)
     d.Set("assoc_policy_group_category_name", PolicyGroup.AssocPolicyGroupCategoryName)
@@ -229,5 +223,5 @@ func dataSourcePolicyGroupRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(PolicyGroup.Identifier())
     
-    return nil
+    return
 }

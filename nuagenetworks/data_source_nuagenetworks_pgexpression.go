@@ -67,9 +67,8 @@ func dataSourcePGExpression() *schema.Resource {
 }
 
 
-func dataSourcePGExpressionRead(d *schema.ResourceData, m interface{}) error {
+func dataSourcePGExpressionRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredPGExpressions := vspk.PGExpressionsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -89,13 +88,13 @@ func dataSourcePGExpressionRead(d *schema.ResourceData, m interface{}) error {
         parent := &vspk.Domain{ID: attr.(string)}
         filteredPGExpressions, err = parent.PGExpressions(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredPGExpressions, err = parent.PGExpressions(fetchFilter)
         if err != nil {
-            return err
+            return
         }
     }
 
@@ -127,5 +126,5 @@ func dataSourcePGExpressionRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(PGExpression.Identifier())
     
-    return nil
+    return
 }

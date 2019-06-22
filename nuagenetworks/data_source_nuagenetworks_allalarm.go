@@ -56,10 +56,6 @@ func dataSourceAllAlarm() *schema.Resource {
                 Type:     schema.TypeInt,
                 Computed: true,
             },
-            "alarmed_object_id": &schema.Schema{
-                Type:     schema.TypeString,
-                Computed: true,
-            },
             "enterprise_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Computed: true,
@@ -89,9 +85,8 @@ func dataSourceAllAlarm() *schema.Resource {
 }
 
 
-func dataSourceAllAlarmRead(d *schema.ResourceData, m interface{}) error {
+func dataSourceAllAlarmRead(d *schema.ResourceData, m interface{}) (err error) {
     filteredAllAlarms := vspk.AllAlarmsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -110,7 +105,7 @@ func dataSourceAllAlarmRead(d *schema.ResourceData, m interface{}) error {
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     filteredAllAlarms, err = parent.AllAlarms(fetchFilter)
     if err != nil {
-        return err
+        return
     }
 
     AllAlarm := &vspk.AllAlarm{}
@@ -134,7 +129,6 @@ func dataSourceAllAlarmRead(d *schema.ResourceData, m interface{}) error {
     d.Set("description", AllAlarm.Description)
     d.Set("severity", AllAlarm.Severity)
     d.Set("timestamp", AllAlarm.Timestamp)
-    d.Set("alarmed_object_id", AllAlarm.AlarmedObjectID)
     d.Set("enterprise_id", AllAlarm.EnterpriseID)
     d.Set("entity_scope", AllAlarm.EntityScope)
     d.Set("error_condition", AllAlarm.ErrorCondition)
@@ -148,5 +142,5 @@ func dataSourceAllAlarmRead(d *schema.ResourceData, m interface{}) error {
 
     d.SetId(AllAlarm.Identifier())
     
-    return nil
+    return
 }
