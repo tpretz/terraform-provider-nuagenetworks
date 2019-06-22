@@ -3,7 +3,7 @@ package nuagenetworks
 import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
-    "github.com/nuagenetworks/vspk-go/vspk"
+    "github.com/tpretz/vspk-go/vspk"
     "github.com/nuagenetworks/go-bambou/bambou"
 )
 
@@ -63,7 +63,6 @@ func dataSourceDownloadProgress() *schema.Resource {
 
 func dataSourceDownloadProgressRead(d *schema.ResourceData, m interface{}) error {
     filteredDownloadProgress := vspk.DownloadProgressList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")

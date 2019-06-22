@@ -265,12 +265,6 @@
   version = "v1.0.1"
 
 [[projects]]
-  name = "github.com/nuagenetworks/vspk-go"
-  packages = ["vspk"]
-  revision = "c241b25534a9c311aaf7b2e180ad664a4085f935"
-  version = "v5.4.1"
-
-[[projects]]
   name = "github.com/oklog/run"
   packages = ["."]
   revision = "4dadeb3030eda0273a12382bb2348ffc7c9d1a39"
@@ -299,6 +293,12 @@
   packages = [".","mem"]
   revision = "588a75ec4f32903aa5e39a2619ba6a4631e28424"
   version = "v1.2.2"
+
+[[projects]]
+  name = "github.com/tpretz/vspk-go"
+  packages = ["vspk"]
+  revision = "8c6ce05e40847c109c3d93c4a214383b8c672e61"
+  version = "v5.4.1"
 
 [[projects]]
   name = "github.com/ulikunitz/xz"
@@ -387,6 +387,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "d2ac9d79140e0839fe1dbbcad2b5ff707846746d489589a5ab2b14d2fc790681"
+  inputs-digest = "2911ce23ac849de76186e1f53659b65ce66c188b0bfbd7c81ae01811e9860aef"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -2,7 +2,7 @@ package nuagenetworks
 
 import (
     "github.com/hashicorp/terraform/helper/schema"
-    "github.com/nuagenetworks/vspk-go/vspk"
+    "github.com/tpretz/vspk-go/vspk"
 )
 
 func resourceNSGateway() *schema.Resource {
@@ -275,7 +275,6 @@ func resourceNSGateway() *schema.Resource {
                 Type:     schema.TypeList,
                 Optional: true,
                 Elem:     &schema.Schema{Type: schema.TypeString},
-                Default: UBR,
             },
             "auto_disc_gateway_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -421,13 +420,6 @@ func resourceNSGatewayCreate(d *schema.ResourceData, m interface{}) error {
     }
     if attr, ok := d.GetOk("parent_me"); ok {
         parent := &vspk.Me{ID: attr.(string)}
-        err := parent.CreateNSGateway(o)
-        if err != nil {
-            return err
-        }
-    }
-    if attr, ok := d.GetOk("parent_duc_group"); ok {
-        parent := &vspk.DUCGroup{ID: attr.(string)}
         err := parent.CreateNSGateway(o)
         if err != nil {
             return err

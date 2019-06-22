@@ -3,7 +3,7 @@ package nuagenetworks
 import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
-    "github.com/nuagenetworks/vspk-go/vspk"
+    "github.com/tpretz/vspk-go/vspk"
     "github.com/nuagenetworks/go-bambou/bambou"
 )
 

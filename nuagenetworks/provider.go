@@ -6,7 +6,7 @@ import (
     "crypto/tls"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/hashicorp/terraform/terraform"
-    "github.com/nuagenetworks/vspk-go/vspk"
+    "github.com/tpretz/vspk-go/vspk"
     "github.com/nuagenetworks/go-bambou/bambou"
 )
 
@@ -536,7 +536,7 @@ func providerConfigure(d *schema.ResourceData) (root interface{}, err error) {
     err = s.Start()
 
     if err != nil {
-        err = errors.New("Unable to connect to Nuage VSD: " + err.Description)
+        err = errors.New("Unable to connect to Nuage VSD: " + err.Error())
         return
     }
 

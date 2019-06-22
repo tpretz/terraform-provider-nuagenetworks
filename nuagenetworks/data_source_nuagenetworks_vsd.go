@@ -3,7 +3,7 @@ package nuagenetworks
 import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
-    "github.com/nuagenetworks/vspk-go/vspk"
+    "github.com/tpretz/vspk-go/vspk"
     "github.com/nuagenetworks/go-bambou/bambou"
 )
 
@@ -129,7 +129,6 @@ func dataSourceVSD() *schema.Resource {
 
 func dataSourceVSDRead(d *schema.ResourceData, m interface{}) error {
     filteredVSDs := vspk.VSDsList{}
-    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
