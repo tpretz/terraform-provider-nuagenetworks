@@ -1,5 +1,6 @@
 #!/bin/bash
 
+mkdir build
 
 while read tag; do
   echo "processing $tag"
