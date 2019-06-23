@@ -33,6 +33,7 @@ func resourceKeyServerMonitorEncryptedSeed() *schema.Resource {
             "sek_creation_time": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
@@ -42,10 +43,12 @@ func resourceKeyServerMonitorEncryptedSeed() *schema.Resource {
             "key_server_certificate_serial_number": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "enterprise_secured_data_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -55,22 +58,27 @@ func resourceKeyServerMonitorEncryptedSeed() *schema.Resource {
             "associated_key_server_monitor_sek_creation_time": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "associated_key_server_monitor_sekid": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_key_server_monitor_seed_creation_time": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "associated_key_server_monitor_seed_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_key_server_monitor": &schema.Schema{
                 Type:     schema.TypeString,

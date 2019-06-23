@@ -33,42 +33,52 @@ func resourceQOS() *schema.Resource {
             "fip_committed_burst_size": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "fip_committed_information_rate": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "fip_peak_burst_size": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "fip_peak_information_rate": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "fip_rate_limiting_active": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "bum_committed_burst_size": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "bum_committed_information_rate": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "bum_peak_burst_size": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "bum_peak_information_rate": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "bum_rate_limiting_active": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -82,42 +92,52 @@ func resourceQOS() *schema.Resource {
             "rate_limiting_active": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "active": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "peak": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "service_class": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "rewrite_forwarding_class": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "egress_fip_committed_burst_size": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "egress_fip_committed_information_rate": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "egress_fip_peak_burst_size": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "egress_fip_peak_information_rate": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -127,34 +147,42 @@ func resourceQOS() *schema.Resource {
             "committed_burst_size": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "committed_information_rate": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "trusted_forwarding_class": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "assoc_qos_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_dscp_forwarding_class_table_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_dscp_forwarding_class_table_name": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "burst": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_domain": &schema.Schema{
                 Type:     schema.TypeString,

@@ -53,10 +53,12 @@ func resourceIKEEncryptionprofile() *schema.Resource {
             "ipsec_dont_fragment": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "ipsec_enable_pfs": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "ipsec_encryption_algorithm": &schema.Schema{
                 Type:     schema.TypeString,
@@ -66,6 +68,7 @@ func resourceIKEEncryptionprofile() *schema.Resource {
             "ipsec_pre_fragment": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "ipsec_sa_lifetime": &schema.Schema{
                 Type:     schema.TypeInt,
@@ -105,6 +108,7 @@ func resourceIKEEncryptionprofile() *schema.Resource {
             "name": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
@@ -114,10 +118,12 @@ func resourceIKEEncryptionprofile() *schema.Resource {
             "sequence": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -132,10 +138,12 @@ func resourceIKEEncryptionprofile() *schema.Resource {
             "associated_enterprise_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,

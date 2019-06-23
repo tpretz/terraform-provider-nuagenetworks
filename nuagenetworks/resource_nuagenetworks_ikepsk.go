@@ -33,6 +33,7 @@ func resourceIKEPSK() *schema.Resource {
             "name": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
@@ -42,26 +43,32 @@ func resourceIKEPSK() *schema.Resource {
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "signature": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "signing_certificate_serial_number": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "encrypted_psk": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "encrypting_certificate_serial_number": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "unencrypted_psk": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -71,14 +78,17 @@ func resourceIKEPSK() *schema.Resource {
             "associated_enterprise_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "auto_created": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,

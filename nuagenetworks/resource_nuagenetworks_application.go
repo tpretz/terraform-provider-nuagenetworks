@@ -33,6 +33,7 @@ func resourceApplication() *schema.Resource {
             "dscp": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -41,6 +42,7 @@ func resourceApplication() *schema.Resource {
             "bandwidth": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
@@ -60,14 +62,17 @@ func resourceApplication() *schema.Resource {
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "destination_ip": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "destination_port": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "enable_pps": &schema.Schema{
                 Type:     schema.TypeBool,
@@ -77,14 +82,17 @@ func resourceApplication() *schema.Resource {
             "one_way_delay": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "one_way_jitter": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "one_way_loss": &schema.Schema{
                 Type:     schema.TypeFloat,
                 Optional: true,
+                Computed: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -99,10 +107,12 @@ func resourceApplication() *schema.Resource {
             "source_ip": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "source_port": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "app_id": &schema.Schema{
                 Type:     schema.TypeInt,
@@ -112,6 +122,7 @@ func resourceApplication() *schema.Resource {
             "optimize_path_selection": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "pre_classification_path": &schema.Schema{
                 Type:     schema.TypeString,
@@ -126,14 +137,17 @@ func resourceApplication() *schema.Resource {
             "associated_l7_application_signature_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "ether_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "symmetry": &schema.Schema{
                 Type:     schema.TypeBool,

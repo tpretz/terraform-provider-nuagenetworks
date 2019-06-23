@@ -42,6 +42,7 @@ func resourceVPNConnection() *schema.Resource {
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -51,10 +52,12 @@ func resourceVPNConnection() *schema.Resource {
             "associated_wan_service_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_shared_network_resource": &schema.Schema{
                 Type:     schema.TypeString,

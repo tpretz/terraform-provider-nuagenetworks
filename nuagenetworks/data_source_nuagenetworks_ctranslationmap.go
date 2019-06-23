@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceCTranslationMap() *schema.Resource {
@@ -45,8 +45,9 @@ func dataSourceCTranslationMap() *schema.Resource {
 }
 
 
-func dataSourceCTranslationMapRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceCTranslationMapRead(d *schema.ResourceData, m interface{}) error {
     filteredCTranslationMaps := vspk.CTranslationMapsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -65,7 +66,7 @@ func dataSourceCTranslationMapRead(d *schema.ResourceData, m interface{}) (err e
     parent := &vspk.CSNATPool{ID: d.Get("parent_csnat_pool").(string)}
     filteredCTranslationMaps, err = parent.CTranslationMaps(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     CTranslationMap := &vspk.CTranslationMap{}
@@ -92,5 +93,5 @@ func dataSourceCTranslationMapRead(d *schema.ResourceData, m interface{}) (err e
 
     d.SetId(CTranslationMap.Identifier())
     
-    return
+    return nil
 }

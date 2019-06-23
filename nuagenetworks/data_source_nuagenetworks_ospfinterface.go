@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceOSPFInterface() *schema.Resource {
@@ -102,8 +102,9 @@ func dataSourceOSPFInterface() *schema.Resource {
 }
 
 
-func dataSourceOSPFInterfaceRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceOSPFInterfaceRead(d *schema.ResourceData, m interface{}) error {
     filteredOSPFInterfaces := vspk.OSPFInterfacesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -122,7 +123,7 @@ func dataSourceOSPFInterfaceRead(d *schema.ResourceData, m interface{}) (err err
     parent := &vspk.OSPFArea{ID: d.Get("parent_ospf_area").(string)}
     filteredOSPFInterfaces, err = parent.OSPFInterfaces(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     OSPFInterface := &vspk.OSPFInterface{}
@@ -163,5 +164,5 @@ func dataSourceOSPFInterfaceRead(d *schema.ResourceData, m interface{}) (err err
 
     d.SetId(OSPFInterface.Identifier())
     
-    return
+    return nil
 }

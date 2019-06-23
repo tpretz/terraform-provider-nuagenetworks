@@ -33,6 +33,7 @@ func resourceTCA() *schema.Resource {
             "url_end_point": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -41,6 +42,7 @@ func resourceTCA() *schema.Resource {
             "target_policy_group_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
@@ -58,6 +60,7 @@ func resourceTCA() *schema.Resource {
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "metric": &schema.Schema{
                 Type:     schema.TypeString,
@@ -80,6 +83,7 @@ func resourceTCA() *schema.Resource {
             "display_status": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -94,6 +98,7 @@ func resourceTCA() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "type": &schema.Schema{
                 Type:     schema.TypeString,

@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceIKEGatewayProfile() *schema.Resource {
@@ -89,8 +89,9 @@ func dataSourceIKEGatewayProfile() *schema.Resource {
 }
 
 
-func dataSourceIKEGatewayProfileRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceIKEGatewayProfileRead(d *schema.ResourceData, m interface{}) error {
     filteredIKEGatewayProfiles := vspk.IKEGatewayProfilesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -109,7 +110,7 @@ func dataSourceIKEGatewayProfileRead(d *schema.ResourceData, m interface{}) (err
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     filteredIKEGatewayProfiles, err = parent.IKEGatewayProfiles(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     IKEGatewayProfile := &vspk.IKEGatewayProfile{}
@@ -147,5 +148,5 @@ func dataSourceIKEGatewayProfileRead(d *schema.ResourceData, m interface{}) (err
 
     d.SetId(IKEGatewayProfile.Identifier())
     
-    return
+    return nil
 }

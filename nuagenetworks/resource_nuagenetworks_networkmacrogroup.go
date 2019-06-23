@@ -42,10 +42,12 @@ func resourceNetworkMacroGroup() *schema.Resource {
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "network_macros": &schema.Schema{
                 Type:     schema.TypeList,
                 Optional: true,
+                Computed: true,
                 Elem:     &schema.Schema{Type: schema.TypeString},
             },
             "entity_scope": &schema.Schema{
@@ -61,6 +63,7 @@ func resourceNetworkMacroGroup() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,

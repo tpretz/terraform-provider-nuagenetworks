@@ -42,10 +42,12 @@ func resourceRedirectionTargetTemplate() *schema.Resource {
             "redundancy_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "end_point_type": &schema.Schema{
                 Type:     schema.TypeString,
@@ -64,6 +66,7 @@ func resourceRedirectionTargetTemplate() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_l2_domain_template": &schema.Schema{
                 Type:     schema.TypeString,

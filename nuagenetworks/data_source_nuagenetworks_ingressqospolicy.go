@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceIngressQOSPolicy() *schema.Resource {
@@ -97,8 +97,9 @@ func dataSourceIngressQOSPolicy() *schema.Resource {
 }
 
 
-func dataSourceIngressQOSPolicyRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceIngressQOSPolicyRead(d *schema.ResourceData, m interface{}) error {
     filteredIngressQOSPolicies := vspk.IngressQOSPoliciesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -118,13 +119,13 @@ func dataSourceIngressQOSPolicyRead(d *schema.ResourceData, m interface{}) (err 
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredIngressQOSPolicies, err = parent.IngressQOSPolicies(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredIngressQOSPolicies, err = parent.IngressQOSPolicies(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -164,5 +165,5 @@ func dataSourceIngressQOSPolicyRead(d *schema.ResourceData, m interface{}) (err 
 
     d.SetId(IngressQOSPolicy.Identifier())
     
-    return
+    return nil
 }

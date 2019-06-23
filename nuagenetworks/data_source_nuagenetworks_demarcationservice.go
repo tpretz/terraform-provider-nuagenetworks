@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceDemarcationService() *schema.Resource {
@@ -53,8 +53,9 @@ func dataSourceDemarcationService() *schema.Resource {
 }
 
 
-func dataSourceDemarcationServiceRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceDemarcationServiceRead(d *schema.ResourceData, m interface{}) error {
     filteredDemarcationServices := vspk.DemarcationServicesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -73,7 +74,7 @@ func dataSourceDemarcationServiceRead(d *schema.ResourceData, m interface{}) (er
     parent := &vspk.Link{ID: d.Get("parent_link").(string)}
     filteredDemarcationServices, err = parent.DemarcationServices(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     DemarcationService := &vspk.DemarcationService{}
@@ -102,5 +103,5 @@ func dataSourceDemarcationServiceRead(d *schema.ResourceData, m interface{}) (er
 
     d.SetId(DemarcationService.Identifier())
     
-    return
+    return nil
 }

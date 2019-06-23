@@ -33,10 +33,12 @@ func resourceWANService() *schema.Resource {
             "wan_service_identifier": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "irb_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -50,10 +52,12 @@ func resourceWANService() *schema.Resource {
             "permitted_action": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "service_policy": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "service_type": &schema.Schema{
                 Type:     schema.TypeString,
@@ -62,14 +66,17 @@ func resourceWANService() *schema.Resource {
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "vn_id": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "enterprise_name": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -79,42 +86,52 @@ func resourceWANService() *schema.Resource {
             "domain_name": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "config_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "orphan": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "use_user_mnemonic": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "user_mnemonic": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_domain_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_vpn_connect_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "tunnel_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "external_route_target": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_redundancy_group": &schema.Schema{
                 Type:     schema.TypeString,

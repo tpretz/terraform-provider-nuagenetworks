@@ -38,14 +38,17 @@ func resourceVirtualFirewallRule() *schema.Resource {
             "icmp_code": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "icmp_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "dscp": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
@@ -59,14 +62,17 @@ func resourceVirtualFirewallRule() *schema.Resource {
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "destination_port": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "network_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "network_type": &schema.Schema{
                 Type:     schema.TypeString,
@@ -76,6 +82,7 @@ func resourceVirtualFirewallRule() *schema.Resource {
             "mirror_destination_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "flow_logging_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
@@ -95,6 +102,7 @@ func resourceVirtualFirewallRule() *schema.Resource {
             "location_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "location_type": &schema.Schema{
                 Type:     schema.TypeString,
@@ -113,18 +121,22 @@ func resourceVirtualFirewallRule() *schema.Resource {
             "source_port": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "priority": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "protocol": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_l7_application_signature_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_live_entity_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -134,10 +146,12 @@ func resourceVirtualFirewallRule() *schema.Resource {
             "associated_traffic_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_traffic_type_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "stateful": &schema.Schema{
                 Type:     schema.TypeBool,
@@ -157,10 +171,12 @@ func resourceVirtualFirewallRule() *schema.Resource {
             "overlay_mirror_destination_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_virtual_firewall_policy": &schema.Schema{
                 Type:     schema.TypeString,

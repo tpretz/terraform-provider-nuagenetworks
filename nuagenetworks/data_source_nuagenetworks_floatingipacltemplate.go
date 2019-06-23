@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceFloatingIPACLTemplate() *schema.Resource {
@@ -91,8 +91,9 @@ func dataSourceFloatingIPACLTemplate() *schema.Resource {
 }
 
 
-func dataSourceFloatingIPACLTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceFloatingIPACLTemplateRead(d *schema.ResourceData, m interface{}) error {
     filteredFloatingIPACLTemplates := vspk.FloatingIPACLTemplatesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -112,19 +113,19 @@ func dataSourceFloatingIPACLTemplateRead(d *schema.ResourceData, m interface{}) 
         parent := &vspk.Domain{ID: attr.(string)}
         filteredFloatingIPACLTemplates, err = parent.FloatingIPACLTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_domain_template"); ok {
         parent := &vspk.DomainTemplate{ID: attr.(string)}
         filteredFloatingIPACLTemplates, err = parent.FloatingIPACLTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredFloatingIPACLTemplates, err = parent.FloatingIPACLTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -162,5 +163,5 @@ func dataSourceFloatingIPACLTemplateRead(d *schema.ResourceData, m interface{}) 
 
     d.SetId(FloatingIPACLTemplate.Identifier())
     
-    return
+    return nil
 }

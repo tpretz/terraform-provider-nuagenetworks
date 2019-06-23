@@ -9,7 +9,7 @@
 
 package vspk
 
-import "github.com/nuagenetworks/go-bambou/bambou"
+import "github.com/tpretz/go-bambou/bambou"
 
 // KeyServerMonitorIdentity represents the Identity of the object
 var KeyServerMonitorIdentity = bambou.Identity{

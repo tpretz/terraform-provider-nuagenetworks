@@ -43,14 +43,17 @@ func resourceNextHop() *schema.Resource {
             "route_distinguisher": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "ip": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_link": &schema.Schema{
                 Type:     schema.TypeString,

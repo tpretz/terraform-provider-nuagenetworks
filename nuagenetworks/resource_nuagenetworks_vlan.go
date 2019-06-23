@@ -58,10 +58,12 @@ func resourceVLAN() *schema.Resource {
             "permitted_action": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "restricted": &schema.Schema{
                 Type:     schema.TypeBool,
@@ -91,14 +93,17 @@ func resourceVLAN() *schema.Resource {
             "use_user_mnemonic": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "user_mnemonic": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_bgp_profile_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_connection_type": &schema.Schema{
                 Type:     schema.TypeString,
@@ -108,30 +113,37 @@ func resourceVLAN() *schema.Resource {
             "associated_egress_qos_policy_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_ingress_overlay_qo_s_policer_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_ingress_qos_policy_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_ingress_underlay_qo_s_policer_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_uplink_connection_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_vsc_profile_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "status": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "duc_vlan": &schema.Schema{
                 Type:     schema.TypeBool,
@@ -141,6 +153,7 @@ func resourceVLAN() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "type": &schema.Schema{
                 Type:     schema.TypeString,

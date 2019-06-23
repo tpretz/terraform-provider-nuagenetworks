@@ -33,10 +33,12 @@ func resourceAddressRange() *schema.Resource {
             "dhcp_pool_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "ip_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
@@ -59,6 +61,7 @@ func resourceAddressRange() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_shared_network_resource": &schema.Schema{
                 Type:     schema.TypeString,

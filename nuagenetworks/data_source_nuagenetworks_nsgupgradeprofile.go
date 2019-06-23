@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceNSGUpgradeProfile() *schema.Resource {
@@ -57,8 +57,9 @@ func dataSourceNSGUpgradeProfile() *schema.Resource {
 }
 
 
-func dataSourceNSGUpgradeProfileRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceNSGUpgradeProfileRead(d *schema.ResourceData, m interface{}) error {
     filteredNSGUpgradeProfiles := vspk.NSGUpgradeProfilesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -77,7 +78,7 @@ func dataSourceNSGUpgradeProfileRead(d *schema.ResourceData, m interface{}) (err
     parent := m.(*vspk.Me)
     filteredNSGUpgradeProfiles, err = parent.NSGUpgradeProfiles(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     NSGUpgradeProfile := &vspk.NSGUpgradeProfile{}
@@ -108,5 +109,5 @@ func dataSourceNSGUpgradeProfileRead(d *schema.ResourceData, m interface{}) (err
 
     d.SetId(NSGUpgradeProfile.Identifier())
     
-    return
+    return nil
 }

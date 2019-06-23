@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceBFDSession() *schema.Resource {
@@ -67,8 +67,9 @@ func dataSourceBFDSession() *schema.Resource {
 }
 
 
-func dataSourceBFDSessionRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceBFDSessionRead(d *schema.ResourceData, m interface{}) error {
     filteredBFDSessions := vspk.BFDSessionsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -88,13 +89,13 @@ func dataSourceBFDSessionRead(d *schema.ResourceData, m interface{}) (err error)
         parent := &vspk.BRConnection{ID: attr.(string)}
         filteredBFDSessions, err = parent.BFDSessions(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_uplink_connection"); ok {
         parent := &vspk.UplinkConnection{ID: attr.(string)}
         filteredBFDSessions, err = parent.BFDSessions(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -126,5 +127,5 @@ func dataSourceBFDSessionRead(d *schema.ResourceData, m interface{}) (err error)
 
     d.SetId(BFDSession.Identifier())
     
-    return
+    return nil
 }

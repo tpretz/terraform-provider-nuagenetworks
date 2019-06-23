@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceTCA() *schema.Resource {
@@ -138,8 +138,9 @@ func dataSourceTCA() *schema.Resource {
 }
 
 
-func dataSourceTCARead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceTCARead(d *schema.ResourceData, m interface{}) error {
     filteredTCAs := vspk.TCAsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -159,61 +160,61 @@ func dataSourceTCARead(d *schema.ResourceData, m interface{}) (err error) {
         parent := &vspk.Domain{ID: attr.(string)}
         filteredTCAs, err = parent.TCAs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vm_interface"); ok {
         parent := &vspk.VMInterface{ID: attr.(string)}
         filteredTCAs, err = parent.TCAs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_host_interface"); ok {
         parent := &vspk.HostInterface{ID: attr.(string)}
         filteredTCAs, err = parent.TCAs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_container_interface"); ok {
         parent := &vspk.ContainerInterface{ID: attr.(string)}
         filteredTCAs, err = parent.TCAs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredTCAs, err = parent.TCAs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_bridge_interface"); ok {
         parent := &vspk.BridgeInterface{ID: attr.(string)}
         filteredTCAs, err = parent.TCAs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_subnet"); ok {
         parent := &vspk.Subnet{ID: attr.(string)}
         filteredTCAs, err = parent.TCAs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_zone"); ok {
         parent := &vspk.Zone{ID: attr.(string)}
         filteredTCAs, err = parent.TCAs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredTCAs, err = parent.TCAs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredTCAs, err = parent.TCAs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -255,5 +256,5 @@ func dataSourceTCARead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(TCA.Identifier())
     
-    return
+    return nil
 }

@@ -33,6 +33,7 @@ func resourceGroup() *schema.Resource {
             "ldap_group_dn": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -41,6 +42,7 @@ func resourceGroup() *schema.Resource {
             "management_mode": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
@@ -50,14 +52,17 @@ func resourceGroup() *schema.Resource {
             "account_restrictions": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "restriction_date": &schema.Schema{
                 Type:     schema.TypeFloat,
                 Optional: true,
+                Computed: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -67,14 +72,17 @@ func resourceGroup() *schema.Resource {
             "role": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "private": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,

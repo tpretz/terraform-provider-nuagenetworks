@@ -62,15 +62,18 @@ func resourceOSPFInterface() *schema.Resource {
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "message_digest_keys": &schema.Schema{
                 Type:     schema.TypeList,
                 Optional: true,
+                Computed: true,
                 Elem:     &schema.Schema{Type: schema.TypeString},
             },
             "metric": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "interface_type": &schema.Schema{
                 Type:     schema.TypeString,
@@ -94,10 +97,12 @@ func resourceOSPFInterface() *schema.Resource {
             "mtu": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "authentication_key": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "authentication_type": &schema.Schema{
                 Type:     schema.TypeString,
@@ -107,6 +112,7 @@ func resourceOSPFInterface() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_ospf_area": &schema.Schema{
                 Type:     schema.TypeString,

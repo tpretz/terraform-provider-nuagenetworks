@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceDSCPRemarkingPolicy() *schema.Resource {
@@ -53,8 +53,9 @@ func dataSourceDSCPRemarkingPolicy() *schema.Resource {
 }
 
 
-func dataSourceDSCPRemarkingPolicyRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceDSCPRemarkingPolicyRead(d *schema.ResourceData, m interface{}) error {
     filteredDSCPRemarkingPolicies := vspk.DSCPRemarkingPoliciesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -73,7 +74,7 @@ func dataSourceDSCPRemarkingPolicyRead(d *schema.ResourceData, m interface{}) (e
     parent := &vspk.DSCPRemarkingPolicyTable{ID: d.Get("parent_dscp_remarking_policy_table").(string)}
     filteredDSCPRemarkingPolicies, err = parent.DSCPRemarkingPolicies(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     DSCPRemarkingPolicy := &vspk.DSCPRemarkingPolicy{}
@@ -102,5 +103,5 @@ func dataSourceDSCPRemarkingPolicyRead(d *schema.ResourceData, m interface{}) (e
 
     d.SetId(DSCPRemarkingPolicy.Identifier())
     
-    return
+    return nil
 }

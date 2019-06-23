@@ -33,6 +33,7 @@ func resourcePolicyGroup() *schema.Resource {
             "evpn_community_tag": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -46,10 +47,12 @@ func resourcePolicyGroup() *schema.Resource {
             "template_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -59,10 +62,12 @@ func resourcePolicyGroup() *schema.Resource {
             "policy_group_id": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "assoc_policy_group_category_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "assoc_policy_group_category_name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -72,10 +77,12 @@ func resourcePolicyGroup() *schema.Resource {
             "external": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "type": &schema.Schema{
                 Type:     schema.TypeString,

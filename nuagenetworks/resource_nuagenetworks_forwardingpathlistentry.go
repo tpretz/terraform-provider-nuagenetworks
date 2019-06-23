@@ -33,6 +33,7 @@ func resourceForwardingPathListEntry() *schema.Resource {
             "fc_override": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
@@ -51,6 +52,7 @@ func resourceForwardingPathListEntry() *schema.Resource {
             "uplink_preference": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "priority": &schema.Schema{
                 Type:     schema.TypeInt,
@@ -60,6 +62,7 @@ func resourceForwardingPathListEntry() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_forwarding_path_list": &schema.Schema{
                 Type:     schema.TypeString,

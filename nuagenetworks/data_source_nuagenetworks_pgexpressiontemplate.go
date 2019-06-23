@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourcePGExpressionTemplate() *schema.Resource {
@@ -63,8 +63,9 @@ func dataSourcePGExpressionTemplate() *schema.Resource {
 }
 
 
-func dataSourcePGExpressionTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourcePGExpressionTemplateRead(d *schema.ResourceData, m interface{}) error {
     filteredPGExpressionTemplates := vspk.PGExpressionTemplatesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -84,13 +85,13 @@ func dataSourcePGExpressionTemplateRead(d *schema.ResourceData, m interface{}) (
         parent := &vspk.L2DomainTemplate{ID: attr.(string)}
         filteredPGExpressionTemplates, err = parent.PGExpressionTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_domain_template"); ok {
         parent := &vspk.DomainTemplate{ID: attr.(string)}
         filteredPGExpressionTemplates, err = parent.PGExpressionTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -121,5 +122,5 @@ func dataSourcePGExpressionTemplateRead(d *schema.ResourceData, m interface{}) (
 
     d.SetId(PGExpressionTemplate.Identifier())
     
-    return
+    return nil
 }

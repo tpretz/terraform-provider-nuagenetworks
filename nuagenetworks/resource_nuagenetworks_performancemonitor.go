@@ -57,10 +57,12 @@ func resourcePerformanceMonitor() *schema.Resource {
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "destination_target_list": &schema.Schema{
                 Type:     schema.TypeList,
                 Optional: true,
+                Computed: true,
                 Elem:     &schema.Schema{Type: schema.TypeString},
             },
             "timeout": &schema.Schema{
@@ -94,6 +96,7 @@ func resourcePerformanceMonitor() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,

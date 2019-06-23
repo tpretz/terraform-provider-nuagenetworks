@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceDomainFIPAclTemplate() *schema.Resource {
@@ -92,8 +92,9 @@ func dataSourceDomainFIPAclTemplate() *schema.Resource {
 }
 
 
-func dataSourceDomainFIPAclTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceDomainFIPAclTemplateRead(d *schema.ResourceData, m interface{}) error {
     filteredDomainFIPAclTemplates := vspk.DomainFIPAclTemplatesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -113,19 +114,19 @@ func dataSourceDomainFIPAclTemplateRead(d *schema.ResourceData, m interface{}) (
         parent := &vspk.Domain{ID: attr.(string)}
         filteredDomainFIPAclTemplates, err = parent.DomainFIPAclTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_domain_template"); ok {
         parent := &vspk.DomainTemplate{ID: attr.(string)}
         filteredDomainFIPAclTemplates, err = parent.DomainFIPAclTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredDomainFIPAclTemplates, err = parent.DomainFIPAclTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -163,5 +164,5 @@ func dataSourceDomainFIPAclTemplateRead(d *schema.ResourceData, m interface{}) (
 
     d.SetId(DomainFIPAclTemplate.Identifier())
     
-    return
+    return nil
 }

@@ -33,6 +33,7 @@ func resourceJob() *schema.Resource {
             "parameters": &schema.Schema{
                 Type:     schema.TypeMap,
                 Optional: true,
+                Computed: true,
             },
             "parameters_raw": {
 				Type:     schema.TypeString,
@@ -47,6 +48,7 @@ func resourceJob() *schema.Resource {
             "result": &schema.Schema{
                 Type:     schema.TypeMap,
                 Optional: true,
+                Computed: true,
             },
             "result_raw": {
 				Type:     schema.TypeString,
@@ -65,18 +67,22 @@ func resourceJob() *schema.Resource {
             "progress": &schema.Schema{
                 Type:     schema.TypeFloat,
                 Optional: true,
+                Computed: true,
             },
             "assoc_entity_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "status": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_domain": &schema.Schema{
                 Type:     schema.TypeString,

@@ -33,6 +33,7 @@ func resourceDHCPOption() *schema.Resource {
             "value": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
@@ -42,15 +43,18 @@ func resourceDHCPOption() *schema.Resource {
             "actual_type": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "actual_values": &schema.Schema{
                 Type:     schema.TypeList,
                 Optional: true,
+                Computed: true,
                 Elem:     &schema.Schema{Type: schema.TypeString},
             },
             "length": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -60,10 +64,12 @@ func resourceDHCPOption() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_shared_network_resource": &schema.Schema{
                 Type:     schema.TypeString,

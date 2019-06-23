@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceEgressAdvFwdEntryTemplate() *schema.Resource {
@@ -165,8 +165,9 @@ func dataSourceEgressAdvFwdEntryTemplate() *schema.Resource {
 }
 
 
-func dataSourceEgressAdvFwdEntryTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceEgressAdvFwdEntryTemplateRead(d *schema.ResourceData, m interface{}) error {
     filteredEgressAdvFwdEntryTemplates := vspk.EgressAdvFwdEntryTemplatesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -185,7 +186,7 @@ func dataSourceEgressAdvFwdEntryTemplateRead(d *schema.ResourceData, m interface
     parent := &vspk.EgressAdvFwdTemplate{ID: d.Get("parent_egress_adv_fwd_template").(string)}
     filteredEgressAdvFwdEntryTemplates, err = parent.EgressAdvFwdEntryTemplates(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     EgressAdvFwdEntryTemplate := &vspk.EgressAdvFwdEntryTemplate{}
@@ -242,5 +243,5 @@ func dataSourceEgressAdvFwdEntryTemplateRead(d *schema.ResourceData, m interface
 
     d.SetId(EgressAdvFwdEntryTemplate.Identifier())
     
-    return
+    return nil
 }

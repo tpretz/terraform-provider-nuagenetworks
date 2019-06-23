@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceBGPNeighbor() *schema.Resource {
@@ -96,8 +96,9 @@ func dataSourceBGPNeighbor() *schema.Resource {
 }
 
 
-func dataSourceBGPNeighborRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceBGPNeighborRead(d *schema.ResourceData, m interface{}) error {
     filteredBGPNeighbors := vspk.BGPNeighborsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -117,25 +118,25 @@ func dataSourceBGPNeighborRead(d *schema.ResourceData, m interface{}) (err error
         parent := &vspk.Subnet{ID: attr.(string)}
         filteredBGPNeighbors, err = parent.BGPNeighbors(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vlan"); ok {
         parent := &vspk.VLAN{ID: attr.(string)}
         filteredBGPNeighbors, err = parent.BGPNeighbors(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredBGPNeighbors, err = parent.BGPNeighbors(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredBGPNeighbors, err = parent.BGPNeighbors(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -173,5 +174,5 @@ func dataSourceBGPNeighborRead(d *schema.ResourceData, m interface{}) (err error
 
     d.SetId(BGPNeighbor.Identifier())
     
-    return
+    return nil
 }

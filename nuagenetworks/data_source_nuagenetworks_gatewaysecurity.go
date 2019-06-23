@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceGatewaySecurity() *schema.Resource {
@@ -53,8 +53,9 @@ func dataSourceGatewaySecurity() *schema.Resource {
 }
 
 
-func dataSourceGatewaySecurityRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceGatewaySecurityRead(d *schema.ResourceData, m interface{}) error {
     filteredGatewaySecurities := vspk.GatewaySecuritiesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -73,7 +74,7 @@ func dataSourceGatewaySecurityRead(d *schema.ResourceData, m interface{}) (err e
     parent := &vspk.NSGateway{ID: d.Get("parent_ns_gateway").(string)}
     filteredGatewaySecurities, err = parent.GatewaySecurities(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     GatewaySecurity := &vspk.GatewaySecurity{}
@@ -102,5 +103,5 @@ func dataSourceGatewaySecurityRead(d *schema.ResourceData, m interface{}) (err e
 
     d.SetId(GatewaySecurity.Identifier())
     
-    return
+    return nil
 }

@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceSharedNetworkResource() *schema.Resource {
@@ -155,8 +155,9 @@ func dataSourceSharedNetworkResource() *schema.Resource {
 }
 
 
-func dataSourceSharedNetworkResourceRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceSharedNetworkResourceRead(d *schema.ResourceData, m interface{}) error {
     filteredSharedNetworkResources := vspk.SharedNetworkResourcesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -176,19 +177,19 @@ func dataSourceSharedNetworkResourceRead(d *schema.ResourceData, m interface{}) 
         parent := &vspk.PATMapper{ID: attr.(string)}
         filteredSharedNetworkResources, err = parent.SharedNetworkResources(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredSharedNetworkResources, err = parent.SharedNetworkResources(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredSharedNetworkResources, err = parent.SharedNetworkResources(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -242,5 +243,5 @@ func dataSourceSharedNetworkResourceRead(d *schema.ResourceData, m interface{}) 
 
     d.SetId(SharedNetworkResource.Identifier())
     
-    return
+    return nil
 }

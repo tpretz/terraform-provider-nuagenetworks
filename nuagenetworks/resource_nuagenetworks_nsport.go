@@ -52,14 +52,17 @@ func resourceNSPort() *schema.Resource {
             "template_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "permitted_action": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "shunt_port": &schema.Schema{
                 Type:     schema.TypeBool,
@@ -97,22 +100,27 @@ func resourceNSPort() *schema.Resource {
             "use_user_mnemonic": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "user_mnemonic": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_egress_qos_policy_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_redundant_port_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "status": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "mtu": &schema.Schema{
                 Type:     schema.TypeInt,
@@ -122,6 +130,7 @@ func resourceNSPort() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_ns_gateway": &schema.Schema{
                 Type:     schema.TypeString,

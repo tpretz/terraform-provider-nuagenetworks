@@ -47,6 +47,7 @@ func resourceNATMapEntry() *schema.Resource {
             "associated_patnat_pool_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "public_ip": &schema.Schema{
                 Type:     schema.TypeString,
@@ -55,6 +56,7 @@ func resourceNATMapEntry() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "type": &schema.Schema{
                 Type:     schema.TypeString,

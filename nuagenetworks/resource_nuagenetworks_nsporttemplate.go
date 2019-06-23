@@ -47,6 +47,7 @@ func resourceNSPortTemplate() *schema.Resource {
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "physical_name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -55,6 +56,7 @@ func resourceNSPortTemplate() *schema.Resource {
             "infrastructure_profile_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -73,6 +75,7 @@ func resourceNSPortTemplate() *schema.Resource {
             "associated_egress_qos_policy_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "mtu": &schema.Schema{
                 Type:     schema.TypeInt,
@@ -82,6 +85,7 @@ func resourceNSPortTemplate() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_ns_gateway_template": &schema.Schema{
                 Type:     schema.TypeString,

@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceOverlayAddressPool() *schema.Resource {
@@ -53,8 +53,9 @@ func dataSourceOverlayAddressPool() *schema.Resource {
 }
 
 
-func dataSourceOverlayAddressPoolRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceOverlayAddressPoolRead(d *schema.ResourceData, m interface{}) error {
     filteredOverlayAddressPools := vspk.OverlayAddressPoolsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -73,7 +74,7 @@ func dataSourceOverlayAddressPoolRead(d *schema.ResourceData, m interface{}) (er
     parent := &vspk.Link{ID: d.Get("parent_link").(string)}
     filteredOverlayAddressPools, err = parent.OverlayAddressPools(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     OverlayAddressPool := &vspk.OverlayAddressPool{}
@@ -102,5 +103,5 @@ func dataSourceOverlayAddressPoolRead(d *schema.ResourceData, m interface{}) (er
 
     d.SetId(OverlayAddressPool.Identifier())
     
-    return
+    return nil
 }

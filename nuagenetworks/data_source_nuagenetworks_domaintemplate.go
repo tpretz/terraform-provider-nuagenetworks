@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceDomainTemplate() *schema.Resource {
@@ -87,8 +87,9 @@ func dataSourceDomainTemplate() *schema.Resource {
 }
 
 
-func dataSourceDomainTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceDomainTemplateRead(d *schema.ResourceData, m interface{}) error {
     filteredDomainTemplates := vspk.DomainTemplatesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -108,13 +109,13 @@ func dataSourceDomainTemplateRead(d *schema.ResourceData, m interface{}) (err er
         parent := &vspk.Domain{ID: attr.(string)}
         filteredDomainTemplates, err = parent.DomainTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredDomainTemplates, err = parent.DomainTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -151,5 +152,5 @@ func dataSourceDomainTemplateRead(d *schema.ResourceData, m interface{}) (err er
 
     d.SetId(DomainTemplate.Identifier())
     
-    return
+    return nil
 }

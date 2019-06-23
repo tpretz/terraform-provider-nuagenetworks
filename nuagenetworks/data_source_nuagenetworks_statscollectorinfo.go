@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceStatsCollectorInfo() *schema.Resource {
@@ -57,8 +57,9 @@ func dataSourceStatsCollectorInfo() *schema.Resource {
 }
 
 
-func dataSourceStatsCollectorInfoRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceStatsCollectorInfoRead(d *schema.ResourceData, m interface{}) error {
     filteredStatsCollectorInfos := vspk.StatsCollectorInfosList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -77,7 +78,7 @@ func dataSourceStatsCollectorInfoRead(d *schema.ResourceData, m interface{}) (er
     parent := m.(*vspk.Me)
     filteredStatsCollectorInfos, err = parent.StatsCollectorInfos(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     StatsCollectorInfo := &vspk.StatsCollectorInfo{}
@@ -108,5 +109,5 @@ func dataSourceStatsCollectorInfoRead(d *schema.ResourceData, m interface{}) (er
 
     d.SetId(StatsCollectorInfo.Identifier())
     
-    return
+    return nil
 }

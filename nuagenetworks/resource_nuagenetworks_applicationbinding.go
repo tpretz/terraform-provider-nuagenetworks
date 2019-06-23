@@ -57,6 +57,7 @@ func resourceApplicationBinding() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_applicationperformancemanagement": &schema.Schema{
                 Type:     schema.TypeString,

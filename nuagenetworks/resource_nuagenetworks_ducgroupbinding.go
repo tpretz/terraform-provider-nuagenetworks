@@ -38,10 +38,12 @@ func resourceDUCGroupBinding() *schema.Resource {
             "priority": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "associated_duc_group_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_nsg_group": &schema.Schema{
                 Type:     schema.TypeString,

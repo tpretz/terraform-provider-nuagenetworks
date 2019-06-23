@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceEnterpriseProfile() *schema.Resource {
@@ -98,8 +98,9 @@ func dataSourceEnterpriseProfile() *schema.Resource {
 }
 
 
-func dataSourceEnterpriseProfileRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceEnterpriseProfileRead(d *schema.ResourceData, m interface{}) error {
     filteredEnterpriseProfiles := vspk.EnterpriseProfilesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -118,7 +119,7 @@ func dataSourceEnterpriseProfileRead(d *schema.ResourceData, m interface{}) (err
     parent := m.(*vspk.Me)
     filteredEnterpriseProfiles, err = parent.EnterpriseProfiles(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     EnterpriseProfile := &vspk.EnterpriseProfile{}
@@ -159,5 +160,5 @@ func dataSourceEnterpriseProfileRead(d *schema.ResourceData, m interface{}) (err
 
     d.SetId(EnterpriseProfile.Identifier())
     
-    return
+    return nil
 }

@@ -37,6 +37,7 @@ func resourceSSIDConnection() *schema.Resource {
             "passphrase": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "redirect_option": &schema.Schema{
                 Type:     schema.TypeString,
@@ -46,23 +47,28 @@ func resourceSSIDConnection() *schema.Resource {
             "redirect_url": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "generic_config": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "white_list": &schema.Schema{
                 Type:     schema.TypeList,
                 Optional: true,
+                Computed: true,
                 Elem:     &schema.Schema{Type: schema.TypeString},
             },
             "black_list": &schema.Schema{
                 Type:     schema.TypeList,
                 Optional: true,
+                Computed: true,
                 Elem:     &schema.Schema{Type: schema.TypeString},
             },
             "interface_name": &schema.Schema{
@@ -83,10 +89,12 @@ func resourceSSIDConnection() *schema.Resource {
             "associated_captive_portal_profile_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_egress_qos_policy_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "authentication_mode": &schema.Schema{
                 Type:     schema.TypeString,

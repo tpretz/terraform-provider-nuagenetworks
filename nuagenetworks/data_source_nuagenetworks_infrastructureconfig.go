@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceInfrastructureConfig() *schema.Resource {
@@ -53,8 +53,9 @@ func dataSourceInfrastructureConfig() *schema.Resource {
 }
 
 
-func dataSourceInfrastructureConfigRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceInfrastructureConfigRead(d *schema.ResourceData, m interface{}) error {
     filteredInfrastructureConfigs := vspk.InfrastructureConfigsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -73,7 +74,7 @@ func dataSourceInfrastructureConfigRead(d *schema.ResourceData, m interface{}) (
     parent := &vspk.NSGateway{ID: d.Get("parent_ns_gateway").(string)}
     filteredInfrastructureConfigs, err = parent.InfrastructureConfigs(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     InfrastructureConfig := &vspk.InfrastructureConfig{}
@@ -102,5 +103,5 @@ func dataSourceInfrastructureConfigRead(d *schema.ResourceData, m interface{}) (
 
     d.SetId(InfrastructureConfig.Identifier())
     
-    return
+    return nil
 }

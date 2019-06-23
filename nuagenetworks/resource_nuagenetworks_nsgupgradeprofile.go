@@ -33,6 +33,7 @@ func resourceNSGUpgradeProfile() *schema.Resource {
             "name": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
@@ -42,6 +43,7 @@ func resourceNSGUpgradeProfile() *schema.Resource {
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "metadata_upgrade_path": &schema.Schema{
                 Type:     schema.TypeString,
@@ -50,6 +52,7 @@ func resourceNSGUpgradeProfile() *schema.Resource {
             "enterprise_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -59,6 +62,7 @@ func resourceNSGUpgradeProfile() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
         },
     }

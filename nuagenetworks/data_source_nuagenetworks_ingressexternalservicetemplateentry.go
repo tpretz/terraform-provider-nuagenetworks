@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceIngressExternalServiceTemplateEntry() *schema.Resource {
@@ -153,8 +153,9 @@ func dataSourceIngressExternalServiceTemplateEntry() *schema.Resource {
 }
 
 
-func dataSourceIngressExternalServiceTemplateEntryRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceIngressExternalServiceTemplateEntryRead(d *schema.ResourceData, m interface{}) error {
     filteredIngressExternalServiceTemplateEntries := vspk.IngressExternalServiceTemplateEntriesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -173,7 +174,7 @@ func dataSourceIngressExternalServiceTemplateEntryRead(d *schema.ResourceData, m
     parent := &vspk.IngressExternalServiceTemplate{ID: d.Get("parent_ingress_external_service_template").(string)}
     filteredIngressExternalServiceTemplateEntries, err = parent.IngressExternalServiceTemplateEntries(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     IngressExternalServiceTemplateEntry := &vspk.IngressExternalServiceTemplateEntry{}
@@ -227,5 +228,5 @@ func dataSourceIngressExternalServiceTemplateEntryRead(d *schema.ResourceData, m
 
     d.SetId(IngressExternalServiceTemplateEntry.Identifier())
     
-    return
+    return nil
 }

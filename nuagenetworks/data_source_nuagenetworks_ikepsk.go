@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceIKEPSK() *schema.Resource {
@@ -81,8 +81,9 @@ func dataSourceIKEPSK() *schema.Resource {
 }
 
 
-func dataSourceIKEPSKRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceIKEPSKRead(d *schema.ResourceData, m interface{}) error {
     filteredIKEPSKs := vspk.IKEPSKsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -101,7 +102,7 @@ func dataSourceIKEPSKRead(d *schema.ResourceData, m interface{}) (err error) {
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     filteredIKEPSKs, err = parent.IKEPSKs(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     IKEPSK := &vspk.IKEPSK{}
@@ -137,5 +138,5 @@ func dataSourceIKEPSKRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(IKEPSK.Identifier())
     
-    return
+    return nil
 }

@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceMultiCastList() *schema.Resource {
@@ -55,8 +55,9 @@ func dataSourceMultiCastList() *schema.Resource {
 }
 
 
-func dataSourceMultiCastListRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceMultiCastListRead(d *schema.ResourceData, m interface{}) error {
     filteredMultiCastLists := vspk.MultiCastListsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -76,13 +77,13 @@ func dataSourceMultiCastListRead(d *schema.ResourceData, m interface{}) (err err
         parent := &vspk.EnterpriseProfile{ID: attr.(string)}
         filteredMultiCastLists, err = parent.MultiCastLists(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredMultiCastLists, err = parent.MultiCastLists(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -111,5 +112,5 @@ func dataSourceMultiCastListRead(d *schema.ResourceData, m interface{}) (err err
 
     d.SetId(MultiCastList.Identifier())
     
-    return
+    return nil
 }

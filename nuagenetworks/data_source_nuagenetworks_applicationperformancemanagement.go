@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceApplicationperformancemanagement() *schema.Resource {
@@ -72,8 +72,9 @@ func dataSourceApplicationperformancemanagement() *schema.Resource {
 }
 
 
-func dataSourceApplicationperformancemanagementRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceApplicationperformancemanagementRead(d *schema.ResourceData, m interface{}) error {
     filteredApplicationperformancemanagements := vspk.ApplicationperformancemanagementsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -93,19 +94,19 @@ func dataSourceApplicationperformancemanagementRead(d *schema.ResourceData, m in
         parent := &vspk.PerformanceMonitor{ID: attr.(string)}
         filteredApplicationperformancemanagements, err = parent.Applicationperformancemanagements(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredApplicationperformancemanagements, err = parent.Applicationperformancemanagements(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredApplicationperformancemanagements, err = parent.Applicationperformancemanagements(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -137,5 +138,5 @@ func dataSourceApplicationperformancemanagementRead(d *schema.ResourceData, m in
 
     d.SetId(Applicationperformancemanagement.Identifier())
     
-    return
+    return nil
 }

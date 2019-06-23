@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceNetworkLayout() *schema.Resource {
@@ -53,8 +53,9 @@ func dataSourceNetworkLayout() *schema.Resource {
 }
 
 
-func dataSourceNetworkLayoutRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceNetworkLayoutRead(d *schema.ResourceData, m interface{}) error {
     filteredNetworkLayouts := vspk.NetworkLayoutsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -73,7 +74,7 @@ func dataSourceNetworkLayoutRead(d *schema.ResourceData, m interface{}) (err err
     parent := m.(*vspk.Me)
     filteredNetworkLayouts, err = parent.NetworkLayouts(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     NetworkLayout := &vspk.NetworkLayout{}
@@ -103,5 +104,5 @@ func dataSourceNetworkLayoutRead(d *schema.ResourceData, m interface{}) (err err
 
     d.SetId(NetworkLayout.Identifier())
     
-    return
+    return nil
 }

@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceIKEGatewayConnection() *schema.Resource {
@@ -111,8 +111,9 @@ func dataSourceIKEGatewayConnection() *schema.Resource {
 }
 
 
-func dataSourceIKEGatewayConnectionRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceIKEGatewayConnectionRead(d *schema.ResourceData, m interface{}) error {
     filteredIKEGatewayConnections := vspk.IKEGatewayConnectionsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -132,13 +133,13 @@ func dataSourceIKEGatewayConnectionRead(d *schema.ResourceData, m interface{}) (
         parent := &vspk.Subnet{ID: attr.(string)}
         filteredIKEGatewayConnections, err = parent.IKEGatewayConnections(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vlan"); ok {
         parent := &vspk.VLAN{ID: attr.(string)}
         filteredIKEGatewayConnections, err = parent.IKEGatewayConnections(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -181,5 +182,5 @@ func dataSourceIKEGatewayConnectionRead(d *schema.ResourceData, m interface{}) (
 
     d.SetId(IKEGatewayConnection.Identifier())
     
-    return
+    return nil
 }

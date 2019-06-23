@@ -33,10 +33,12 @@ func resourceOverlayMirrorDestination() *schema.Resource {
             "esi": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "name": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
@@ -46,18 +48,22 @@ func resourceOverlayMirrorDestination() *schema.Resource {
             "redundancy_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "template_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "virtual_network_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "end_point_type": &schema.Schema{
                 Type:     schema.TypeString,
@@ -76,6 +82,7 @@ func resourceOverlayMirrorDestination() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_l2_domain": &schema.Schema{
                 Type:     schema.TypeString,

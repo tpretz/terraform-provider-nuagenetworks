@@ -37,6 +37,7 @@ func resourceVNFMetadata() *schema.Resource {
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "blob": &schema.Schema{
                 Type:     schema.TypeString,

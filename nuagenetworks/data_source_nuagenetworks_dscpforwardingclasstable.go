@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceDSCPForwardingClassTable() *schema.Resource {
@@ -53,8 +53,9 @@ func dataSourceDSCPForwardingClassTable() *schema.Resource {
 }
 
 
-func dataSourceDSCPForwardingClassTableRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceDSCPForwardingClassTableRead(d *schema.ResourceData, m interface{}) error {
     filteredDSCPForwardingClassTables := vspk.DSCPForwardingClassTablesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -73,7 +74,7 @@ func dataSourceDSCPForwardingClassTableRead(d *schema.ResourceData, m interface{
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     filteredDSCPForwardingClassTables, err = parent.DSCPForwardingClassTables(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     DSCPForwardingClassTable := &vspk.DSCPForwardingClassTable{}
@@ -102,5 +103,5 @@ func dataSourceDSCPForwardingClassTableRead(d *schema.ResourceData, m interface{
 
     d.SetId(DSCPForwardingClassTable.Identifier())
     
-    return
+    return nil
 }

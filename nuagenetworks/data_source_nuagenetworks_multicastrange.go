@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceMultiCastRange() *schema.Resource {
@@ -53,8 +53,9 @@ func dataSourceMultiCastRange() *schema.Resource {
 }
 
 
-func dataSourceMultiCastRangeRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceMultiCastRangeRead(d *schema.ResourceData, m interface{}) error {
     filteredMultiCastRanges := vspk.MultiCastRangesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -73,7 +74,7 @@ func dataSourceMultiCastRangeRead(d *schema.ResourceData, m interface{}) (err er
     parent := &vspk.MultiCastChannelMap{ID: d.Get("parent_multi_cast_channel_map").(string)}
     filteredMultiCastRanges, err = parent.MultiCastRanges(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     MultiCastRange := &vspk.MultiCastRange{}
@@ -102,5 +103,5 @@ func dataSourceMultiCastRangeRead(d *schema.ResourceData, m interface{}) (err er
 
     d.SetId(MultiCastRange.Identifier())
     
-    return
+    return nil
 }

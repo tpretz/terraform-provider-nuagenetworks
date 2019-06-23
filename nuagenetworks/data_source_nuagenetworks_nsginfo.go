@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceNSGInfo() *schema.Resource {
@@ -107,8 +107,9 @@ func dataSourceNSGInfo() *schema.Resource {
 }
 
 
-func dataSourceNSGInfoRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceNSGInfoRead(d *schema.ResourceData, m interface{}) error {
     filteredNSGInfos := vspk.NSGInfosList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -128,13 +129,13 @@ func dataSourceNSGInfoRead(d *schema.ResourceData, m interface{}) (err error) {
         parent := &vspk.NSGateway{ID: attr.(string)}
         filteredNSGInfos, err = parent.NSGInfos(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_gateway"); ok {
         parent := &vspk.Gateway{ID: attr.(string)}
         filteredNSGInfos, err = parent.NSGInfos(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -176,5 +177,5 @@ func dataSourceNSGInfoRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(NSGInfo.Identifier())
     
-    return
+    return nil
 }

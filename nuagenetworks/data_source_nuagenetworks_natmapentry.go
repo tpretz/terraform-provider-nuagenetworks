@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceNATMapEntry() *schema.Resource {
@@ -61,8 +61,9 @@ func dataSourceNATMapEntry() *schema.Resource {
 }
 
 
-func dataSourceNATMapEntryRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceNATMapEntryRead(d *schema.ResourceData, m interface{}) error {
     filteredNATMapEntries := vspk.NATMapEntriesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -81,7 +82,7 @@ func dataSourceNATMapEntryRead(d *schema.ResourceData, m interface{}) (err error
     parent := &vspk.PATNATPool{ID: d.Get("parent_patnat_pool").(string)}
     filteredNATMapEntries, err = parent.NATMapEntries(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     NATMapEntry := &vspk.NATMapEntry{}
@@ -112,5 +113,5 @@ func dataSourceNATMapEntryRead(d *schema.ResourceData, m interface{}) (err error
 
     d.SetId(NATMapEntry.Identifier())
     
-    return
+    return nil
 }

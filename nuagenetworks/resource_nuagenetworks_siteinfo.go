@@ -46,10 +46,12 @@ func resourceSiteInfo() *schema.Resource {
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "site_identifier": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "xmpp_domain": &schema.Schema{
                 Type:     schema.TypeString,
@@ -63,6 +65,7 @@ func resourceSiteInfo() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
         },
     }

@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceFirewallRule() *schema.Resource {
@@ -191,8 +191,9 @@ func dataSourceFirewallRule() *schema.Resource {
 }
 
 
-func dataSourceFirewallRuleRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceFirewallRuleRead(d *schema.ResourceData, m interface{}) error {
     filteredFirewallRules := vspk.FirewallRulesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -212,13 +213,13 @@ func dataSourceFirewallRuleRead(d *schema.ResourceData, m interface{}) (err erro
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredFirewallRules, err = parent.FirewallRules(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_firewall_acl"); ok {
         parent := &vspk.FirewallAcl{ID: attr.(string)}
         filteredFirewallRules, err = parent.FirewallRules(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -281,5 +282,5 @@ func dataSourceFirewallRuleRead(d *schema.ResourceData, m interface{}) (err erro
 
     d.SetId(FirewallRule.Identifier())
     
-    return
+    return nil
 }

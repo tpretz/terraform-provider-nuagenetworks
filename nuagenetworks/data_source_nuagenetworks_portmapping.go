@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourcePortMapping() *schema.Resource {
@@ -53,8 +53,9 @@ func dataSourcePortMapping() *schema.Resource {
 }
 
 
-func dataSourcePortMappingRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourcePortMappingRead(d *schema.ResourceData, m interface{}) error {
     filteredPortMappings := vspk.PortMappingsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -73,7 +74,7 @@ func dataSourcePortMappingRead(d *schema.ResourceData, m interface{}) (err error
     parent := &vspk.VPort{ID: d.Get("parent_vport").(string)}
     filteredPortMappings, err = parent.PortMappings(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     PortMapping := &vspk.PortMapping{}
@@ -102,5 +103,5 @@ func dataSourcePortMappingRead(d *schema.ResourceData, m interface{}) (err error
 
     d.SetId(PortMapping.Identifier())
     
-    return
+    return nil
 }

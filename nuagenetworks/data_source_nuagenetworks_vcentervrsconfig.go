@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceVCenterVRSConfig() *schema.Resource {
@@ -273,8 +273,9 @@ func dataSourceVCenterVRSConfig() *schema.Resource {
 }
 
 
-func dataSourceVCenterVRSConfigRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceVCenterVRSConfigRead(d *schema.ResourceData, m interface{}) error {
     filteredVCenterVRSConfigs := vspk.VCenterVRSConfigsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -293,7 +294,7 @@ func dataSourceVCenterVRSConfigRead(d *schema.ResourceData, m interface{}) (err 
     parent := m.(*vspk.Me)
     filteredVCenterVRSConfigs, err = parent.VCenterVRSConfigs(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     VCenterVRSConfig := &vspk.VCenterVRSConfig{}
@@ -378,5 +379,5 @@ func dataSourceVCenterVRSConfigRead(d *schema.ResourceData, m interface{}) (err 
 
     d.SetId(VCenterVRSConfig.Identifier())
     
-    return
+    return nil
 }

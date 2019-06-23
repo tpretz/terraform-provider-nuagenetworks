@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceLDAPConfiguration() *schema.Resource {
@@ -101,8 +101,9 @@ func dataSourceLDAPConfiguration() *schema.Resource {
 }
 
 
-func dataSourceLDAPConfigurationRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceLDAPConfigurationRead(d *schema.ResourceData, m interface{}) error {
     filteredLDAPConfigurations := vspk.LDAPConfigurationsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -121,7 +122,7 @@ func dataSourceLDAPConfigurationRead(d *schema.ResourceData, m interface{}) (err
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     filteredLDAPConfigurations, err = parent.LDAPConfigurations(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     LDAPConfiguration := &vspk.LDAPConfiguration{}
@@ -162,5 +163,5 @@ func dataSourceLDAPConfigurationRead(d *schema.ResourceData, m interface{}) (err
 
     d.SetId(LDAPConfiguration.Identifier())
     
-    return
+    return nil
 }

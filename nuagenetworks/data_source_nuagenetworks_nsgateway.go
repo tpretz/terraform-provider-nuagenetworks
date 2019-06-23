@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceNSGateway() *schema.Resource {
@@ -267,8 +267,9 @@ func dataSourceNSGateway() *schema.Resource {
 }
 
 
-func dataSourceNSGatewayRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceNSGatewayRead(d *schema.ResourceData, m interface{}) error {
     filteredNSGateways := vspk.NSGatewaysList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -288,43 +289,43 @@ func dataSourceNSGatewayRead(d *schema.ResourceData, m interface{}) (err error) 
         parent := &vspk.PerformanceMonitor{ID: attr.(string)}
         filteredNSGateways, err = parent.NSGateways(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_policy_object_group"); ok {
         parent := &vspk.PolicyObjectGroup{ID: attr.(string)}
         filteredNSGateways, err = parent.NSGateways(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_duc_group"); ok {
         parent := &vspk.DUCGroup{ID: attr.(string)}
         filteredNSGateways, err = parent.NSGateways(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ns_redundant_gateway_group"); ok {
         parent := &vspk.NSRedundantGatewayGroup{ID: attr.(string)}
         filteredNSGateways, err = parent.NSGateways(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredNSGateways, err = parent.NSGateways(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_nsg_group"); ok {
         parent := &vspk.NSGGroup{ID: attr.(string)}
         filteredNSGateways, err = parent.NSGateways(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredNSGateways, err = parent.NSGateways(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -401,5 +402,5 @@ func dataSourceNSGatewayRead(d *schema.ResourceData, m interface{}) (err error) 
 
     d.SetId(NSGateway.Identifier())
     
-    return
+    return nil
 }

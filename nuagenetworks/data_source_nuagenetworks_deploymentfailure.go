@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceDeploymentFailure() *schema.Resource {
@@ -67,8 +67,9 @@ func dataSourceDeploymentFailure() *schema.Resource {
 }
 
 
-func dataSourceDeploymentFailureRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceDeploymentFailureRead(d *schema.ResourceData, m interface{}) error {
     filteredDeploymentFailures := vspk.DeploymentFailuresList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -88,13 +89,13 @@ func dataSourceDeploymentFailureRead(d *schema.ResourceData, m interface{}) (err
         parent := &vspk.RedundancyGroup{ID: attr.(string)}
         filteredDeploymentFailures, err = parent.DeploymentFailures(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_gateway"); ok {
         parent := &vspk.Gateway{ID: attr.(string)}
         filteredDeploymentFailures, err = parent.DeploymentFailures(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -126,5 +127,5 @@ func dataSourceDeploymentFailureRead(d *schema.ResourceData, m interface{}) (err
 
     d.SetId(DeploymentFailure.Identifier())
     
-    return
+    return nil
 }

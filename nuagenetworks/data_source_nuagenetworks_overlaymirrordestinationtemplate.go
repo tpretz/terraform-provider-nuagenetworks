@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceOverlayMirrorDestinationTemplate() *schema.Resource {
@@ -65,8 +65,9 @@ func dataSourceOverlayMirrorDestinationTemplate() *schema.Resource {
 }
 
 
-func dataSourceOverlayMirrorDestinationTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceOverlayMirrorDestinationTemplateRead(d *schema.ResourceData, m interface{}) error {
     filteredOverlayMirrorDestinationTemplates := vspk.OverlayMirrorDestinationTemplatesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -85,7 +86,7 @@ func dataSourceOverlayMirrorDestinationTemplateRead(d *schema.ResourceData, m in
     parent := &vspk.L2DomainTemplate{ID: d.Get("parent_l2_domain_template").(string)}
     filteredOverlayMirrorDestinationTemplates, err = parent.OverlayMirrorDestinationTemplates(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     OverlayMirrorDestinationTemplate := &vspk.OverlayMirrorDestinationTemplate{}
@@ -117,5 +118,5 @@ func dataSourceOverlayMirrorDestinationTemplateRead(d *schema.ResourceData, m in
 
     d.SetId(OverlayMirrorDestinationTemplate.Identifier())
     
-    return
+    return nil
 }

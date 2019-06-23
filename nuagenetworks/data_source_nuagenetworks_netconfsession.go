@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceNetconfSession() *schema.Resource {
@@ -45,8 +45,9 @@ func dataSourceNetconfSession() *schema.Resource {
 }
 
 
-func dataSourceNetconfSessionRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceNetconfSessionRead(d *schema.ResourceData, m interface{}) error {
     filteredNetconfSessions := vspk.NetconfSessionsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -65,7 +66,7 @@ func dataSourceNetconfSessionRead(d *schema.ResourceData, m interface{}) (err er
     parent := &vspk.NetconfManager{ID: d.Get("parent_netconf_manager").(string)}
     filteredNetconfSessions, err = parent.NetconfSessions(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     NetconfSession := &vspk.NetconfSession{}
@@ -92,5 +93,5 @@ func dataSourceNetconfSessionRead(d *schema.ResourceData, m interface{}) (err er
 
     d.SetId(NetconfSession.Identifier())
     
-    return
+    return nil
 }

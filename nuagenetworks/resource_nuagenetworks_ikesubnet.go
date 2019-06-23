@@ -43,14 +43,17 @@ func resourceIKESubnet() *schema.Resource {
             "prefix": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_ike_gateway_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_ike_gateway": &schema.Schema{
                 Type:     schema.TypeString,

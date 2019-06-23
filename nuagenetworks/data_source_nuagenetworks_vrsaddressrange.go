@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceVRSAddressRange() *schema.Resource {
@@ -74,8 +74,9 @@ func dataSourceVRSAddressRange() *schema.Resource {
 }
 
 
-func dataSourceVRSAddressRangeRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceVRSAddressRangeRead(d *schema.ResourceData, m interface{}) error {
     filteredVRSAddressRanges := vspk.VRSAddressRangesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -95,31 +96,31 @@ func dataSourceVRSAddressRangeRead(d *schema.ResourceData, m interface{}) (err e
         parent := &vspk.VCenterHypervisor{ID: attr.(string)}
         filteredVRSAddressRanges, err = parent.VRSAddressRanges(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vcenter_data_center"); ok {
         parent := &vspk.VCenterDataCenter{ID: attr.(string)}
         filteredVRSAddressRanges, err = parent.VRSAddressRanges(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vcenter_cluster"); ok {
         parent := &vspk.VCenterCluster{ID: attr.(string)}
         filteredVRSAddressRanges, err = parent.VRSAddressRanges(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vcenter"); ok {
         parent := &vspk.VCenter{ID: attr.(string)}
         filteredVRSAddressRanges, err = parent.VRSAddressRanges(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vcenter_vrs_config"); ok {
         parent := &vspk.VCenterVRSConfig{ID: attr.(string)}
         filteredVRSAddressRanges, err = parent.VRSAddressRanges(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -149,5 +150,5 @@ func dataSourceVRSAddressRangeRead(d *schema.ResourceData, m interface{}) (err e
 
     d.SetId(VRSAddressRange.Identifier())
     
-    return
+    return nil
 }

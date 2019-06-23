@@ -33,6 +33,7 @@ func resourceL2DomainTemplate() *schema.Resource {
             "dhcp_managed": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "dpi": &schema.Schema{
                 Type:     schema.TypeString,
@@ -42,14 +43,17 @@ func resourceL2DomainTemplate() *schema.Resource {
             "ip_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "ipv6_address": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "ipv6_gateway": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -63,22 +67,27 @@ func resourceL2DomainTemplate() *schema.Resource {
             "gateway": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "address": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "netmask": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "encryption": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -88,10 +97,12 @@ func resourceL2DomainTemplate() *schema.Resource {
             "entity_state": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "policy_change_status": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "use_global_mac": &schema.Schema{
                 Type:     schema.TypeString,
@@ -101,14 +112,17 @@ func resourceL2DomainTemplate() *schema.Resource {
             "associated_multicast_channel_map_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "multicast": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "dynamic_ipv6_address": &schema.Schema{
                 Type:     schema.TypeBool,

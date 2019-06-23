@@ -33,10 +33,12 @@ func resourcePolicyEntry() *schema.Resource {
             "name": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "match_criteria": &schema.Schema{
                 Type:     schema.TypeMap,
                 Optional: true,
+                Computed: true,
             },
             "match_criteria_raw": {
 				Type:     schema.TypeString,
@@ -56,6 +58,7 @@ func resourcePolicyEntry() *schema.Resource {
             "actions": &schema.Schema{
                 Type:     schema.TypeMap,
                 Optional: true,
+                Computed: true,
             },
             "actions_raw": {
 				Type:     schema.TypeString,
@@ -65,6 +68,7 @@ func resourcePolicyEntry() *schema.Resource {
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_policy_statement": &schema.Schema{
                 Type:     schema.TypeString,

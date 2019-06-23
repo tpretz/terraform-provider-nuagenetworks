@@ -26,8 +26,8 @@
   version = "0.12.2"
 
 [[constraint]]
-  name = "github.com/nuagenetworks/go-bambou"
-  version = "1.0.1"
+  name = "github.com/tpretz/go-bambou"
+  version = "1.0.6"
 
 [[constraint]]
   name = "github.com/tpretz/vspk-go"

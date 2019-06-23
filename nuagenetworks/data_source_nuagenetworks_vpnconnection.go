@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceVPNConnection() *schema.Resource {
@@ -68,8 +68,9 @@ func dataSourceVPNConnection() *schema.Resource {
 }
 
 
-func dataSourceVPNConnectionRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceVPNConnectionRead(d *schema.ResourceData, m interface{}) error {
     filteredVPNConnections := vspk.VPNConnectionsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -89,19 +90,19 @@ func dataSourceVPNConnectionRead(d *schema.ResourceData, m interface{}) (err err
         parent := &vspk.SharedNetworkResource{ID: attr.(string)}
         filteredVPNConnections, err = parent.VPNConnections(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_domain"); ok {
         parent := &vspk.Domain{ID: attr.(string)}
         filteredVPNConnections, err = parent.VPNConnections(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredVPNConnections, err = parent.VPNConnections(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -132,5 +133,5 @@ func dataSourceVPNConnectionRead(d *schema.ResourceData, m interface{}) (err err
 
     d.SetId(VPNConnection.Identifier())
     
-    return
+    return nil
 }

@@ -33,6 +33,7 @@ func resourceVPort() *schema.Resource {
             "fip_ignore_default_route": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "vlan": &schema.Schema{
                 Type:     schema.TypeInt,
@@ -42,6 +43,7 @@ func resourceVPort() *schema.Resource {
             "vlanid": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "dpi": &schema.Schema{
                 Type:     schema.TypeString,
@@ -55,6 +57,7 @@ func resourceVPort() *schema.Resource {
             "has_attached_interfaces": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
@@ -64,14 +67,17 @@ func resourceVPort() *schema.Resource {
             "gateway_mac_move_role": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "gateway_port_name": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "active": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "address_spoofing": &schema.Schema{
                 Type:     schema.TypeString,
@@ -80,22 +86,27 @@ func resourceVPort() *schema.Resource {
             "peer_operational_state": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "segmentation_id": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "segmentation_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "service_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -105,30 +116,37 @@ func resourceVPort() *schema.Resource {
             "domain_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "zone_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "operational_state": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "trunk_role": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "assoc_entity_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_egress_profile_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_floating_ip_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_gateway_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -148,22 +166,27 @@ func resourceVPort() *schema.Resource {
             "associated_ingress_profile_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_multicast_channel_map_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_ssid": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_send_multicast_channel_map_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_trunk_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "sub_type": &schema.Schema{
                 Type:     schema.TypeString,
@@ -173,10 +196,12 @@ func resourceVPort() *schema.Resource {
             "multi_nic_vport_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "multicast": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "gw_eligible": &schema.Schema{
                 Type:     schema.TypeBool,
@@ -186,6 +211,7 @@ func resourceVPort() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "type": &schema.Schema{
                 Type:     schema.TypeString,
@@ -194,6 +220,7 @@ func resourceVPort() *schema.Resource {
             "system_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_l2_domain": &schema.Schema{
                 Type:     schema.TypeString,

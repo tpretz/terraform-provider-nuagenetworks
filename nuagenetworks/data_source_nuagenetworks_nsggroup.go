@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceNSGGroup() *schema.Resource {
@@ -41,8 +41,9 @@ func dataSourceNSGGroup() *schema.Resource {
 }
 
 
-func dataSourceNSGGroupRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceNSGGroupRead(d *schema.ResourceData, m interface{}) error {
     filteredNSGGroups := vspk.NSGGroupsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -62,13 +63,13 @@ func dataSourceNSGGroupRead(d *schema.ResourceData, m interface{}) (err error) {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredNSGGroups, err = parent.NSGGroups(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredNSGGroups, err = parent.NSGGroups(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -95,5 +96,5 @@ func dataSourceNSGGroupRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(NSGGroup.Identifier())
     
-    return
+    return nil
 }

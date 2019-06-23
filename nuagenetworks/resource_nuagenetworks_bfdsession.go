@@ -33,6 +33,7 @@ func resourceBFDSession() *schema.Resource {
             "bfd_destination_ip": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "bfd_multiplier": &schema.Schema{
                 Type:     schema.TypeInt,
@@ -62,6 +63,7 @@ func resourceBFDSession() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_br_connection": &schema.Schema{
                 Type:     schema.TypeString,

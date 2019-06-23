@@ -33,6 +33,7 @@ func resourceVNFDomainMapping() *schema.Resource {
             "segmentation_id": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "segmentation_type": &schema.Schema{
                 Type:     schema.TypeString,
@@ -42,10 +43,12 @@ func resourceVNFDomainMapping() *schema.Resource {
             "associated_ns_gateway_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_ns_gateway_name": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_domain": &schema.Schema{
                 Type:     schema.TypeString,

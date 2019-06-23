@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceIKESubnet() *schema.Resource {
@@ -53,8 +53,9 @@ func dataSourceIKESubnet() *schema.Resource {
 }
 
 
-func dataSourceIKESubnetRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceIKESubnetRead(d *schema.ResourceData, m interface{}) error {
     filteredIKESubnets := vspk.IKESubnetsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -73,7 +74,7 @@ func dataSourceIKESubnetRead(d *schema.ResourceData, m interface{}) (err error) 
     parent := &vspk.IKEGateway{ID: d.Get("parent_ike_gateway").(string)}
     filteredIKESubnets, err = parent.IKESubnets(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     IKESubnet := &vspk.IKESubnet{}
@@ -102,5 +103,5 @@ func dataSourceIKESubnetRead(d *schema.ResourceData, m interface{}) (err error) 
 
     d.SetId(IKESubnet.Identifier())
     
-    return
+    return nil
 }

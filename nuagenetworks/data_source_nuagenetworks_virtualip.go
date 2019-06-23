@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceVirtualIP() *schema.Resource {
@@ -76,8 +76,9 @@ func dataSourceVirtualIP() *schema.Resource {
 }
 
 
-func dataSourceVirtualIPRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceVirtualIPRead(d *schema.ResourceData, m interface{}) error {
     filteredVirtualIPs := vspk.VirtualIPsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -97,19 +98,19 @@ func dataSourceVirtualIPRead(d *schema.ResourceData, m interface{}) (err error) 
         parent := &vspk.Subnet{ID: attr.(string)}
         filteredVirtualIPs, err = parent.VirtualIPs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_redirection_target"); ok {
         parent := &vspk.RedirectionTarget{ID: attr.(string)}
         filteredVirtualIPs, err = parent.VirtualIPs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredVirtualIPs, err = parent.VirtualIPs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -142,5 +143,5 @@ func dataSourceVirtualIPRead(d *schema.ResourceData, m interface{}) (err error) 
 
     d.SetId(VirtualIP.Identifier())
     
-    return
+    return nil
 }

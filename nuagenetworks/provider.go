@@ -7,7 +7,7 @@ import (
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/hashicorp/terraform/terraform"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func Provider() terraform.ResourceProvider {
@@ -526,10 +526,10 @@ func providerConfigure(d *schema.ResourceData) (root interface{}, err error) {
       s, root = vspk.NewSession(d.Get("username").(string), d.Get("password").(string), d.Get("enterprise").(string), d.Get("vsd_endpoint").(string))
     }
 
-    err = s.Start()
+    berr := s.Start()
 
-    if err != nil {
-        err = errors.New("Unable to connect to Nuage VSD: " + err.Error())
+    if berr != nil {
+        err = errors.New("Unable to connect to Nuage VSD: " + berr.Description)
         return
     }
 

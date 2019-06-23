@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceBGPProfile() *schema.Resource {
@@ -77,8 +77,9 @@ func dataSourceBGPProfile() *schema.Resource {
 }
 
 
-func dataSourceBGPProfileRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceBGPProfileRead(d *schema.ResourceData, m interface{}) error {
     filteredBGPProfiles := vspk.BGPProfilesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -98,13 +99,13 @@ func dataSourceBGPProfileRead(d *schema.ResourceData, m interface{}) (err error)
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredBGPProfiles, err = parent.BGPProfiles(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredBGPProfiles, err = parent.BGPProfiles(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -140,5 +141,5 @@ func dataSourceBGPProfileRead(d *schema.ResourceData, m interface{}) (err error)
 
     d.SetId(BGPProfile.Identifier())
     
-    return
+    return nil
 }

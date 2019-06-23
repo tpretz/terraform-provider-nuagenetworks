@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceNextHop() *schema.Resource {
@@ -53,8 +53,9 @@ func dataSourceNextHop() *schema.Resource {
 }
 
 
-func dataSourceNextHopRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceNextHopRead(d *schema.ResourceData, m interface{}) error {
     filteredNextHops := vspk.NextHopsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -73,7 +74,7 @@ func dataSourceNextHopRead(d *schema.ResourceData, m interface{}) (err error) {
     parent := &vspk.Link{ID: d.Get("parent_link").(string)}
     filteredNextHops, err = parent.NextHops(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     NextHop := &vspk.NextHop{}
@@ -102,5 +103,5 @@ func dataSourceNextHopRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(NextHop.Identifier())
     
-    return
+    return nil
 }

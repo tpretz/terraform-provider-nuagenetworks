@@ -42,10 +42,12 @@ func resourcePGExpression() *schema.Resource {
             "template_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -59,6 +61,7 @@ func resourcePGExpression() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_domain": &schema.Schema{
                 Type:     schema.TypeString,

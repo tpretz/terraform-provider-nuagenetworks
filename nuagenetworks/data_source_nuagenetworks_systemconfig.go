@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceSystemConfig() *schema.Resource {
@@ -601,8 +601,9 @@ func dataSourceSystemConfig() *schema.Resource {
 }
 
 
-func dataSourceSystemConfigRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceSystemConfigRead(d *schema.ResourceData, m interface{}) error {
     filteredSystemConfigs := vspk.SystemConfigsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -621,7 +622,7 @@ func dataSourceSystemConfigRead(d *schema.ResourceData, m interface{}) (err erro
     parent := m.(*vspk.Me)
     filteredSystemConfigs, err = parent.SystemConfigs(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     SystemConfig := &vspk.SystemConfig{}
@@ -788,5 +789,5 @@ func dataSourceSystemConfigRead(d *schema.ResourceData, m interface{}) (err erro
 
     d.SetId(SystemConfig.Identifier())
     
-    return
+    return nil
 }

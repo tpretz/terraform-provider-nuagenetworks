@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceSAPEgressQoSProfile() *schema.Resource {
@@ -47,8 +47,9 @@ func dataSourceSAPEgressQoSProfile() *schema.Resource {
 }
 
 
-func dataSourceSAPEgressQoSProfileRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceSAPEgressQoSProfileRead(d *schema.ResourceData, m interface{}) error {
     filteredSAPEgressQoSProfiles := vspk.SAPEgressQoSProfilesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -68,13 +69,13 @@ func dataSourceSAPEgressQoSProfileRead(d *schema.ResourceData, m interface{}) (e
         parent := &vspk.RedundancyGroup{ID: attr.(string)}
         filteredSAPEgressQoSProfiles, err = parent.SAPEgressQoSProfiles(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_gateway"); ok {
         parent := &vspk.Gateway{ID: attr.(string)}
         filteredSAPEgressQoSProfiles, err = parent.SAPEgressQoSProfiles(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -101,5 +102,5 @@ func dataSourceSAPEgressQoSProfileRead(d *schema.ResourceData, m interface{}) (e
 
     d.SetId(SAPEgressQoSProfile.Identifier())
     
-    return
+    return nil
 }

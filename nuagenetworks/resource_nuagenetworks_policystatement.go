@@ -33,10 +33,12 @@ func resourcePolicyStatement() *schema.Resource {
             "name": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_link": &schema.Schema{
                 Type:     schema.TypeString,

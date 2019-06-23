@@ -91,6 +91,7 @@ func resourceShuntLink() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_ns_redundant_gateway_group": &schema.Schema{
                 Type:     schema.TypeString,

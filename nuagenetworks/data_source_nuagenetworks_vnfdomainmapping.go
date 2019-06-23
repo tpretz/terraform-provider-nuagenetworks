@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceVNFDomainMapping() *schema.Resource {
@@ -49,8 +49,9 @@ func dataSourceVNFDomainMapping() *schema.Resource {
 }
 
 
-func dataSourceVNFDomainMappingRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceVNFDomainMappingRead(d *schema.ResourceData, m interface{}) error {
     filteredVNFDomainMappings := vspk.VNFDomainMappingsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -69,7 +70,7 @@ func dataSourceVNFDomainMappingRead(d *schema.ResourceData, m interface{}) (err 
     parent := &vspk.Domain{ID: d.Get("parent_domain").(string)}
     filteredVNFDomainMappings, err = parent.VNFDomainMappings(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     VNFDomainMapping := &vspk.VNFDomainMapping{}
@@ -97,5 +98,5 @@ func dataSourceVNFDomainMappingRead(d *schema.ResourceData, m interface{}) (err 
 
     d.SetId(VNFDomainMapping.Identifier())
     
-    return
+    return nil
 }

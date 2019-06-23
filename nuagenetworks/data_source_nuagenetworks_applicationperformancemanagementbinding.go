@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceApplicationperformancemanagementbinding() *schema.Resource {
@@ -63,8 +63,9 @@ func dataSourceApplicationperformancemanagementbinding() *schema.Resource {
 }
 
 
-func dataSourceApplicationperformancemanagementbindingRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceApplicationperformancemanagementbindingRead(d *schema.ResourceData, m interface{}) error {
     filteredApplicationperformancemanagementbindings := vspk.ApplicationperformancemanagementbindingsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -84,13 +85,13 @@ func dataSourceApplicationperformancemanagementbindingRead(d *schema.ResourceDat
         parent := &vspk.Domain{ID: attr.(string)}
         filteredApplicationperformancemanagementbindings, err = parent.Applicationperformancemanagementbindings(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredApplicationperformancemanagementbindings, err = parent.Applicationperformancemanagementbindings(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -121,5 +122,5 @@ func dataSourceApplicationperformancemanagementbindingRead(d *schema.ResourceDat
 
     d.SetId(Applicationperformancemanagementbinding.Identifier())
     
-    return
+    return nil
 }

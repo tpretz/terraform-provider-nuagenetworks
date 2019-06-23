@@ -33,6 +33,7 @@ func resourceVNFDescriptor() *schema.Resource {
             "cpu_count": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -45,10 +46,12 @@ func resourceVNFDescriptor() *schema.Resource {
             "vendor": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "metadata_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -62,6 +65,7 @@ func resourceVNFDescriptor() *schema.Resource {
             "associated_vnf_threshold_policy_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "storage_gb": &schema.Schema{
                 Type:     schema.TypeInt,

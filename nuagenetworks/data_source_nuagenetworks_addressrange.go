@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceAddressRange() *schema.Resource {
@@ -82,8 +82,9 @@ func dataSourceAddressRange() *schema.Resource {
 }
 
 
-func dataSourceAddressRangeRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceAddressRangeRead(d *schema.ResourceData, m interface{}) error {
     filteredAddressRanges := vspk.AddressRangesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -103,31 +104,31 @@ func dataSourceAddressRangeRead(d *schema.ResourceData, m interface{}) (err erro
         parent := &vspk.SharedNetworkResource{ID: attr.(string)}
         filteredAddressRanges, err = parent.AddressRanges(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredAddressRanges, err = parent.AddressRanges(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_l2_domain_template"); ok {
         parent := &vspk.L2DomainTemplate{ID: attr.(string)}
         filteredAddressRanges, err = parent.AddressRanges(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_subnet"); ok {
         parent := &vspk.Subnet{ID: attr.(string)}
         filteredAddressRanges, err = parent.AddressRanges(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_subnet_template"); ok {
         parent := &vspk.SubnetTemplate{ID: attr.(string)}
         filteredAddressRanges, err = parent.AddressRanges(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -159,5 +160,5 @@ func dataSourceAddressRangeRead(d *schema.ResourceData, m interface{}) (err erro
 
     d.SetId(AddressRange.Identifier())
     
-    return
+    return nil
 }

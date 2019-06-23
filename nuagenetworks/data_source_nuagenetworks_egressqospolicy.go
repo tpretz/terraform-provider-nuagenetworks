@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceEgressQOSPolicy() *schema.Resource {
@@ -109,8 +109,9 @@ func dataSourceEgressQOSPolicy() *schema.Resource {
 }
 
 
-func dataSourceEgressQOSPolicyRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceEgressQOSPolicyRead(d *schema.ResourceData, m interface{}) error {
     filteredEgressQOSPolicies := vspk.EgressQOSPoliciesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -130,13 +131,13 @@ func dataSourceEgressQOSPolicyRead(d *schema.ResourceData, m interface{}) (err e
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredEgressQOSPolicies, err = parent.EgressQOSPolicies(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredEgressQOSPolicies, err = parent.EgressQOSPolicies(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -179,5 +180,5 @@ func dataSourceEgressQOSPolicyRead(d *schema.ResourceData, m interface{}) (err e
 
     d.SetId(EgressQOSPolicy.Identifier())
     
-    return
+    return nil
 }

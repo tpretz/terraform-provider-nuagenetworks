@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceGateway() *schema.Resource {
@@ -187,8 +187,9 @@ func dataSourceGateway() *schema.Resource {
 }
 
 
-func dataSourceGatewayRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceGatewayRead(d *schema.ResourceData, m interface{}) error {
     filteredGateways := vspk.GatewaysList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -208,19 +209,19 @@ func dataSourceGatewayRead(d *schema.ResourceData, m interface{}) (err error) {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredGateways, err = parent.Gateways(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_redundancy_group"); ok {
         parent := &vspk.RedundancyGroup{ID: attr.(string)}
         filteredGateways, err = parent.Gateways(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredGateways, err = parent.Gateways(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -282,5 +283,5 @@ func dataSourceGatewayRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(Gateway.Identifier())
     
-    return
+    return nil
 }

@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceIngressAdvFwdTemplate() *schema.Resource {
@@ -93,8 +93,9 @@ func dataSourceIngressAdvFwdTemplate() *schema.Resource {
 }
 
 
-func dataSourceIngressAdvFwdTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceIngressAdvFwdTemplateRead(d *schema.ResourceData, m interface{}) error {
     filteredIngressAdvFwdTemplates := vspk.IngressAdvFwdTemplatesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -114,25 +115,25 @@ func dataSourceIngressAdvFwdTemplateRead(d *schema.ResourceData, m interface{}) 
         parent := &vspk.Domain{ID: attr.(string)}
         filteredIngressAdvFwdTemplates, err = parent.IngressAdvFwdTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredIngressAdvFwdTemplates, err = parent.IngressAdvFwdTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_l2_domain_template"); ok {
         parent := &vspk.L2DomainTemplate{ID: attr.(string)}
         filteredIngressAdvFwdTemplates, err = parent.IngressAdvFwdTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_domain_template"); ok {
         parent := &vspk.DomainTemplate{ID: attr.(string)}
         filteredIngressAdvFwdTemplates, err = parent.IngressAdvFwdTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -168,5 +169,5 @@ func dataSourceIngressAdvFwdTemplateRead(d *schema.ResourceData, m interface{}) 
 
     d.SetId(IngressAdvFwdTemplate.Identifier())
     
-    return
+    return nil
 }

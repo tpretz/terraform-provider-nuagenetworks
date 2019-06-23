@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceJob() *schema.Resource {
@@ -105,8 +105,9 @@ func dataSourceJob() *schema.Resource {
 }
 
 
-func dataSourceJobRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceJobRead(d *schema.ResourceData, m interface{}) error {
     filteredJobs := vspk.JobsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -126,55 +127,55 @@ func dataSourceJobRead(d *schema.ResourceData, m interface{}) (err error) {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredJobs, err = parent.Jobs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_egress_acl_template"); ok {
         parent := &vspk.EgressACLTemplate{ID: attr.(string)}
         filteredJobs, err = parent.Jobs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredJobs, err = parent.Jobs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ingress_adv_fwd_template"); ok {
         parent := &vspk.IngressAdvFwdTemplate{ID: attr.(string)}
         filteredJobs, err = parent.Jobs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ns_gateway"); ok {
         parent := &vspk.NSGateway{ID: attr.(string)}
         filteredJobs, err = parent.Jobs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ingress_acl_template"); ok {
         parent := &vspk.IngressACLTemplate{ID: attr.(string)}
         filteredJobs, err = parent.Jobs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_redundancy_group"); ok {
         parent := &vspk.RedundancyGroup{ID: attr.(string)}
         filteredJobs, err = parent.Jobs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_gateway"); ok {
         parent := &vspk.Gateway{ID: attr.(string)}
         filteredJobs, err = parent.Jobs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredJobs, err = parent.Jobs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -208,5 +209,5 @@ func dataSourceJobRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(Job.Identifier())
     
-    return
+    return nil
 }

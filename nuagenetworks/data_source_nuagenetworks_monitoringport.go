@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceMonitoringPort() *schema.Resource {
@@ -84,8 +84,9 @@ func dataSourceMonitoringPort() *schema.Resource {
 }
 
 
-func dataSourceMonitoringPortRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceMonitoringPortRead(d *schema.ResourceData, m interface{}) error {
     filteredMonitoringPorts := vspk.MonitoringPortsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -105,19 +106,19 @@ func dataSourceMonitoringPortRead(d *schema.ResourceData, m interface{}) (err er
         parent := &vspk.VSC{ID: attr.(string)}
         filteredMonitoringPorts, err = parent.MonitoringPorts(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_hsc"); ok {
         parent := &vspk.HSC{ID: attr.(string)}
         filteredMonitoringPorts, err = parent.MonitoringPorts(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vrs"); ok {
         parent := &vspk.VRS{ID: attr.(string)}
         filteredMonitoringPorts, err = parent.MonitoringPorts(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -152,5 +153,5 @@ func dataSourceMonitoringPortRead(d *schema.ResourceData, m interface{}) (err er
 
     d.SetId(MonitoringPort.Identifier())
     
-    return
+    return nil
 }

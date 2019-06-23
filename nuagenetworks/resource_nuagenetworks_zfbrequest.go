@@ -33,46 +33,57 @@ func resourceZFBRequest() *schema.Resource {
             "mac_address": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "zfb_approval_status": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "zfb_bootstrap_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "zfb_info": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "zfb_request_retry_timer": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "sku": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "ip_address": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "cpu_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "nsg_version": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "uuid": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "family": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "last_connected_time": &schema.Schema{
                 Type:     schema.TypeFloat,
@@ -87,6 +98,7 @@ func resourceZFBRequest() *schema.Resource {
             "serial_number": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -96,14 +108,17 @@ func resourceZFBRequest() *schema.Resource {
             "hostname": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_enterprise_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_enterprise_name": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_entity_type": &schema.Schema{
                 Type:     schema.TypeString,
@@ -113,6 +128,7 @@ func resourceZFBRequest() *schema.Resource {
             "associated_gateway_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_gateway_name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -122,6 +138,7 @@ func resourceZFBRequest() *schema.Resource {
             "associated_ns_gateway_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_ns_gateway_name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -131,10 +148,12 @@ func resourceZFBRequest() *schema.Resource {
             "status_string": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,

@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceSPATSourcesPool() *schema.Resource {
@@ -46,8 +46,9 @@ func dataSourceSPATSourcesPool() *schema.Resource {
 }
 
 
-func dataSourceSPATSourcesPoolRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceSPATSourcesPoolRead(d *schema.ResourceData, m interface{}) error {
     filteredSPATSourcesPools := vspk.SPATSourcesPoolsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -66,7 +67,7 @@ func dataSourceSPATSourcesPoolRead(d *schema.ResourceData, m interface{}) (err e
     parent := &vspk.Domain{ID: d.Get("parent_domain").(string)}
     filteredSPATSourcesPools, err = parent.SPATSourcesPools(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     SPATSourcesPool := &vspk.SPATSourcesPool{}
@@ -93,5 +94,5 @@ func dataSourceSPATSourcesPoolRead(d *schema.ResourceData, m interface{}) (err e
 
     d.SetId(SPATSourcesPool.Identifier())
     
-    return
+    return nil
 }

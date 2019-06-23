@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceVRSMetrics() *schema.Resource {
@@ -97,8 +97,9 @@ func dataSourceVRSMetrics() *schema.Resource {
 }
 
 
-func dataSourceVRSMetricsRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceVRSMetricsRead(d *schema.ResourceData, m interface{}) error {
     filteredVRSMetrics := vspk.VRSMetricsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -117,7 +118,7 @@ func dataSourceVRSMetricsRead(d *schema.ResourceData, m interface{}) (err error)
     parent := &vspk.VCenterHypervisor{ID: d.Get("parent_vcenter_hypervisor").(string)}
     filteredVRSMetrics, err = parent.VRSMetrics(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     VRSMetrics := &vspk.VRSMetrics{}
@@ -157,5 +158,5 @@ func dataSourceVRSMetricsRead(d *schema.ResourceData, m interface{}) (err error)
 
     d.SetId(VRSMetrics.Identifier())
     
-    return
+    return nil
 }

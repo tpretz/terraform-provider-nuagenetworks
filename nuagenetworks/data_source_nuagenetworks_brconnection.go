@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceBRConnection() *schema.Resource {
@@ -87,8 +87,9 @@ func dataSourceBRConnection() *schema.Resource {
 }
 
 
-func dataSourceBRConnectionRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceBRConnectionRead(d *schema.ResourceData, m interface{}) error {
     filteredBRConnections := vspk.BRConnectionsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -108,13 +109,13 @@ func dataSourceBRConnectionRead(d *schema.ResourceData, m interface{}) (err erro
         parent := &vspk.VLANTemplate{ID: attr.(string)}
         filteredBRConnections, err = parent.BRConnections(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vlan"); ok {
         parent := &vspk.VLAN{ID: attr.(string)}
         filteredBRConnections, err = parent.BRConnections(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -151,5 +152,5 @@ func dataSourceBRConnectionRead(d *schema.ResourceData, m interface{}) (err erro
 
     d.SetId(BRConnection.Identifier())
     
-    return
+    return nil
 }

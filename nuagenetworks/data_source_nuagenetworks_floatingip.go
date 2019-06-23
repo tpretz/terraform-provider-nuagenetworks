@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceFloatingIp() *schema.Resource {
@@ -65,8 +65,9 @@ func dataSourceFloatingIp() *schema.Resource {
 }
 
 
-func dataSourceFloatingIpRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceFloatingIpRead(d *schema.ResourceData, m interface{}) error {
     filteredFloatingIps := vspk.FloatingIpsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -86,13 +87,13 @@ func dataSourceFloatingIpRead(d *schema.ResourceData, m interface{}) (err error)
         parent := &vspk.Domain{ID: attr.(string)}
         filteredFloatingIps, err = parent.FloatingIps(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredFloatingIps, err = parent.FloatingIps(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -125,5 +126,5 @@ func dataSourceFloatingIpRead(d *schema.ResourceData, m interface{}) (err error)
 
     d.SetId(FloatingIp.Identifier())
     
-    return
+    return nil
 }

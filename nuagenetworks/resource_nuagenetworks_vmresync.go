@@ -33,10 +33,12 @@ func resourceVMResync() *schema.Resource {
             "last_request_timestamp": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "last_time_resync_initiated": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
@@ -51,10 +53,12 @@ func resourceVMResync() *schema.Resource {
             "status": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_subnet": &schema.Schema{
                 Type:     schema.TypeString,

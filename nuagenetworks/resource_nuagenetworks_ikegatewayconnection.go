@@ -33,6 +33,7 @@ func resourceIKEGatewayConnection() *schema.Resource {
             "nsg_identifier": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "nsg_identifier_type": &schema.Schema{
                 Type:     schema.TypeString,
@@ -42,10 +43,12 @@ func resourceIKEGatewayConnection() *schema.Resource {
             "nsg_role": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "name": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "mark": &schema.Schema{
                 Type:     schema.TypeInt,
@@ -60,14 +63,17 @@ func resourceIKEGatewayConnection() *schema.Resource {
             "sequence": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "allow_any_subnet": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "unencrypted_psk": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -77,34 +83,42 @@ func resourceIKEGatewayConnection() *schema.Resource {
             "port_vlan_name": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "priority": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "associated_ike_authentication_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_ike_authentication_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_ike_encryption_profile_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_ike_gateway_profile_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_vlanid": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_vlan": &schema.Schema{
                 Type:     schema.TypeString,

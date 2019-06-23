@@ -33,26 +33,32 @@ func resourceVRSRedeploymentpolicy() *schema.Resource {
             "al_ubr0_status_redeployment_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "cpu_utilization_redeployment_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "cpu_utilization_threshold": &schema.Schema{
                 Type:     schema.TypeFloat,
                 Optional: true,
+                Computed: true,
             },
             "vrs_corrective_action_delay": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "vrs_process_redeployment_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "vrsvsc_status_redeployment_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
@@ -62,22 +68,27 @@ func resourceVRSRedeploymentpolicy() *schema.Resource {
             "redeployment_delay": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "memory_utilization_redeployment_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "memory_utilization_threshold": &schema.Schema{
                 Type:     schema.TypeFloat,
                 Optional: true,
+                Computed: true,
             },
             "deployment_count_threshold": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "jesxmon_process_redeployment_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -87,22 +98,27 @@ func resourceVRSRedeploymentpolicy() *schema.Resource {
             "log_disk_utilization_redeployment_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "log_disk_utilization_threshold": &schema.Schema{
                 Type:     schema.TypeFloat,
                 Optional: true,
+                Computed: true,
             },
             "root_disk_utilization_redeployment_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "root_disk_utilization_threshold": &schema.Schema{
                 Type:     schema.TypeFloat,
                 Optional: true,
+                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_vcenter_hypervisor": &schema.Schema{
                 Type:     schema.TypeString,

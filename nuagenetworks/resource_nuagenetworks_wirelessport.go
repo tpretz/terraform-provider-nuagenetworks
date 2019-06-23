@@ -37,10 +37,12 @@ func resourceWirelessPort() *schema.Resource {
             "generic_config": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "physical_name": &schema.Schema{
                 Type:     schema.TypeString,

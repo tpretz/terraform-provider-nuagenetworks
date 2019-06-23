@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceContainer() *schema.Resource {
@@ -189,8 +189,9 @@ func dataSourceContainer() *schema.Resource {
 }
 
 
-func dataSourceContainerRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceContainerRead(d *schema.ResourceData, m interface{}) error {
     filteredContainers := vspk.ContainersList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -210,73 +211,73 @@ func dataSourceContainerRead(d *schema.ResourceData, m interface{}) (err error) 
         parent := &vspk.Domain{ID: attr.(string)}
         filteredContainers, err = parent.Containers(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_qos"); ok {
         parent := &vspk.QOS{ID: attr.(string)}
         filteredContainers, err = parent.Containers(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredContainers, err = parent.Containers(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_subnet"); ok {
         parent := &vspk.Subnet{ID: attr.(string)}
         filteredContainers, err = parent.Containers(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_user"); ok {
         parent := &vspk.User{ID: attr.(string)}
         filteredContainers, err = parent.Containers(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredContainers, err = parent.Containers(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_egress_acl_template"); ok {
         parent := &vspk.EgressACLTemplate{ID: attr.(string)}
         filteredContainers, err = parent.Containers(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_zone"); ok {
         parent := &vspk.Zone{ID: attr.(string)}
         filteredContainers, err = parent.Containers(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredContainers, err = parent.Containers(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vrs"); ok {
         parent := &vspk.VRS{ID: attr.(string)}
         filteredContainers, err = parent.Containers(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ingress_acl_template"); ok {
         parent := &vspk.IngressACLTemplate{ID: attr.(string)}
         filteredContainers, err = parent.Containers(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredContainers, err = parent.Containers(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -326,5 +327,5 @@ func dataSourceContainerRead(d *schema.ResourceData, m interface{}) (err error) 
 
     d.SetId(Container.Identifier())
     
-    return
+    return nil
 }

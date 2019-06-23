@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceVNFInterfaceDescriptor() *schema.Resource {
@@ -41,8 +41,9 @@ func dataSourceVNFInterfaceDescriptor() *schema.Resource {
 }
 
 
-func dataSourceVNFInterfaceDescriptorRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceVNFInterfaceDescriptorRead(d *schema.ResourceData, m interface{}) error {
     filteredVNFInterfaceDescriptors := vspk.VNFInterfaceDescriptorsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -61,7 +62,7 @@ func dataSourceVNFInterfaceDescriptorRead(d *schema.ResourceData, m interface{})
     parent := &vspk.VNFDescriptor{ID: d.Get("parent_vnf_descriptor").(string)}
     filteredVNFInterfaceDescriptors, err = parent.VNFInterfaceDescriptors(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     VNFInterfaceDescriptor := &vspk.VNFInterfaceDescriptor{}
@@ -87,5 +88,5 @@ func dataSourceVNFInterfaceDescriptorRead(d *schema.ResourceData, m interface{})
 
     d.SetId(VNFInterfaceDescriptor.Identifier())
     
-    return
+    return nil
 }

@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceIngressACLTemplate() *schema.Resource {
@@ -113,8 +113,9 @@ func dataSourceIngressACLTemplate() *schema.Resource {
 }
 
 
-func dataSourceIngressACLTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceIngressACLTemplateRead(d *schema.ResourceData, m interface{}) error {
     filteredIngressACLTemplates := vspk.IngressACLTemplatesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -134,31 +135,31 @@ func dataSourceIngressACLTemplateRead(d *schema.ResourceData, m interface{}) (er
         parent := &vspk.Domain{ID: attr.(string)}
         filteredIngressACLTemplates, err = parent.IngressACLTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredIngressACLTemplates, err = parent.IngressACLTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_l2_domain_template"); ok {
         parent := &vspk.L2DomainTemplate{ID: attr.(string)}
         filteredIngressACLTemplates, err = parent.IngressACLTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_domain_template"); ok {
         parent := &vspk.DomainTemplate{ID: attr.(string)}
         filteredIngressACLTemplates, err = parent.IngressACLTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredIngressACLTemplates, err = parent.IngressACLTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -199,5 +200,5 @@ func dataSourceIngressACLTemplateRead(d *schema.ResourceData, m interface{}) (er
 
     d.SetId(IngressACLTemplate.Identifier())
     
-    return
+    return nil
 }

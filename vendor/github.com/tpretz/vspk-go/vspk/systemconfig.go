@@ -9,7 +9,7 @@
 
 package vspk
 
-import "github.com/nuagenetworks/go-bambou/bambou"
+import "github.com/tpretz/go-bambou/bambou"
 
 // SystemConfigIdentity represents the Identity of the object
 var SystemConfigIdentity = bambou.Identity{

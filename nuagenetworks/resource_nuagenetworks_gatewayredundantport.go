@@ -33,6 +33,7 @@ func resourceGatewayRedundantPort() *schema.Resource {
             "vlan_range": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -41,10 +42,12 @@ func resourceGatewayRedundantPort() *schema.Resource {
             "permitted_action": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "physical_name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -53,10 +56,12 @@ func resourceGatewayRedundantPort() *schema.Resource {
             "port_peer1_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "port_peer2_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "port_type": &schema.Schema{
                 Type:     schema.TypeString,
@@ -65,18 +70,22 @@ func resourceGatewayRedundantPort() *schema.Resource {
             "use_user_mnemonic": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "user_mnemonic": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_egress_qos_policy_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "status": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_redundancy_group": &schema.Schema{
                 Type:     schema.TypeString,

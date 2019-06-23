@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceRateLimiter() *schema.Resource {
@@ -65,8 +65,9 @@ func dataSourceRateLimiter() *schema.Resource {
 }
 
 
-func dataSourceRateLimiterRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceRateLimiterRead(d *schema.ResourceData, m interface{}) error {
     filteredRateLimiters := vspk.RateLimitersList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -86,13 +87,13 @@ func dataSourceRateLimiterRead(d *schema.ResourceData, m interface{}) (err error
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredRateLimiters, err = parent.RateLimiters(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredRateLimiters, err = parent.RateLimiters(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -125,5 +126,5 @@ func dataSourceRateLimiterRead(d *schema.ResourceData, m interface{}) (err error
 
     d.SetId(RateLimiter.Identifier())
     
-    return
+    return nil
 }

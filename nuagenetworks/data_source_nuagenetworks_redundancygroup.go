@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceRedundancyGroup() *schema.Resource {
@@ -105,8 +105,9 @@ func dataSourceRedundancyGroup() *schema.Resource {
 }
 
 
-func dataSourceRedundancyGroupRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceRedundancyGroupRead(d *schema.ResourceData, m interface{}) error {
     filteredRedundancyGroups := vspk.RedundancyGroupsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -126,13 +127,13 @@ func dataSourceRedundancyGroupRead(d *schema.ResourceData, m interface{}) (err e
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredRedundancyGroups, err = parent.RedundancyGroups(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredRedundancyGroups, err = parent.RedundancyGroups(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -175,5 +176,5 @@ func dataSourceRedundancyGroupRead(d *schema.ResourceData, m interface{}) (err e
 
     d.SetId(RedundancyGroup.Identifier())
     
-    return
+    return nil
 }

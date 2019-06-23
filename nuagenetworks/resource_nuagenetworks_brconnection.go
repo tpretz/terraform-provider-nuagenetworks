@@ -33,22 +33,27 @@ func resourceBRConnection() *schema.Resource {
             "dns_address": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "dns_address_v6": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "gateway": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "gateway_v6": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "address": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "address_family": &schema.Schema{
                 Type:     schema.TypeString,
@@ -58,14 +63,17 @@ func resourceBRConnection() *schema.Resource {
             "address_v6": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "advertisement_criteria": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "netmask": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "inherited": &schema.Schema{
                 Type:     schema.TypeBool,
@@ -75,10 +83,12 @@ func resourceBRConnection() *schema.Resource {
             "mode": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "uplink_id": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "parent_vlan_template": &schema.Schema{
                 Type:     schema.TypeString,

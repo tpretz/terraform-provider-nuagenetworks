@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceVNFMetadata() *schema.Resource {
@@ -51,8 +51,9 @@ func dataSourceVNFMetadata() *schema.Resource {
 }
 
 
-func dataSourceVNFMetadataRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceVNFMetadataRead(d *schema.ResourceData, m interface{}) error {
     filteredVNFMetadatas := vspk.VNFMetadatasList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -72,19 +73,19 @@ func dataSourceVNFMetadataRead(d *schema.ResourceData, m interface{}) (err error
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredVNFMetadatas, err = parent.VNFMetadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vnf"); ok {
         parent := &vspk.VNF{ID: attr.(string)}
         filteredVNFMetadatas, err = parent.VNFMetadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredVNFMetadatas, err = parent.VNFMetadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -112,5 +113,5 @@ func dataSourceVNFMetadataRead(d *schema.ResourceData, m interface{}) (err error
 
     d.SetId(VNFMetadata.Identifier())
     
-    return
+    return nil
 }

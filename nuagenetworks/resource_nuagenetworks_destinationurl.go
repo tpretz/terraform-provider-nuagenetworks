@@ -33,6 +33,7 @@ func resourceDestinationurl() *schema.Resource {
             "url": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "http_method": &schema.Schema{
                 Type:     schema.TypeString,
@@ -52,6 +53,7 @@ func resourceDestinationurl() *schema.Resource {
             "percentage_weight": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "timeout": &schema.Schema{
                 Type:     schema.TypeInt,
@@ -76,6 +78,7 @@ func resourceDestinationurl() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_tier": &schema.Schema{
                 Type:     schema.TypeString,

@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceVNF() *schema.Resource {
@@ -118,8 +118,9 @@ func dataSourceVNF() *schema.Resource {
 }
 
 
-func dataSourceVNFRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceVNFRead(d *schema.ResourceData, m interface{}) error {
     filteredVNFs := vspk.VNFsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -138,7 +139,7 @@ func dataSourceVNFRead(d *schema.ResourceData, m interface{}) (err error) {
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     filteredVNFs, err = parent.VNFs(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     VNF := &vspk.VNF{}
@@ -183,5 +184,5 @@ func dataSourceVNFRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(VNF.Identifier())
     
-    return
+    return nil
 }

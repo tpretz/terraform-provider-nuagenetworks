@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceUplinkRD() *schema.Resource {
@@ -59,8 +59,9 @@ func dataSourceUplinkRD() *schema.Resource {
 }
 
 
-func dataSourceUplinkRDRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceUplinkRDRead(d *schema.ResourceData, m interface{}) error {
     filteredUplinkRDs := vspk.UplinkRDsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -80,19 +81,19 @@ func dataSourceUplinkRDRead(d *schema.ResourceData, m interface{}) (err error) {
         parent := &vspk.Domain{ID: attr.(string)}
         filteredUplinkRDs, err = parent.UplinkRDs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredUplinkRDs, err = parent.UplinkRDs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredUplinkRDs, err = parent.UplinkRDs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -122,5 +123,5 @@ func dataSourceUplinkRDRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(UplinkRD.Identifier())
     
-    return
+    return nil
 }

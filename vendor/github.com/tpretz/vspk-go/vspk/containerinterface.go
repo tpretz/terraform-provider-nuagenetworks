@@ -9,7 +9,7 @@
 
 package vspk
 
-import "github.com/nuagenetworks/go-bambou/bambou"
+import "github.com/tpretz/go-bambou/bambou"
 
 // ContainerInterfaceIdentity represents the Identity of the object
 var ContainerInterfaceIdentity = bambou.Identity{

@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceVNFThresholdPolicy() *schema.Resource {
@@ -65,8 +65,9 @@ func dataSourceVNFThresholdPolicy() *schema.Resource {
 }
 
 
-func dataSourceVNFThresholdPolicyRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceVNFThresholdPolicyRead(d *schema.ResourceData, m interface{}) error {
     filteredVNFThresholdPolicies := vspk.VNFThresholdPoliciesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -86,13 +87,13 @@ func dataSourceVNFThresholdPolicyRead(d *schema.ResourceData, m interface{}) (er
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredVNFThresholdPolicies, err = parent.VNFThresholdPolicies(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredVNFThresholdPolicies, err = parent.VNFThresholdPolicies(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -125,5 +126,5 @@ func dataSourceVNFThresholdPolicyRead(d *schema.ResourceData, m interface{}) (er
 
     d.SetId(VNFThresholdPolicy.Identifier())
     
-    return
+    return nil
 }

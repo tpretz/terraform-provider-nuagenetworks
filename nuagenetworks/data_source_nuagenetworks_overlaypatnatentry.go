@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceOverlayPATNATEntry() *schema.Resource {
@@ -53,8 +53,9 @@ func dataSourceOverlayPATNATEntry() *schema.Resource {
 }
 
 
-func dataSourceOverlayPATNATEntryRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceOverlayPATNATEntryRead(d *schema.ResourceData, m interface{}) error {
     filteredOverlayPATNATEntries := vspk.OverlayPATNATEntriesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -73,7 +74,7 @@ func dataSourceOverlayPATNATEntryRead(d *schema.ResourceData, m interface{}) (er
     parent := &vspk.OverlayAddressPool{ID: d.Get("parent_overlay_address_pool").(string)}
     filteredOverlayPATNATEntries, err = parent.OverlayPATNATEntries(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     OverlayPATNATEntry := &vspk.OverlayPATNATEntry{}
@@ -102,5 +103,5 @@ func dataSourceOverlayPATNATEntryRead(d *schema.ResourceData, m interface{}) (er
 
     d.SetId(OverlayPATNATEntry.Identifier())
     
-    return
+    return nil
 }

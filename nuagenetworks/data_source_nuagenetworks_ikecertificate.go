@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceIKECertificate() *schema.Resource {
@@ -81,8 +81,9 @@ func dataSourceIKECertificate() *schema.Resource {
 }
 
 
-func dataSourceIKECertificateRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceIKECertificateRead(d *schema.ResourceData, m interface{}) error {
     filteredIKECertificates := vspk.IKECertificatesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -101,7 +102,7 @@ func dataSourceIKECertificateRead(d *schema.ResourceData, m interface{}) (err er
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     filteredIKECertificates, err = parent.IKECertificates(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     IKECertificate := &vspk.IKECertificate{}
@@ -137,5 +138,5 @@ func dataSourceIKECertificateRead(d *schema.ResourceData, m interface{}) (err er
 
     d.SetId(IKECertificate.Identifier())
     
-    return
+    return nil
 }

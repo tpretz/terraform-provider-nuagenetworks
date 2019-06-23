@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourcePolicyDecision() *schema.Resource {
@@ -98,8 +98,9 @@ func dataSourcePolicyDecision() *schema.Resource {
 }
 
 
-func dataSourcePolicyDecisionRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourcePolicyDecisionRead(d *schema.ResourceData, m interface{}) error {
     filteredPolicyDecisions := vspk.PolicyDecisionsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -119,25 +120,25 @@ func dataSourcePolicyDecisionRead(d *schema.ResourceData, m interface{}) (err er
         parent := &vspk.VMInterface{ID: attr.(string)}
         filteredPolicyDecisions, err = parent.PolicyDecisions(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_host_interface"); ok {
         parent := &vspk.HostInterface{ID: attr.(string)}
         filteredPolicyDecisions, err = parent.PolicyDecisions(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_container_interface"); ok {
         parent := &vspk.ContainerInterface{ID: attr.(string)}
         filteredPolicyDecisions, err = parent.PolicyDecisions(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_bridge_interface"); ok {
         parent := &vspk.BridgeInterface{ID: attr.(string)}
         filteredPolicyDecisions, err = parent.PolicyDecisions(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -173,5 +174,5 @@ func dataSourcePolicyDecisionRead(d *schema.ResourceData, m interface{}) (err er
 
     d.SetId(PolicyDecision.Identifier())
     
-    return
+    return nil
 }

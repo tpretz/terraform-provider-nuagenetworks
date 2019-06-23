@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceVNFCatalog() *schema.Resource {
@@ -37,8 +37,9 @@ func dataSourceVNFCatalog() *schema.Resource {
 }
 
 
-func dataSourceVNFCatalogRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceVNFCatalogRead(d *schema.ResourceData, m interface{}) error {
     filteredVNFCatalogs := vspk.VNFCatalogsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -57,7 +58,7 @@ func dataSourceVNFCatalogRead(d *schema.ResourceData, m interface{}) (err error)
     parent := m.(*vspk.Me)
     filteredVNFCatalogs, err = parent.VNFCatalogs(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     VNFCatalog := &vspk.VNFCatalog{}
@@ -83,5 +84,5 @@ func dataSourceVNFCatalogRead(d *schema.ResourceData, m interface{}) (err error)
 
     d.SetId(VNFCatalog.Identifier())
     
-    return
+    return nil
 }

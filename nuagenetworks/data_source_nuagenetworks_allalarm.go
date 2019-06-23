@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceAllAlarm() *schema.Resource {
@@ -85,8 +85,9 @@ func dataSourceAllAlarm() *schema.Resource {
 }
 
 
-func dataSourceAllAlarmRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceAllAlarmRead(d *schema.ResourceData, m interface{}) error {
     filteredAllAlarms := vspk.AllAlarmsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -105,7 +106,7 @@ func dataSourceAllAlarmRead(d *schema.ResourceData, m interface{}) (err error) {
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     filteredAllAlarms, err = parent.AllAlarms(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     AllAlarm := &vspk.AllAlarm{}
@@ -142,5 +143,5 @@ func dataSourceAllAlarmRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(AllAlarm.Identifier())
     
-    return
+    return nil
 }

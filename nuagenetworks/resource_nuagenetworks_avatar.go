@@ -43,10 +43,12 @@ func resourceAvatar() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_user": &schema.Schema{
                 Type:     schema.TypeString,

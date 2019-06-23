@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceKeyServerMember() *schema.Resource {
@@ -65,8 +65,9 @@ func dataSourceKeyServerMember() *schema.Resource {
 }
 
 
-func dataSourceKeyServerMemberRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceKeyServerMemberRead(d *schema.ResourceData, m interface{}) error {
     filteredKeyServerMembers := vspk.KeyServerMembersList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -85,7 +86,7 @@ func dataSourceKeyServerMemberRead(d *schema.ResourceData, m interface{}) (err e
     parent := m.(*vspk.Me)
     filteredKeyServerMembers, err = parent.KeyServerMembers(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     KeyServerMember := &vspk.KeyServerMember{}
@@ -118,5 +119,5 @@ func dataSourceKeyServerMemberRead(d *schema.ResourceData, m interface{}) (err e
 
     d.SetId(KeyServerMember.Identifier())
     
-    return
+    return nil
 }

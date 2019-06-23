@@ -9,7 +9,7 @@
 
 package vspk
 
-import "github.com/nuagenetworks/go-bambou/bambou"
+import "github.com/tpretz/go-bambou/bambou"
 
 // VirtualFirewallRuleIdentity represents the Identity of the object
 var VirtualFirewallRuleIdentity = bambou.Identity{

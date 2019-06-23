@@ -33,10 +33,12 @@ func resourceInfrastructureEVDFProfile() *schema.Resource {
             "ntp_server_key": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "ntp_server_key_id": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -59,6 +61,7 @@ func resourceInfrastructureEVDFProfile() *schema.Resource {
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -77,6 +80,7 @@ func resourceInfrastructureEVDFProfile() *schema.Resource {
             "standby_controller": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "nuage_platform": &schema.Schema{
                 Type:     schema.TypeString,
@@ -86,6 +90,7 @@ func resourceInfrastructureEVDFProfile() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
         },
     }

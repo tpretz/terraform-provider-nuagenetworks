@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceLTEInformation() *schema.Resource {
@@ -37,8 +37,9 @@ func dataSourceLTEInformation() *schema.Resource {
 }
 
 
-func dataSourceLTEInformationRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceLTEInformationRead(d *schema.ResourceData, m interface{}) error {
     filteredLTEInformations := vspk.LTEInformationsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -57,7 +58,7 @@ func dataSourceLTEInformationRead(d *schema.ResourceData, m interface{}) (err er
     parent := &vspk.NSPort{ID: d.Get("parent_ns_port").(string)}
     filteredLTEInformations, err = parent.LTEInformations(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     LTEInformation := &vspk.LTEInformation{}
@@ -82,5 +83,5 @@ func dataSourceLTEInformationRead(d *schema.ResourceData, m interface{}) (err er
 
     d.SetId(LTEInformation.Identifier())
     
-    return
+    return nil
 }

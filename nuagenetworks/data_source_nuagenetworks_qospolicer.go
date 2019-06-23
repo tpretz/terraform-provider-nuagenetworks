@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceQosPolicer() *schema.Resource {
@@ -57,8 +57,9 @@ func dataSourceQosPolicer() *schema.Resource {
 }
 
 
-func dataSourceQosPolicerRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceQosPolicerRead(d *schema.ResourceData, m interface{}) error {
     filteredQosPolicers := vspk.QosPolicersList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -77,7 +78,7 @@ func dataSourceQosPolicerRead(d *schema.ResourceData, m interface{}) (err error)
     parent := m.(*vspk.Me)
     filteredQosPolicers, err = parent.QosPolicers(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     QosPolicer := &vspk.QosPolicer{}
@@ -108,5 +109,5 @@ func dataSourceQosPolicerRead(d *schema.ResourceData, m interface{}) (err error)
 
     d.SetId(QosPolicer.Identifier())
     
-    return
+    return nil
 }

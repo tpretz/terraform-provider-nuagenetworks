@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceCustomProperty() *schema.Resource {
@@ -41,8 +41,9 @@ func dataSourceCustomProperty() *schema.Resource {
 }
 
 
-func dataSourceCustomPropertyRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceCustomPropertyRead(d *schema.ResourceData, m interface{}) error {
     filteredCustomProperties := vspk.CustomPropertiesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -61,7 +62,7 @@ func dataSourceCustomPropertyRead(d *schema.ResourceData, m interface{}) (err er
     parent := &vspk.UplinkConnection{ID: d.Get("parent_uplink_connection").(string)}
     filteredCustomProperties, err = parent.CustomProperties(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     CustomProperty := &vspk.CustomProperty{}
@@ -87,5 +88,5 @@ func dataSourceCustomPropertyRead(d *schema.ResourceData, m interface{}) (err er
 
     d.SetId(CustomProperty.Identifier())
     
-    return
+    return nil
 }

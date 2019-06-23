@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceIKEGatewayConfig() *schema.Resource {
@@ -49,8 +49,9 @@ func dataSourceIKEGatewayConfig() *schema.Resource {
 }
 
 
-func dataSourceIKEGatewayConfigRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceIKEGatewayConfigRead(d *schema.ResourceData, m interface{}) error {
     filteredIKEGatewayConfigs := vspk.IKEGatewayConfigsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -69,7 +70,7 @@ func dataSourceIKEGatewayConfigRead(d *schema.ResourceData, m interface{}) (err 
     parent := &vspk.IKEGateway{ID: d.Get("parent_ike_gateway").(string)}
     filteredIKEGatewayConfigs, err = parent.IKEGatewayConfigs(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     IKEGatewayConfig := &vspk.IKEGatewayConfig{}
@@ -97,5 +98,5 @@ func dataSourceIKEGatewayConfigRead(d *schema.ResourceData, m interface{}) (err 
 
     d.SetId(IKEGatewayConfig.Identifier())
     
-    return
+    return nil
 }

@@ -9,7 +9,7 @@
 
 package vspk
 
-import "github.com/nuagenetworks/go-bambou/bambou"
+import "github.com/tpretz/go-bambou/bambou"
 
 // VRSMetricsIdentity represents the Identity of the object
 var VRSMetricsIdentity = bambou.Identity{

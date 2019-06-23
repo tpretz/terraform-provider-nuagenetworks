@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceLink() *schema.Resource {
@@ -81,8 +81,9 @@ func dataSourceLink() *schema.Resource {
 }
 
 
-func dataSourceLinkRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceLinkRead(d *schema.ResourceData, m interface{}) error {
     filteredLinks := vspk.LinksList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -101,7 +102,7 @@ func dataSourceLinkRead(d *schema.ResourceData, m interface{}) (err error) {
     parent := &vspk.Domain{ID: d.Get("parent_domain").(string)}
     filteredLinks, err = parent.Links(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     Link := &vspk.Link{}
@@ -137,5 +138,5 @@ func dataSourceLinkRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(Link.Identifier())
     
-    return
+    return nil
 }

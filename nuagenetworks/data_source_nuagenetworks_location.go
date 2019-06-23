@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceLocation() *schema.Resource {
@@ -95,8 +95,9 @@ func dataSourceLocation() *schema.Resource {
 }
 
 
-func dataSourceLocationRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceLocationRead(d *schema.ResourceData, m interface{}) error {
     filteredLocations := vspk.LocationsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -116,13 +117,13 @@ func dataSourceLocationRead(d *schema.ResourceData, m interface{}) (err error) {
         parent := &vspk.NSGateway{ID: attr.(string)}
         filteredLocations, err = parent.Locations(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_gateway"); ok {
         parent := &vspk.Gateway{ID: attr.(string)}
         filteredLocations, err = parent.Locations(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -161,5 +162,5 @@ func dataSourceLocationRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(Location.Identifier())
     
-    return
+    return nil
 }

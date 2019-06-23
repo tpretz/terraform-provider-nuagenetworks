@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourcePerformanceMonitor() *schema.Resource {
@@ -96,8 +96,9 @@ func dataSourcePerformanceMonitor() *schema.Resource {
 }
 
 
-func dataSourcePerformanceMonitorRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourcePerformanceMonitorRead(d *schema.ResourceData, m interface{}) error {
     filteredPerformanceMonitors := vspk.PerformanceMonitorsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -117,19 +118,19 @@ func dataSourcePerformanceMonitorRead(d *schema.ResourceData, m interface{}) (er
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredPerformanceMonitors, err = parent.PerformanceMonitors(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ike_gateway_connection"); ok {
         parent := &vspk.IKEGatewayConnection{ID: attr.(string)}
         filteredPerformanceMonitors, err = parent.PerformanceMonitors(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredPerformanceMonitors, err = parent.PerformanceMonitors(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -168,5 +169,5 @@ func dataSourcePerformanceMonitorRead(d *schema.ResourceData, m interface{}) (er
 
     d.SetId(PerformanceMonitor.Identifier())
     
-    return
+    return nil
 }

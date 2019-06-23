@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceTrunk() *schema.Resource {
@@ -47,8 +47,9 @@ func dataSourceTrunk() *schema.Resource {
 }
 
 
-func dataSourceTrunkRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceTrunkRead(d *schema.ResourceData, m interface{}) error {
     filteredTrunks := vspk.TrunksList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -68,13 +69,13 @@ func dataSourceTrunkRead(d *schema.ResourceData, m interface{}) (err error) {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredTrunks, err = parent.Trunks(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredTrunks, err = parent.Trunks(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -101,5 +102,5 @@ func dataSourceTrunkRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(Trunk.Identifier())
     
-    return
+    return nil
 }

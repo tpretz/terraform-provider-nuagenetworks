@@ -24,6 +24,7 @@
 package bambou
 
 import (
+  "os"
 	"bytes"
 	"crypto/tls"
 	"encoding/base64"
@@ -34,6 +35,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+  "fmt"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -88,6 +90,8 @@ func NewSession(username, password, organization, url string, root Rootable) *Se
 			InsecureSkipVerify: true,
 		},
 	}
+  log.SetOutput(os.Stderr)
+  log.SetLevel(log.TraceLevel)
 
 	return &Session{
 		Username:     username,
@@ -109,6 +113,8 @@ func NewX509Session(cert *tls.Certificate, url string, root Rootable) *Session {
 			InsecureSkipVerify: true,
 		},
 	}
+  log.SetOutput(os.Stderr)
+  log.SetLevel(log.TraceLevel)
 
 	return &Session{
 		Certificate: cert,
@@ -249,7 +255,8 @@ func (s *Session) send(request *http.Request, info *FetchingInfo) (*http.Respons
 		if len(vsdresp.VsdErrors) == 0 {
 			return nil, NewBambouError("Non-VSD server HTTP error", response.Status)
 		} else { // Valid VSD response
-			return nil, NewBambouError(vsdresp.VsdErrors[0].Descriptions[0].Title, vsdresp.VsdErrors[0].Descriptions[0].Description)
+			return nil, NewBambouError("vsd response error", fmt.Sprintf("%#s", vsdresp))
+			//return nil, NewBambouError(vsdresp.VsdErrors[0].Descriptions[0].Title, vsdresp.VsdErrors[0].Descriptions[0].Description)
 		}
 
 	default:
@@ -322,20 +329,24 @@ func (s *Session) Reset() {
 // FetchEntity fetchs the given Identifiable from the server.
 func (s *Session) FetchEntity(object Identifiable) *Error {
 
+  log.Debug("starting fetchentity")
 	url, berr := s.getPersonalURL(object)
 	if berr != nil {
 		return berr
 	}
+  log.Debug("after url")
 
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return NewBambouError("HTTP transaction error", err.Error())
 	}
+  log.Debug("after getreqbuild")
 
 	response, berr := s.send(request, nil)
 	if berr != nil {
 		return berr
 	}
+  log.Debug("after send")
 	defer response.Body.Close()
 
 	body, _ := ioutil.ReadAll(response.Body)

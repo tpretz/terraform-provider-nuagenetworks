@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceMonitorscope() *schema.Resource {
@@ -70,8 +70,9 @@ func dataSourceMonitorscope() *schema.Resource {
 }
 
 
-func dataSourceMonitorscopeRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceMonitorscopeRead(d *schema.ResourceData, m interface{}) error {
     filteredMonitorscopes := vspk.MonitorscopesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -91,19 +92,19 @@ func dataSourceMonitorscopeRead(d *schema.ResourceData, m interface{}) (err erro
         parent := &vspk.Application{ID: attr.(string)}
         filteredMonitorscopes, err = parent.Monitorscopes(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_network_performance_measurement"); ok {
         parent := &vspk.NetworkPerformanceMeasurement{ID: attr.(string)}
         filteredMonitorscopes, err = parent.Monitorscopes(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ns_gateway"); ok {
         parent := &vspk.NSGateway{ID: attr.(string)}
         filteredMonitorscopes, err = parent.Monitorscopes(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -134,5 +135,5 @@ func dataSourceMonitorscopeRead(d *schema.ResourceData, m interface{}) (err erro
 
     d.SetId(Monitorscope.Identifier())
     
-    return
+    return nil
 }

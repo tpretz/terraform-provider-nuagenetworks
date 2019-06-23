@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceEnterpriseNetwork() *schema.Resource {
@@ -76,8 +76,9 @@ func dataSourceEnterpriseNetwork() *schema.Resource {
 }
 
 
-func dataSourceEnterpriseNetworkRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceEnterpriseNetworkRead(d *schema.ResourceData, m interface{}) error {
     filteredEnterpriseNetworks := vspk.EnterpriseNetworksList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -97,19 +98,19 @@ func dataSourceEnterpriseNetworkRead(d *schema.ResourceData, m interface{}) (err
         parent := &vspk.SaaSApplicationType{ID: attr.(string)}
         filteredEnterpriseNetworks, err = parent.EnterpriseNetworks(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredEnterpriseNetworks, err = parent.EnterpriseNetworks(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_network_macro_group"); ok {
         parent := &vspk.NetworkMacroGroup{ID: attr.(string)}
         filteredEnterpriseNetworks, err = parent.EnterpriseNetworks(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -142,5 +143,5 @@ func dataSourceEnterpriseNetworkRead(d *schema.ResourceData, m interface{}) (err
 
     d.SetId(EnterpriseNetwork.Identifier())
     
-    return
+    return nil
 }

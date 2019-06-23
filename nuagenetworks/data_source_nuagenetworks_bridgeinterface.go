@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceBridgeInterface() *schema.Resource {
@@ -124,8 +124,9 @@ func dataSourceBridgeInterface() *schema.Resource {
 }
 
 
-func dataSourceBridgeInterfaceRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceBridgeInterfaceRead(d *schema.ResourceData, m interface{}) error {
     filteredBridgeInterfaces := vspk.BridgeInterfacesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -145,19 +146,19 @@ func dataSourceBridgeInterfaceRead(d *schema.ResourceData, m interface{}) (err e
         parent := &vspk.Domain{ID: attr.(string)}
         filteredBridgeInterfaces, err = parent.BridgeInterfaces(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredBridgeInterfaces, err = parent.BridgeInterfaces(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredBridgeInterfaces, err = parent.BridgeInterfaces(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -202,5 +203,5 @@ func dataSourceBridgeInterfaceRead(d *schema.ResourceData, m interface{}) (err e
 
     d.SetId(BridgeInterface.Identifier())
     
-    return
+    return nil
 }

@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceAutoDiscoverHypervisorFromCluster() *schema.Resource {
@@ -64,8 +64,9 @@ func dataSourceAutoDiscoverHypervisorFromCluster() *schema.Resource {
 }
 
 
-func dataSourceAutoDiscoverHypervisorFromClusterRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceAutoDiscoverHypervisorFromClusterRead(d *schema.ResourceData, m interface{}) error {
     filteredAutoDiscoverHypervisorFromClusters := vspk.AutoDiscoverHypervisorFromClustersList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -85,13 +86,13 @@ func dataSourceAutoDiscoverHypervisorFromClusterRead(d *schema.ResourceData, m i
         parent := &vspk.VCenterDataCenter{ID: attr.(string)}
         filteredAutoDiscoverHypervisorFromClusters, err = parent.AutoDiscoverHypervisorFromClusters(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vcenter_cluster"); ok {
         parent := &vspk.VCenterCluster{ID: attr.(string)}
         filteredAutoDiscoverHypervisorFromClusters, err = parent.AutoDiscoverHypervisorFromClusters(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -122,5 +123,5 @@ func dataSourceAutoDiscoverHypervisorFromClusterRead(d *schema.ResourceData, m i
 
     d.SetId(AutoDiscoverHypervisorFromCluster.Identifier())
     
-    return
+    return nil
 }

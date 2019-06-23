@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceApplicationBinding() *schema.Resource {
@@ -63,8 +63,9 @@ func dataSourceApplicationBinding() *schema.Resource {
 }
 
 
-func dataSourceApplicationBindingRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceApplicationBindingRead(d *schema.ResourceData, m interface{}) error {
     filteredApplicationBindings := vspk.ApplicationBindingsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -84,13 +85,13 @@ func dataSourceApplicationBindingRead(d *schema.ResourceData, m interface{}) (er
         parent := &vspk.Application{ID: attr.(string)}
         filteredApplicationBindings, err = parent.ApplicationBindings(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_applicationperformancemanagement"); ok {
         parent := &vspk.Applicationperformancemanagement{ID: attr.(string)}
         filteredApplicationBindings, err = parent.ApplicationBindings(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -121,5 +122,5 @@ func dataSourceApplicationBindingRead(d *schema.ResourceData, m interface{}) (er
 
     d.SetId(ApplicationBinding.Identifier())
     
-    return
+    return nil
 }

@@ -259,12 +259,6 @@
   version = "v1.0.1"
 
 [[projects]]
-  name = "github.com/nuagenetworks/go-bambou"
-  packages = ["bambou"]
-  revision = "983799055125d5e8e9f312899147be457c1b8ec9"
-  version = "v1.0.1"
-
-[[projects]]
   name = "github.com/oklog/run"
   packages = ["."]
   revision = "4dadeb3030eda0273a12382bb2348ffc7c9d1a39"
@@ -295,9 +289,15 @@
   version = "v1.2.2"
 
 [[projects]]
+  name = "github.com/tpretz/go-bambou"
+  packages = ["bambou"]
+  revision = "3788678a7c174fb41824bbf17d061d233d3a0615"
+  version = "v1.0.6"
+
+[[projects]]
   name = "github.com/tpretz/vspk-go"
   packages = ["vspk"]
-  revision = "7e644669681352cc91cf2dc87ee9de6103038497"
+  revision = "4b4c2adba8c109ddb0aaf0202952758bfe96312e"
   version = "v5.3.2"
 
 [[projects]]
@@ -387,6 +387,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "0cde407eaed94c428e3b2b40854497bcbca1720e007dc52abd41633801b0c2f1"
+  inputs-digest = "1f7f97c951ab3d7abef3e510a93b197e94e562c08aef153a6baf3d5d87a3788c"
   solver-name = "gps-cdcl"
   solver-version = 1

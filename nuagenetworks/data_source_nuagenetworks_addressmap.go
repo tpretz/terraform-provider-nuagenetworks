@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceAddressMap() *schema.Resource {
@@ -69,8 +69,9 @@ func dataSourceAddressMap() *schema.Resource {
 }
 
 
-func dataSourceAddressMapRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceAddressMapRead(d *schema.ResourceData, m interface{}) error {
     filteredAddressMaps := vspk.AddressMapsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -89,7 +90,7 @@ func dataSourceAddressMapRead(d *schema.ResourceData, m interface{}) (err error)
     parent := &vspk.PATNATPool{ID: d.Get("parent_patnat_pool").(string)}
     filteredAddressMaps, err = parent.AddressMaps(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     AddressMap := &vspk.AddressMap{}
@@ -122,5 +123,5 @@ func dataSourceAddressMapRead(d *schema.ResourceData, m interface{}) (err error)
 
     d.SetId(AddressMap.Identifier())
     
-    return
+    return nil
 }

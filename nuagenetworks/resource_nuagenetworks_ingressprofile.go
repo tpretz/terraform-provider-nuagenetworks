@@ -33,14 +33,17 @@ func resourceIngressProfile() *schema.Resource {
             "name": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_ip_filter_profile_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_ip_filter_profile_name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -50,6 +53,7 @@ func resourceIngressProfile() *schema.Resource {
             "associated_ipv6_filter_profile_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_ipv6_filter_profile_name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -59,6 +63,7 @@ func resourceIngressProfile() *schema.Resource {
             "associated_mac_filter_profile_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_mac_filter_profile_name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -68,6 +73,7 @@ func resourceIngressProfile() *schema.Resource {
             "associated_sap_ingress_qo_s_profile_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_sap_ingress_qo_s_profile_name": &schema.Schema{
                 Type:     schema.TypeString,

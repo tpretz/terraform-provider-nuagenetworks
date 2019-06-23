@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceHSC() *schema.Resource {
@@ -132,8 +132,9 @@ func dataSourceHSC() *schema.Resource {
 }
 
 
-func dataSourceHSCRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceHSCRead(d *schema.ResourceData, m interface{}) error {
     filteredHSCs := vspk.HSCsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -152,7 +153,7 @@ func dataSourceHSCRead(d *schema.ResourceData, m interface{}) (err error) {
     parent := &vspk.VSP{ID: d.Get("parent_vsp").(string)}
     filteredHSCs, err = parent.HSCs(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     HSC := &vspk.HSC{}
@@ -200,5 +201,5 @@ func dataSourceHSCRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(HSC.Identifier())
     
-    return
+    return nil
 }

@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourcePolicyStatement() *schema.Resource {
@@ -41,8 +41,9 @@ func dataSourcePolicyStatement() *schema.Resource {
 }
 
 
-func dataSourcePolicyStatementRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourcePolicyStatementRead(d *schema.ResourceData, m interface{}) error {
     filteredPolicyStatements := vspk.PolicyStatementsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -61,7 +62,7 @@ func dataSourcePolicyStatementRead(d *schema.ResourceData, m interface{}) (err e
     parent := &vspk.Link{ID: d.Get("parent_link").(string)}
     filteredPolicyStatements, err = parent.PolicyStatements(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     PolicyStatement := &vspk.PolicyStatement{}
@@ -87,5 +88,5 @@ func dataSourcePolicyStatementRead(d *schema.ResourceData, m interface{}) (err e
 
     d.SetId(PolicyStatement.Identifier())
     
-    return
+    return nil
 }

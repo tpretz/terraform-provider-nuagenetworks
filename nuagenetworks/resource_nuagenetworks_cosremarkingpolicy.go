@@ -33,6 +33,7 @@ func resourceCOSRemarkingPolicy() *schema.Resource {
             "dscp": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
@@ -47,10 +48,12 @@ func resourceCOSRemarkingPolicy() *schema.Resource {
             "forwarding_class": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_cos_remarking_policy_table": &schema.Schema{
                 Type:     schema.TypeString,

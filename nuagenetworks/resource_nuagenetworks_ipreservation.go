@@ -51,10 +51,12 @@ func resourceIPReservation() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "dynamic_allocation_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "parent_subnet": &schema.Schema{
                 Type:     schema.TypeString,

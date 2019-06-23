@@ -33,6 +33,7 @@ func resourceDSCPForwardingClassMapping() *schema.Resource {
             "dscp": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
@@ -47,10 +48,12 @@ func resourceDSCPForwardingClassMapping() *schema.Resource {
             "forwarding_class": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_dscp_forwarding_class_table": &schema.Schema{
                 Type:     schema.TypeString,

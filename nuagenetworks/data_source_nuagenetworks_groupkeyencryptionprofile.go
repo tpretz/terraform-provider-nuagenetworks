@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceGroupKeyEncryptionProfile() *schema.Resource {
@@ -129,8 +129,9 @@ func dataSourceGroupKeyEncryptionProfile() *schema.Resource {
 }
 
 
-func dataSourceGroupKeyEncryptionProfileRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceGroupKeyEncryptionProfileRead(d *schema.ResourceData, m interface{}) error {
     filteredGroupKeyEncryptionProfiles := vspk.GroupKeyEncryptionProfilesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -149,7 +150,7 @@ func dataSourceGroupKeyEncryptionProfileRead(d *schema.ResourceData, m interface
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     filteredGroupKeyEncryptionProfiles, err = parent.GroupKeyEncryptionProfiles(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     GroupKeyEncryptionProfile := &vspk.GroupKeyEncryptionProfile{}
@@ -197,5 +198,5 @@ func dataSourceGroupKeyEncryptionProfileRead(d *schema.ResourceData, m interface
 
     d.SetId(GroupKeyEncryptionProfile.Identifier())
     
-    return
+    return nil
 }

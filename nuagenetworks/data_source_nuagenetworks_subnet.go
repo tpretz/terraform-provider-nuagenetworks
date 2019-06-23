@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceSubnet() *schema.Resource {
@@ -223,8 +223,9 @@ func dataSourceSubnet() *schema.Resource {
 }
 
 
-func dataSourceSubnetRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceSubnetRead(d *schema.ResourceData, m interface{}) error {
     filteredSubnets := vspk.SubnetsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -244,43 +245,43 @@ func dataSourceSubnetRead(d *schema.ResourceData, m interface{}) (err error) {
         parent := &vspk.Domain{ID: attr.(string)}
         filteredSubnets, err = parent.Subnets(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_pat_mapper"); ok {
         parent := &vspk.PATMapper{ID: attr.(string)}
         filteredSubnets, err = parent.Subnets(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_zone"); ok {
         parent := &vspk.Zone{ID: attr.(string)}
         filteredSubnets, err = parent.Subnets(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ns_gateway"); ok {
         parent := &vspk.NSGateway{ID: attr.(string)}
         filteredSubnets, err = parent.Subnets(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_subnet_template"); ok {
         parent := &vspk.SubnetTemplate{ID: attr.(string)}
         filteredSubnets, err = parent.Subnets(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ike_gateway_connection"); ok {
         parent := &vspk.IKEGatewayConnection{ID: attr.(string)}
         filteredSubnets, err = parent.Subnets(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredSubnets, err = parent.Subnets(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -346,5 +347,5 @@ func dataSourceSubnetRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(Subnet.Identifier())
     
-    return
+    return nil
 }

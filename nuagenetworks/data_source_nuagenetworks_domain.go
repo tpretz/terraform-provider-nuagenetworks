@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceDomain() *schema.Resource {
@@ -250,8 +250,9 @@ func dataSourceDomain() *schema.Resource {
 }
 
 
-func dataSourceDomainRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceDomainRead(d *schema.ResourceData, m interface{}) error {
     filteredDomains := vspk.DomainsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -271,31 +272,31 @@ func dataSourceDomainRead(d *schema.ResourceData, m interface{}) (err error) {
         parent := &vspk.Domain{ID: attr.(string)}
         filteredDomains, err = parent.Domains(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredDomains, err = parent.Domains(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_domain_template"); ok {
         parent := &vspk.DomainTemplate{ID: attr.(string)}
         filteredDomains, err = parent.Domains(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_firewall_acl"); ok {
         parent := &vspk.FirewallAcl{ID: attr.(string)}
         filteredDomains, err = parent.Domains(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredDomains, err = parent.Domains(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -370,5 +371,5 @@ func dataSourceDomainRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(Domain.Identifier())
     
-    return
+    return nil
 }

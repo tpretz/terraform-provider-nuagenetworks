@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceMACFilterProfile() *schema.Resource {
@@ -47,8 +47,9 @@ func dataSourceMACFilterProfile() *schema.Resource {
 }
 
 
-func dataSourceMACFilterProfileRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceMACFilterProfileRead(d *schema.ResourceData, m interface{}) error {
     filteredMACFilterProfiles := vspk.MACFilterProfilesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -68,13 +69,13 @@ func dataSourceMACFilterProfileRead(d *schema.ResourceData, m interface{}) (err 
         parent := &vspk.RedundancyGroup{ID: attr.(string)}
         filteredMACFilterProfiles, err = parent.MACFilterProfiles(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_gateway"); ok {
         parent := &vspk.Gateway{ID: attr.(string)}
         filteredMACFilterProfiles, err = parent.MACFilterProfiles(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -101,5 +102,5 @@ func dataSourceMACFilterProfileRead(d *schema.ResourceData, m interface{}) (err 
 
     d.SetId(MACFilterProfile.Identifier())
     
-    return
+    return nil
 }

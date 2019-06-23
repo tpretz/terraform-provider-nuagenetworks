@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceInfrastructureEVDFProfile() *schema.Resource {
@@ -81,8 +81,9 @@ func dataSourceInfrastructureEVDFProfile() *schema.Resource {
 }
 
 
-func dataSourceInfrastructureEVDFProfileRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceInfrastructureEVDFProfileRead(d *schema.ResourceData, m interface{}) error {
     filteredInfrastructureEVDFProfiles := vspk.InfrastructureEVDFProfilesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -101,7 +102,7 @@ func dataSourceInfrastructureEVDFProfileRead(d *schema.ResourceData, m interface
     parent := m.(*vspk.Me)
     filteredInfrastructureEVDFProfiles, err = parent.InfrastructureEVDFProfiles(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     InfrastructureEVDFProfile := &vspk.InfrastructureEVDFProfile{}
@@ -138,5 +139,5 @@ func dataSourceInfrastructureEVDFProfileRead(d *schema.ResourceData, m interface
 
     d.SetId(InfrastructureEVDFProfile.Identifier())
     
-    return
+    return nil
 }

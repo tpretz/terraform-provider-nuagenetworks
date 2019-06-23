@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceL2Domain() *schema.Resource {
@@ -176,8 +176,9 @@ func dataSourceL2Domain() *schema.Resource {
 }
 
 
-func dataSourceL2DomainRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceL2DomainRead(d *schema.ResourceData, m interface{}) error {
     filteredL2Domains := vspk.L2DomainsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -197,25 +198,25 @@ func dataSourceL2DomainRead(d *schema.ResourceData, m interface{}) (err error) {
         parent := &vspk.L2DomainTemplate{ID: attr.(string)}
         filteredL2Domains, err = parent.L2Domains(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredL2Domains, err = parent.L2Domains(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_redundancy_group"); ok {
         parent := &vspk.RedundancyGroup{ID: attr.(string)}
         filteredL2Domains, err = parent.L2Domains(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredL2Domains, err = parent.L2Domains(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -273,5 +274,5 @@ func dataSourceL2DomainRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(L2Domain.Identifier())
     
-    return
+    return nil
 }

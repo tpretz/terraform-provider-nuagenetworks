@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceContainerInterface() *schema.Resource {
@@ -163,8 +163,9 @@ func dataSourceContainerInterface() *schema.Resource {
 }
 
 
-func dataSourceContainerInterfaceRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceContainerInterfaceRead(d *schema.ResourceData, m interface{}) error {
     filteredContainerInterfaces := vspk.ContainerInterfacesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -184,43 +185,43 @@ func dataSourceContainerInterfaceRead(d *schema.ResourceData, m interface{}) (er
         parent := &vspk.Domain{ID: attr.(string)}
         filteredContainerInterfaces, err = parent.ContainerInterfaces(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredContainerInterfaces, err = parent.ContainerInterfaces(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_subnet"); ok {
         parent := &vspk.Subnet{ID: attr.(string)}
         filteredContainerInterfaces, err = parent.ContainerInterfaces(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_zone"); ok {
         parent := &vspk.Zone{ID: attr.(string)}
         filteredContainerInterfaces, err = parent.ContainerInterfaces(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredContainerInterfaces, err = parent.ContainerInterfaces(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_container"); ok {
         parent := &vspk.Container{ID: attr.(string)}
         filteredContainerInterfaces, err = parent.ContainerInterfaces(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredContainerInterfaces, err = parent.ContainerInterfaces(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -271,5 +272,5 @@ func dataSourceContainerInterfaceRead(d *schema.ResourceData, m interface{}) (er
 
     d.SetId(ContainerInterface.Identifier())
     
-    return
+    return nil
 }

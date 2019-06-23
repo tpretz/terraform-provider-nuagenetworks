@@ -43,6 +43,7 @@ func resourceNetworkPerformanceBinding() *schema.Resource {
             "associated_network_measurement_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_domain": &schema.Schema{
                 Type:     schema.TypeString,

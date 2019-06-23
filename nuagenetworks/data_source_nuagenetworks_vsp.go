@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceVSP() *schema.Resource {
@@ -57,8 +57,9 @@ func dataSourceVSP() *schema.Resource {
 }
 
 
-func dataSourceVSPRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceVSPRead(d *schema.ResourceData, m interface{}) error {
     filteredVSPs := vspk.VSPsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -77,7 +78,7 @@ func dataSourceVSPRead(d *schema.ResourceData, m interface{}) (err error) {
     parent := m.(*vspk.Me)
     filteredVSPs, err = parent.VSPs(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     VSP := &vspk.VSP{}
@@ -108,5 +109,5 @@ func dataSourceVSPRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(VSP.Identifier())
     
-    return
+    return nil
 }

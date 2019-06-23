@@ -33,10 +33,12 @@ func resourceNSGateway() *schema.Resource {
             "mac_address": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "nat_traversal_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "tcpmss_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
@@ -56,18 +58,22 @@ func resourceNSGateway() *schema.Resource {
             "zfb_match_value": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "bios_release_date": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "bios_version": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "sku": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "tpm_status": &schema.Schema{
                 Type:     schema.TypeString,
@@ -82,10 +88,12 @@ func resourceNSGateway() *schema.Resource {
             "cpu_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "nsg_version": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "ssh_service": &schema.Schema{
                 Type:     schema.TypeString,
@@ -95,6 +103,7 @@ func resourceNSGateway() *schema.Resource {
             "uuid": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -103,6 +112,7 @@ func resourceNSGateway() *schema.Resource {
             "family": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "last_configuration_reload_timestamp": &schema.Schema{
                 Type:     schema.TypeInt,
@@ -141,26 +151,32 @@ func resourceNSGateway() *schema.Resource {
             "pending": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "serial_number": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "derived_ssh_service_state": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "permitted_action": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "personality": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "network_acceleration": &schema.Schema{
                 Type:     schema.TypeString,
@@ -170,6 +186,7 @@ func resourceNSGateway() *schema.Resource {
             "libraries": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "inherited_ssh_service_state": &schema.Schema{
                 Type:     schema.TypeString,
@@ -224,14 +241,17 @@ func resourceNSGateway() *schema.Resource {
             "operation_mode": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "operation_status": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "product_name": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_gateway_security_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -251,6 +271,7 @@ func resourceNSGateway() *schema.Resource {
             "associated_nsg_upgrade_profile_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "auto_disc_gateway_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -260,10 +281,12 @@ func resourceNSGateway() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "system_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,

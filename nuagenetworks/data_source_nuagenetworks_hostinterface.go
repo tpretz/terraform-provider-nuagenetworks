@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceHostInterface() *schema.Resource {
@@ -132,8 +132,9 @@ func dataSourceHostInterface() *schema.Resource {
 }
 
 
-func dataSourceHostInterfaceRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceHostInterfaceRead(d *schema.ResourceData, m interface{}) error {
     filteredHostInterfaces := vspk.HostInterfacesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -153,25 +154,25 @@ func dataSourceHostInterfaceRead(d *schema.ResourceData, m interface{}) (err err
         parent := &vspk.Domain{ID: attr.(string)}
         filteredHostInterfaces, err = parent.HostInterfaces(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredHostInterfaces, err = parent.HostInterfaces(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredHostInterfaces, err = parent.HostInterfaces(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredHostInterfaces, err = parent.HostInterfaces(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -218,5 +219,5 @@ func dataSourceHostInterfaceRead(d *schema.ResourceData, m interface{}) (err err
 
     d.SetId(HostInterface.Identifier())
     
-    return
+    return nil
 }

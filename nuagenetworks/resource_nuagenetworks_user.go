@@ -33,10 +33,12 @@ func resourceUser() *schema.Resource {
             "ldapuser_dn": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "management_mode": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "password": &schema.Schema{
                 Type:     schema.TypeString,
@@ -58,6 +60,7 @@ func resourceUser() *schema.Resource {
             "disabled": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "email": &schema.Schema{
                 Type:     schema.TypeString,
@@ -71,6 +74,7 @@ func resourceUser() *schema.Resource {
             "mobile_number": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "user_name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -79,14 +83,17 @@ func resourceUser() *schema.Resource {
             "avatar_data": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "avatar_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,

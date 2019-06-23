@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceCaptivePortalProfile() *schema.Resource {
@@ -67,8 +67,9 @@ func dataSourceCaptivePortalProfile() *schema.Resource {
 }
 
 
-func dataSourceCaptivePortalProfileRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceCaptivePortalProfileRead(d *schema.ResourceData, m interface{}) error {
     filteredCaptivePortalProfiles := vspk.CaptivePortalProfilesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -88,13 +89,13 @@ func dataSourceCaptivePortalProfileRead(d *schema.ResourceData, m interface{}) (
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredCaptivePortalProfiles, err = parent.CaptivePortalProfiles(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ssid_connection"); ok {
         parent := &vspk.SSIDConnection{ID: attr.(string)}
         filteredCaptivePortalProfiles, err = parent.CaptivePortalProfiles(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -126,5 +127,5 @@ func dataSourceCaptivePortalProfileRead(d *schema.ResourceData, m interface{}) (
 
     d.SetId(CaptivePortalProfile.Identifier())
     
-    return
+    return nil
 }

@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceConnectionendpoint() *schema.Resource {
@@ -53,8 +53,9 @@ func dataSourceConnectionendpoint() *schema.Resource {
 }
 
 
-func dataSourceConnectionendpointRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceConnectionendpointRead(d *schema.ResourceData, m interface{}) error {
     filteredConnectionendpoints := vspk.ConnectionendpointsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -73,7 +74,7 @@ func dataSourceConnectionendpointRead(d *schema.ResourceData, m interface{}) (er
     parent := &vspk.InfrastructureAccessProfile{ID: d.Get("parent_infrastructure_access_profile").(string)}
     filteredConnectionendpoints, err = parent.Connectionendpoints(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     Connectionendpoint := &vspk.Connectionendpoint{}
@@ -102,5 +103,5 @@ func dataSourceConnectionendpointRead(d *schema.ResourceData, m interface{}) (er
 
     d.SetId(Connectionendpoint.Identifier())
     
-    return
+    return nil
 }

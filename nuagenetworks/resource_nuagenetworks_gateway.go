@@ -43,6 +43,7 @@ func resourceGateway() *schema.Resource {
             "zfb_match_value": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "bios_release_date": &schema.Schema{
                 Type:     schema.TypeString,
@@ -76,6 +77,7 @@ func resourceGateway() *schema.Resource {
             "management_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
@@ -105,14 +107,17 @@ func resourceGateway() *schema.Resource {
             "peer": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "template_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "pending": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "serial_number": &schema.Schema{
                 Type:     schema.TypeString,
@@ -122,14 +127,17 @@ func resourceGateway() *schema.Resource {
             "permitted_action": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "personality": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "libraries": &schema.Schema{
                 Type:     schema.TypeString,
@@ -169,6 +177,7 @@ func resourceGateway() *schema.Resource {
             "use_gateway_vlanvnid": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "associated_gateway_security_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -183,10 +192,12 @@ func resourceGateway() *schema.Resource {
             "associated_netconf_profile_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "vtep": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "auto_disc_gateway_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -196,6 +207,7 @@ func resourceGateway() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "system_id": &schema.Schema{
                 Type:     schema.TypeString,

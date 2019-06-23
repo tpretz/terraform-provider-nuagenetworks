@@ -47,6 +47,7 @@ func resourceAddressMap() *schema.Resource {
             "private_port": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "associated_patnat_pool_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -60,14 +61,17 @@ func resourceAddressMap() *schema.Resource {
             "public_port": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_patnat_pool": &schema.Schema{
                 Type:     schema.TypeString,

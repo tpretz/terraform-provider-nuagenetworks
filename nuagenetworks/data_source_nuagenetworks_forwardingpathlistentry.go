@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceForwardingPathListEntry() *schema.Resource {
@@ -61,8 +61,9 @@ func dataSourceForwardingPathListEntry() *schema.Resource {
 }
 
 
-func dataSourceForwardingPathListEntryRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceForwardingPathListEntryRead(d *schema.ResourceData, m interface{}) error {
     filteredForwardingPathListEntries := vspk.ForwardingPathListEntriesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -81,7 +82,7 @@ func dataSourceForwardingPathListEntryRead(d *schema.ResourceData, m interface{}
     parent := &vspk.ForwardingPathList{ID: d.Get("parent_forwarding_path_list").(string)}
     filteredForwardingPathListEntries, err = parent.ForwardingPathListEntries(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     ForwardingPathListEntry := &vspk.ForwardingPathListEntry{}
@@ -112,5 +113,5 @@ func dataSourceForwardingPathListEntryRead(d *schema.ResourceData, m interface{}
 
     d.SetId(ForwardingPathListEntry.Identifier())
     
-    return
+    return nil
 }

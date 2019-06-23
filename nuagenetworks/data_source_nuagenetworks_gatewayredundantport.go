@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceGatewayRedundantPort() *schema.Resource {
@@ -81,8 +81,9 @@ func dataSourceGatewayRedundantPort() *schema.Resource {
 }
 
 
-func dataSourceGatewayRedundantPortRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceGatewayRedundantPortRead(d *schema.ResourceData, m interface{}) error {
     filteredGatewayRedundantPorts := vspk.GatewayRedundantPortsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -101,7 +102,7 @@ func dataSourceGatewayRedundantPortRead(d *schema.ResourceData, m interface{}) (
     parent := &vspk.RedundancyGroup{ID: d.Get("parent_redundancy_group").(string)}
     filteredGatewayRedundantPorts, err = parent.GatewayRedundantPorts(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     GatewayRedundantPort := &vspk.GatewayRedundantPort{}
@@ -137,5 +138,5 @@ func dataSourceGatewayRedundantPortRead(d *schema.ResourceData, m interface{}) (
 
     d.SetId(GatewayRedundantPort.Identifier())
     
-    return
+    return nil
 }

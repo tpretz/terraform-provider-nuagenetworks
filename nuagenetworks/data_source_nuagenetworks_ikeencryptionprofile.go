@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceIKEEncryptionprofile() *schema.Resource {
@@ -125,8 +125,9 @@ func dataSourceIKEEncryptionprofile() *schema.Resource {
 }
 
 
-func dataSourceIKEEncryptionprofileRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceIKEEncryptionprofileRead(d *schema.ResourceData, m interface{}) error {
     filteredIKEEncryptionprofiles := vspk.IKEEncryptionprofilesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -145,7 +146,7 @@ func dataSourceIKEEncryptionprofileRead(d *schema.ResourceData, m interface{}) (
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     filteredIKEEncryptionprofiles, err = parent.IKEEncryptionprofiles(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     IKEEncryptionprofile := &vspk.IKEEncryptionprofile{}
@@ -192,5 +193,5 @@ func dataSourceIKEEncryptionprofileRead(d *schema.ResourceData, m interface{}) (
 
     d.SetId(IKEEncryptionprofile.Identifier())
     
-    return
+    return nil
 }

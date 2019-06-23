@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceZFBRequest() *schema.Resource {
@@ -133,8 +133,9 @@ func dataSourceZFBRequest() *schema.Resource {
 }
 
 
-func dataSourceZFBRequestRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceZFBRequestRead(d *schema.ResourceData, m interface{}) error {
     filteredZFBRequests := vspk.ZFBRequestsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -154,13 +155,13 @@ func dataSourceZFBRequestRead(d *schema.ResourceData, m interface{}) (err error)
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredZFBRequests, err = parent.ZFBRequests(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredZFBRequests, err = parent.ZFBRequests(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -210,5 +211,5 @@ func dataSourceZFBRequestRead(d *schema.ResourceData, m interface{}) (err error)
 
     d.SetId(ZFBRequest.Identifier())
     
-    return
+    return nil
 }

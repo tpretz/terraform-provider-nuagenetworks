@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceLtestatistics() *schema.Resource {
@@ -50,8 +50,9 @@ func dataSourceLtestatistics() *schema.Resource {
 }
 
 
-func dataSourceLtestatisticsRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceLtestatisticsRead(d *schema.ResourceData, m interface{}) error {
     filteredLtestatistics := vspk.LtestatisticsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -70,7 +71,7 @@ func dataSourceLtestatisticsRead(d *schema.ResourceData, m interface{}) (err err
     parent := &vspk.VLAN{ID: d.Get("parent_vlan").(string)}
     filteredLtestatistics, err = parent.Ltestatistics(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     Ltestatistics := &vspk.Ltestatistics{}
@@ -98,5 +99,5 @@ func dataSourceLtestatisticsRead(d *schema.ResourceData, m interface{}) (err err
 
     d.SetId(Ltestatistics.Identifier())
     
-    return
+    return nil
 }

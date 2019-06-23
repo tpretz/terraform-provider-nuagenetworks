@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceIngressExternalServiceTemplate() *schema.Resource {
@@ -85,8 +85,9 @@ func dataSourceIngressExternalServiceTemplate() *schema.Resource {
 }
 
 
-func dataSourceIngressExternalServiceTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceIngressExternalServiceTemplateRead(d *schema.ResourceData, m interface{}) error {
     filteredIngressExternalServiceTemplates := vspk.IngressExternalServiceTemplatesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -106,25 +107,25 @@ func dataSourceIngressExternalServiceTemplateRead(d *schema.ResourceData, m inte
         parent := &vspk.Domain{ID: attr.(string)}
         filteredIngressExternalServiceTemplates, err = parent.IngressExternalServiceTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredIngressExternalServiceTemplates, err = parent.IngressExternalServiceTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_l2_domain_template"); ok {
         parent := &vspk.L2DomainTemplate{ID: attr.(string)}
         filteredIngressExternalServiceTemplates, err = parent.IngressExternalServiceTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_domain_template"); ok {
         parent := &vspk.DomainTemplate{ID: attr.(string)}
         filteredIngressExternalServiceTemplates, err = parent.IngressExternalServiceTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -158,5 +159,5 @@ func dataSourceIngressExternalServiceTemplateRead(d *schema.ResourceData, m inte
 
     d.SetId(IngressExternalServiceTemplate.Identifier())
     
-    return
+    return nil
 }

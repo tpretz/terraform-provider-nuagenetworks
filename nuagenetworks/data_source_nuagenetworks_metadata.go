@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceMetadata() *schema.Resource {
@@ -964,8 +964,9 @@ func dataSourceMetadata() *schema.Resource {
 }
 
 
-func dataSourceMetadataRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceMetadataRead(d *schema.ResourceData, m interface{}) error {
     filteredMetadatas := vspk.MetadatasList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -985,1075 +986,1075 @@ func dataSourceMetadataRead(d *schema.ResourceData, m interface{}) (err error) {
         parent := &vspk.VMResync{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_shared_network_resource"); ok {
         parent := &vspk.SharedNetworkResource{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_enterprise_secured_data"); ok {
         parent := &vspk.EnterpriseSecuredData{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_statistics"); ok {
         parent := &vspk.Statistics{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ospf_instance"); ok {
         parent := &vspk.OSPFInstance{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ike_gateway"); ok {
         parent := &vspk.IKEGateway{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_domain_fip_acl_template_entry"); ok {
         parent := &vspk.DomainFIPAclTemplateEntry{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_dscp_forwarding_class_table"); ok {
         parent := &vspk.DSCPForwardingClassTable{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_bootstrap"); ok {
         parent := &vspk.Bootstrap{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_domain"); ok {
         parent := &vspk.Domain{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_tca"); ok {
         parent := &vspk.TCA{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_enterprise_profile"); ok {
         parent := &vspk.EnterpriseProfile{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_rate_limiter"); ok {
         parent := &vspk.RateLimiter{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_cloud_mgmt_system"); ok {
         parent := &vspk.CloudMgmtSystem{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vm_interface"); ok {
         parent := &vspk.VMInterface{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_auto_discovered_gateway"); ok {
         parent := &vspk.AutoDiscoveredGateway{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_host_interface"); ok {
         parent := &vspk.HostInterface{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_bfd_session"); ok {
         parent := &vspk.BFDSession{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ike_gateway_profile"); ok {
         parent := &vspk.IKEGatewayProfile{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vcenter_hypervisor"); ok {
         parent := &vspk.VCenterHypervisor{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ike_subnet"); ok {
         parent := &vspk.IKESubnet{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_qos"); ok {
         parent := &vspk.QOS{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_global_metadata"); ok {
         parent := &vspk.GlobalMetadata{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vrs_address_range"); ok {
         parent := &vspk.VRSAddressRange{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ingress_external_service_template_entry"); ok {
         parent := &vspk.IngressExternalServiceTemplateEntry{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_permission"); ok {
         parent := &vspk.Permission{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_container_interface"); ok {
         parent := &vspk.ContainerInterface{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_event_log"); ok {
         parent := &vspk.EventLog{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_bootstrap_activation"); ok {
         parent := &vspk.BootstrapActivation{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vsp"); ok {
         parent := &vspk.VSP{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vlan_template"); ok {
         parent := &vspk.VLANTemplate{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_mirror_destination"); ok {
         parent := &vspk.MirrorDestination{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_group_key_encryption_profile"); ok {
         parent := &vspk.GroupKeyEncryptionProfile{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_infrastructure_evdf_profile"); ok {
         parent := &vspk.InfrastructureEVDFProfile{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_network_layout"); ok {
         parent := &vspk.NetworkLayout{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ns_port_template"); ok {
         parent := &vspk.NSPortTemplate{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_alarm"); ok {
         parent := &vspk.Alarm{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vpn_connection"); ok {
         parent := &vspk.VPNConnection{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_key_server_monitor_seed"); ok {
         parent := &vspk.KeyServerMonitorSeed{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vcenter_data_center"); ok {
         parent := &vspk.VCenterDataCenter{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ike_gateway_config"); ok {
         parent := &vspk.IKEGatewayConfig{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_static_route"); ok {
         parent := &vspk.StaticRoute{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_bridge_interface"); ok {
         parent := &vspk.BridgeInterface{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_redirection_target_template"); ok {
         parent := &vspk.RedirectionTargetTemplate{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_dscp_forwarding_class_mapping"); ok {
         parent := &vspk.DSCPForwardingClassMapping{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_l2_domain_template"); ok {
         parent := &vspk.L2DomainTemplate{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_subnet"); ok {
         parent := &vspk.Subnet{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ns_port"); ok {
         parent := &vspk.NSPort{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_infrastructure_vsc_profile"); ok {
         parent := &vspk.InfrastructureVscProfile{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_bulk_statistics"); ok {
         parent := &vspk.BulkStatistics{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_infrastructure_config"); ok {
         parent := &vspk.InfrastructureConfig{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_policy_decision"); ok {
         parent := &vspk.PolicyDecision{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_user"); ok {
         parent := &vspk.User{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_license"); ok {
         parent := &vspk.License{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vsd_component"); ok {
         parent := &vspk.VSDComponent{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ltestatistics"); ok {
         parent := &vspk.Ltestatistics{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_cos_remarking_policy"); ok {
         parent := &vspk.COSRemarkingPolicy{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_shunt_link"); ok {
         parent := &vspk.ShuntLink{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_dhcp_option"); ok {
         parent := &vspk.DHCPOption{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_enterprise_network"); ok {
         parent := &vspk.EnterpriseNetwork{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ns_redundant_gateway_group"); ok {
         parent := &vspk.NSRedundantGatewayGroup{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_zone_template"); ok {
         parent := &vspk.ZoneTemplate{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_key_server_member"); ok {
         parent := &vspk.KeyServerMember{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_key_server_monitor_sek"); ok {
         parent := &vspk.KeyServerMonitorSEK{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_saa_s_application_type"); ok {
         parent := &vspk.SaaSApplicationType{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_gateway_security"); ok {
         parent := &vspk.GatewaySecurity{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_routing_policy"); ok {
         parent := &vspk.RoutingPolicy{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_application_binding"); ok {
         parent := &vspk.ApplicationBinding{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_gateway_template"); ok {
         parent := &vspk.GatewayTemplate{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_qos_policer"); ok {
         parent := &vspk.QosPolicer{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_underlay"); ok {
         parent := &vspk.Underlay{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_redirection_target"); ok {
         parent := &vspk.RedirectionTarget{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ldap_configuration"); ok {
         parent := &vspk.LDAPConfiguration{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_wan_service"); ok {
         parent := &vspk.WANService{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_site_info"); ok {
         parent := &vspk.SiteInfo{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_virtual_firewall_rule"); ok {
         parent := &vspk.VirtualFirewallRule{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_avatar"); ok {
         parent := &vspk.Avatar{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_key_server_monitor_encrypted_seed"); ok {
         parent := &vspk.KeyServerMonitorEncryptedSeed{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vsg_redundant_port"); ok {
         parent := &vspk.VsgRedundantPort{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_policy_group_template"); ok {
         parent := &vspk.PolicyGroupTemplate{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_virtual_firewall_policy"); ok {
         parent := &vspk.VirtualFirewallPolicy{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_application"); ok {
         parent := &vspk.Application{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_egress_acl_template"); ok {
         parent := &vspk.EgressACLTemplate{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_egress_adv_fwd_entry_template"); ok {
         parent := &vspk.EgressAdvFwdEntryTemplate{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ingress_adv_fwd_entry_template"); ok {
         parent := &vspk.IngressAdvFwdEntryTemplate{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_redundant_port"); ok {
         parent := &vspk.RedundantPort{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_link"); ok {
         parent := &vspk.Link{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_nsg_routing_policy_binding"); ok {
         parent := &vspk.NSGRoutingPolicyBinding{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_public_network_macro"); ok {
         parent := &vspk.PublicNetworkMacro{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ingress_external_service_template"); ok {
         parent := &vspk.IngressExternalServiceTemplate{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_bgp_peer"); ok {
         parent := &vspk.BGPPeer{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vport_mirror"); ok {
         parent := &vspk.VPortMirror{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_floating_ipacl_template_entry"); ok {
         parent := &vspk.FloatingIPACLTemplateEntry{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ingress_acl_entry_template"); ok {
         parent := &vspk.IngressACLEntryTemplate{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_policy_group"); ok {
         parent := &vspk.PolicyGroup{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_dscp_remarking_policy_table"); ok {
         parent := &vspk.DSCPRemarkingPolicyTable{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_overlay_mirror_destination_template"); ok {
         parent := &vspk.OverlayMirrorDestinationTemplate{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_policy_group_category"); ok {
         parent := &vspk.PolicyGroupCategory{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vcenter_cluster"); ok {
         parent := &vspk.VCenterCluster{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_enterprise_security"); ok {
         parent := &vspk.EnterpriseSecurity{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_egress_adv_fwd_template"); ok {
         parent := &vspk.EgressAdvFwdTemplate{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_zone"); ok {
         parent := &vspk.Zone{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_multi_cast_list"); ok {
         parent := &vspk.MultiCastList{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_container_resync"); ok {
         parent := &vspk.ContainerResync{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_system_config"); ok {
         parent := &vspk.SystemConfig{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_multi_cast_channel_map"); ok {
         parent := &vspk.MultiCastChannelMap{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_bgp_neighbor"); ok {
         parent := &vspk.BGPNeighbor{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vlan"); ok {
         parent := &vspk.VLAN{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_dscp_remarking_policy"); ok {
         parent := &vspk.DSCPRemarkingPolicy{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_statistics_policy"); ok {
         parent := &vspk.StatisticsPolicy{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_zfb_request"); ok {
         parent := &vspk.ZFBRequest{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_job"); ok {
         parent := &vspk.Job{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_network_macro_group"); ok {
         parent := &vspk.NetworkMacroGroup{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ns_gateway_template"); ok {
         parent := &vspk.NSGatewayTemplate{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_patnat_pool"); ok {
         parent := &vspk.PATNATPool{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_all_alarm"); ok {
         parent := &vspk.AllAlarm{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_applicationperformancemanagementbinding"); ok {
         parent := &vspk.Applicationperformancemanagementbinding{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vsc"); ok {
         parent := &vspk.VSC{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_forwarding_path_list"); ok {
         parent := &vspk.ForwardingPathList{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_hsc"); ok {
         parent := &vspk.HSC{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vrs"); ok {
         parent := &vspk.VRS{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_egress_qos_policy"); ok {
         parent := &vspk.EgressQOSPolicy{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_group"); ok {
         parent := &vspk.Group{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_address_range"); ok {
         parent := &vspk.AddressRange{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_bgp_profile"); ok {
         parent := &vspk.BGPProfile{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ingress_adv_fwd_template"); ok {
         parent := &vspk.IngressAdvFwdTemplate{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_location"); ok {
         parent := &vspk.Location{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_egress_acl_entry_template"); ok {
         parent := &vspk.EgressACLEntryTemplate{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_tier"); ok {
         parent := &vspk.Tier{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ikepsk"); ok {
         parent := &vspk.IKEPSK{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_port_template"); ok {
         parent := &vspk.PortTemplate{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_multi_nic_vport"); ok {
         parent := &vspk.MultiNICVPort{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ike_encryptionprofile"); ok {
         parent := &vspk.IKEEncryptionprofile{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_floating_ip"); ok {
         parent := &vspk.FloatingIp{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ospf_interface"); ok {
         parent := &vspk.OSPFInterface{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_destinationurl"); ok {
         parent := &vspk.Destinationurl{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vcenter_eam_config"); ok {
         parent := &vspk.VCenterEAMConfig{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ns_gateway"); ok {
         parent := &vspk.NSGateway{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_enterprise_permission"); ok {
         parent := &vspk.EnterprisePermission{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_multi_cast_range"); ok {
         parent := &vspk.MultiCastRange{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_domain_template"); ok {
         parent := &vspk.DomainTemplate{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_forwarding_path_list_entry"); ok {
         parent := &vspk.ForwardingPathListEntry{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vcenter"); ok {
         parent := &vspk.VCenter{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ingress_qos_policy"); ok {
         parent := &vspk.IngressQOSPolicy{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_infrastructure_gateway_profile"); ok {
         parent := &vspk.InfrastructureGatewayProfile{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_saa_s_application_group"); ok {
         parent := &vspk.SaaSApplicationGroup{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ingress_acl_template"); ok {
         parent := &vspk.IngressACLTemplate{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vcenter_vrs_config"); ok {
         parent := &vspk.VCenterVRSConfig{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_key_server_monitor"); ok {
         parent := &vspk.KeyServerMonitor{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_monitoring_port"); ok {
         parent := &vspk.MonitoringPort{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_uplink_rd"); ok {
         parent := &vspk.UplinkRD{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_floating_ipacl_template"); ok {
         parent := &vspk.FloatingIPACLTemplate{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_port"); ok {
         parent := &vspk.Port{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_next_hop"); ok {
         parent := &vspk.NextHop{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_redundancy_group"); ok {
         parent := &vspk.RedundancyGroup{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vm"); ok {
         parent := &vspk.VM{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_container"); ok {
         parent := &vspk.Container{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_virtual_ip"); ok {
         parent := &vspk.VirtualIP{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_applicationperformancemanagement"); ok {
         parent := &vspk.Applicationperformancemanagement{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_infrastructure_access_profile"); ok {
         parent := &vspk.InfrastructureAccessProfile{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_subnet_template"); ok {
         parent := &vspk.SubnetTemplate{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ip_reservation"); ok {
         parent := &vspk.IPReservation{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ospf_area"); ok {
         parent := &vspk.OSPFArea{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_stats_collector_info"); ok {
         parent := &vspk.StatsCollectorInfo{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_certificate"); ok {
         parent := &vspk.Certificate{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_domain_fip_acl_template"); ok {
         parent := &vspk.DomainFIPAclTemplate{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_address_map"); ok {
         parent := &vspk.AddressMap{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_overlay_mirror_destination"); ok {
         parent := &vspk.OverlayMirrorDestination{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_gateway"); ok {
         parent := &vspk.Gateway{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ike_gateway_connection"); ok {
         parent := &vspk.IKEGatewayConnection{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_gateway_secured_data"); ok {
         parent := &vspk.GatewaySecuredData{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_cos_remarking_policy_table"); ok {
         parent := &vspk.COSRemarkingPolicyTable{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ike_certificate"); ok {
         parent := &vspk.IKECertificate{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vsd"); ok {
         parent := &vspk.VSD{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_nat_map_entry"); ok {
         parent := &vspk.NATMapEntry{ID: attr.(string)}
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredMetadatas, err = parent.Metadatas(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -2089,5 +2090,5 @@ func dataSourceMetadataRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(Metadata.Identifier())
     
-    return
+    return nil
 }

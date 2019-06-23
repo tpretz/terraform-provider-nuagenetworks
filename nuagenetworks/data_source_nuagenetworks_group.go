@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceGroup() *schema.Resource {
@@ -108,8 +108,9 @@ func dataSourceGroup() *schema.Resource {
 }
 
 
-func dataSourceGroupRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceGroupRead(d *schema.ResourceData, m interface{}) error {
     filteredGroups := vspk.GroupsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -129,43 +130,43 @@ func dataSourceGroupRead(d *schema.ResourceData, m interface{}) (err error) {
         parent := &vspk.Domain{ID: attr.(string)}
         filteredGroups, err = parent.Groups(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredGroups, err = parent.Groups(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_l2_domain_template"); ok {
         parent := &vspk.L2DomainTemplate{ID: attr.(string)}
         filteredGroups, err = parent.Groups(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_user"); ok {
         parent := &vspk.User{ID: attr.(string)}
         filteredGroups, err = parent.Groups(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredGroups, err = parent.Groups(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_zone"); ok {
         parent := &vspk.Zone{ID: attr.(string)}
         filteredGroups, err = parent.Groups(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_domain_template"); ok {
         parent := &vspk.DomainTemplate{ID: attr.(string)}
         filteredGroups, err = parent.Groups(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -201,5 +202,5 @@ func dataSourceGroupRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(Group.Identifier())
     
-    return
+    return nil
 }

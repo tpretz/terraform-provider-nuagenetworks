@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceVCenterDataCenter() *schema.Resource {
@@ -445,8 +445,9 @@ func dataSourceVCenterDataCenter() *schema.Resource {
 }
 
 
-func dataSourceVCenterDataCenterRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceVCenterDataCenterRead(d *schema.ResourceData, m interface{}) error {
     filteredVCenterDataCenters := vspk.VCenterDataCentersList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -465,7 +466,7 @@ func dataSourceVCenterDataCenterRead(d *schema.ResourceData, m interface{}) (err
     parent := &vspk.VCenter{ID: d.Get("parent_vcenter").(string)}
     filteredVCenterDataCenters, err = parent.VCenterDataCenters(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     VCenterDataCenter := &vspk.VCenterDataCenter{}
@@ -592,5 +593,5 @@ func dataSourceVCenterDataCenterRead(d *schema.ResourceData, m interface{}) (err
 
     d.SetId(VCenterDataCenter.Identifier())
     
-    return
+    return nil
 }

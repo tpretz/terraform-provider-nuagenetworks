@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceRedirectionTargetTemplate() *schema.Resource {
@@ -71,8 +71,9 @@ func dataSourceRedirectionTargetTemplate() *schema.Resource {
 }
 
 
-func dataSourceRedirectionTargetTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceRedirectionTargetTemplateRead(d *schema.ResourceData, m interface{}) error {
     filteredRedirectionTargetTemplates := vspk.RedirectionTargetTemplatesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -92,13 +93,13 @@ func dataSourceRedirectionTargetTemplateRead(d *schema.ResourceData, m interface
         parent := &vspk.L2DomainTemplate{ID: attr.(string)}
         filteredRedirectionTargetTemplates, err = parent.RedirectionTargetTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_domain_template"); ok {
         parent := &vspk.DomainTemplate{ID: attr.(string)}
         filteredRedirectionTargetTemplates, err = parent.RedirectionTargetTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -131,5 +132,5 @@ func dataSourceRedirectionTargetTemplateRead(d *schema.ResourceData, m interface
 
     d.SetId(RedirectionTargetTemplate.Identifier())
     
-    return
+    return nil
 }

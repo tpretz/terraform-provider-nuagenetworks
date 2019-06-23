@@ -51,10 +51,12 @@ func resourceRedundantPort() *schema.Resource {
             "permitted_action": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "physical_name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -63,6 +65,7 @@ func resourceRedundantPort() *schema.Resource {
             "infrastructure_profile_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -72,10 +75,12 @@ func resourceRedundantPort() *schema.Resource {
             "port_peer1_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "port_peer2_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "port_type": &schema.Schema{
                 Type:     schema.TypeString,
@@ -84,30 +89,37 @@ func resourceRedundantPort() *schema.Resource {
             "speed": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "use_untagged_heartbeat_vlan": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "use_user_mnemonic": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "user_mnemonic": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_egress_qos_policy_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "status": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_ns_redundant_gateway_group": &schema.Schema{
                 Type:     schema.TypeString,

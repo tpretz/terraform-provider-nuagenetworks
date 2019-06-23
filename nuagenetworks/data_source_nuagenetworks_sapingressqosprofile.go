@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceSAPIngressQoSProfile() *schema.Resource {
@@ -47,8 +47,9 @@ func dataSourceSAPIngressQoSProfile() *schema.Resource {
 }
 
 
-func dataSourceSAPIngressQoSProfileRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceSAPIngressQoSProfileRead(d *schema.ResourceData, m interface{}) error {
     filteredSAPIngressQoSProfiles := vspk.SAPIngressQoSProfilesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -68,13 +69,13 @@ func dataSourceSAPIngressQoSProfileRead(d *schema.ResourceData, m interface{}) (
         parent := &vspk.RedundancyGroup{ID: attr.(string)}
         filteredSAPIngressQoSProfiles, err = parent.SAPIngressQoSProfiles(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_gateway"); ok {
         parent := &vspk.Gateway{ID: attr.(string)}
         filteredSAPIngressQoSProfiles, err = parent.SAPIngressQoSProfiles(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -101,5 +102,5 @@ func dataSourceSAPIngressQoSProfileRead(d *schema.ResourceData, m interface{}) (
 
     d.SetId(SAPIngressQoSProfile.Identifier())
     
-    return
+    return nil
 }

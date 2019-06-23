@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourcePATIPEntry() *schema.Resource {
@@ -71,8 +71,9 @@ func dataSourcePATIPEntry() *schema.Resource {
 }
 
 
-func dataSourcePATIPEntryRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourcePATIPEntryRead(d *schema.ResourceData, m interface{}) error {
     filteredPATIPEntries := vspk.PATIPEntriesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -92,13 +93,13 @@ func dataSourcePATIPEntryRead(d *schema.ResourceData, m interface{}) (err error)
         parent := &vspk.SharedNetworkResource{ID: attr.(string)}
         filteredPATIPEntries, err = parent.PATIPEntries(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_subnet"); ok {
         parent := &vspk.Subnet{ID: attr.(string)}
         filteredPATIPEntries, err = parent.PATIPEntries(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -131,5 +132,5 @@ func dataSourcePATIPEntryRead(d *schema.ResourceData, m interface{}) (err error)
 
     d.SetId(PATIPEntry.Identifier())
     
-    return
+    return nil
 }

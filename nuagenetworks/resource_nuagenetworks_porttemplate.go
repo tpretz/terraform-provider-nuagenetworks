@@ -33,6 +33,7 @@ func resourcePortTemplate() *schema.Resource {
             "vlan_range": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -46,6 +47,7 @@ func resourcePortTemplate() *schema.Resource {
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "physical_name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -64,10 +66,12 @@ func resourcePortTemplate() *schema.Resource {
             "associated_egress_qos_policy_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_gateway_template": &schema.Schema{
                 Type:     schema.TypeString,

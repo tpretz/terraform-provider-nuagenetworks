@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceAggregateMetadata() *schema.Resource {
@@ -66,8 +66,9 @@ func dataSourceAggregateMetadata() *schema.Resource {
 }
 
 
-func dataSourceAggregateMetadataRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceAggregateMetadataRead(d *schema.ResourceData, m interface{}) error {
     filteredAggregateMetadatas := vspk.AggregateMetadatasList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -86,7 +87,7 @@ func dataSourceAggregateMetadataRead(d *schema.ResourceData, m interface{}) (err
     parent := &vspk.VPort{ID: d.Get("parent_vport").(string)}
     filteredAggregateMetadatas, err = parent.AggregateMetadatas(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     AggregateMetadata := &vspk.AggregateMetadata{}
@@ -118,5 +119,5 @@ func dataSourceAggregateMetadataRead(d *schema.ResourceData, m interface{}) (err
 
     d.SetId(AggregateMetadata.Identifier())
     
-    return
+    return nil
 }

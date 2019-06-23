@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceStatistics() *schema.Resource {
@@ -159,8 +159,9 @@ func dataSourceStatistics() *schema.Resource {
 }
 
 
-func dataSourceStatisticsRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceStatisticsRead(d *schema.ResourceData, m interface{}) error {
     filteredStatistics := vspk.StatisticsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -180,133 +181,133 @@ func dataSourceStatisticsRead(d *schema.ResourceData, m interface{}) (err error)
         parent := &vspk.Domain{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vm_interface"); ok {
         parent := &vspk.VMInterface{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_host_interface"); ok {
         parent := &vspk.HostInterface{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ingress_external_service_template_entry"); ok {
         parent := &vspk.IngressExternalServiceTemplateEntry{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_container_interface"); ok {
         parent := &vspk.ContainerInterface{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_bridge_interface"); ok {
         parent := &vspk.BridgeInterface{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_subnet"); ok {
         parent := &vspk.Subnet{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ns_port"); ok {
         parent := &vspk.NSPort{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_virtual_firewall_rule"); ok {
         parent := &vspk.VirtualFirewallRule{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_egress_adv_fwd_entry_template"); ok {
         parent := &vspk.EgressAdvFwdEntryTemplate{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_wireless_port"); ok {
         parent := &vspk.WirelessPort{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ingress_adv_fwd_entry_template"); ok {
         parent := &vspk.IngressAdvFwdEntryTemplate{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ingress_acl_entry_template"); ok {
         parent := &vspk.IngressACLEntryTemplate{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_zone"); ok {
         parent := &vspk.Zone{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vlan"); ok {
         parent := &vspk.VLAN{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_patnat_pool"); ok {
         parent := &vspk.PATNATPool{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vsc"); ok {
         parent := &vspk.VSC{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vrs"); ok {
         parent := &vspk.VRS{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_egress_acl_entry_template"); ok {
         parent := &vspk.EgressACLEntryTemplate{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_address_map"); ok {
         parent := &vspk.AddressMap{ID: attr.(string)}
         filteredStatistics, err = parent.Statistics(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -336,5 +337,5 @@ func dataSourceStatisticsRead(d *schema.ResourceData, m interface{}) (err error)
 
     d.SetId(Statistics.Identifier())
     
-    return
+    return nil
 }

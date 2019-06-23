@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceVCenterHypervisor() *schema.Resource {
@@ -584,8 +584,9 @@ func dataSourceVCenterHypervisor() *schema.Resource {
 }
 
 
-func dataSourceVCenterHypervisorRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceVCenterHypervisorRead(d *schema.ResourceData, m interface{}) error {
     filteredVCenterHypervisors := vspk.VCenterHypervisorsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -605,19 +606,19 @@ func dataSourceVCenterHypervisorRead(d *schema.ResourceData, m interface{}) (err
         parent := &vspk.VCenterDataCenter{ID: attr.(string)}
         filteredVCenterHypervisors, err = parent.VCenterHypervisors(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vcenter_cluster"); ok {
         parent := &vspk.VCenterCluster{ID: attr.(string)}
         filteredVCenterHypervisors, err = parent.VCenterHypervisors(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredVCenterHypervisors, err = parent.VCenterHypervisors(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -778,5 +779,5 @@ func dataSourceVCenterHypervisorRead(d *schema.ResourceData, m interface{}) (err
 
     d.SetId(VCenterHypervisor.Identifier())
     
-    return
+    return nil
 }

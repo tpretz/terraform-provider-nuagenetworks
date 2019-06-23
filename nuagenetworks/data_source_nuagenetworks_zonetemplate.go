@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceZoneTemplate() *schema.Resource {
@@ -97,8 +97,9 @@ func dataSourceZoneTemplate() *schema.Resource {
 }
 
 
-func dataSourceZoneTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceZoneTemplateRead(d *schema.ResourceData, m interface{}) error {
     filteredZoneTemplates := vspk.ZoneTemplatesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -117,7 +118,7 @@ func dataSourceZoneTemplateRead(d *schema.ResourceData, m interface{}) (err erro
     parent := &vspk.DomainTemplate{ID: d.Get("parent_domain_template").(string)}
     filteredZoneTemplates, err = parent.ZoneTemplates(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     ZoneTemplate := &vspk.ZoneTemplate{}
@@ -157,5 +158,5 @@ func dataSourceZoneTemplateRead(d *schema.ResourceData, m interface{}) (err erro
 
     d.SetId(ZoneTemplate.Identifier())
     
-    return
+    return nil
 }

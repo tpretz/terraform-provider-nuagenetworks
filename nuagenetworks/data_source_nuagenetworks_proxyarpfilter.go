@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceProxyARPFilter() *schema.Resource {
@@ -57,8 +57,9 @@ func dataSourceProxyARPFilter() *schema.Resource {
 }
 
 
-func dataSourceProxyARPFilterRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceProxyARPFilterRead(d *schema.ResourceData, m interface{}) error {
     filteredProxyARPFilters := vspk.ProxyARPFiltersList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -77,7 +78,7 @@ func dataSourceProxyARPFilterRead(d *schema.ResourceData, m interface{}) (err er
     parent := &vspk.Subnet{ID: d.Get("parent_subnet").(string)}
     filteredProxyARPFilters, err = parent.ProxyARPFilters(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     ProxyARPFilter := &vspk.ProxyARPFilter{}
@@ -107,5 +108,5 @@ func dataSourceProxyARPFilterRead(d *schema.ResourceData, m interface{}) (err er
 
     d.SetId(ProxyARPFilter.Identifier())
     
-    return
+    return nil
 }

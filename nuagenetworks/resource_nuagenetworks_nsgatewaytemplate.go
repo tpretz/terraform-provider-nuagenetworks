@@ -47,14 +47,17 @@ func resourceNSGatewayTemplate() *schema.Resource {
             "personality": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "infrastructure_access_profile_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "infrastructure_profile_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -78,6 +81,7 @@ func resourceNSGatewayTemplate() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
         },
     }

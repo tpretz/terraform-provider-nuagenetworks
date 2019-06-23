@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceIPv6FilterProfile() *schema.Resource {
@@ -47,8 +47,9 @@ func dataSourceIPv6FilterProfile() *schema.Resource {
 }
 
 
-func dataSourceIPv6FilterProfileRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceIPv6FilterProfileRead(d *schema.ResourceData, m interface{}) error {
     filteredIPv6FilterProfiles := vspk.IPv6FilterProfilesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -68,13 +69,13 @@ func dataSourceIPv6FilterProfileRead(d *schema.ResourceData, m interface{}) (err
         parent := &vspk.RedundancyGroup{ID: attr.(string)}
         filteredIPv6FilterProfiles, err = parent.IPv6FilterProfiles(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_gateway"); ok {
         parent := &vspk.Gateway{ID: attr.(string)}
         filteredIPv6FilterProfiles, err = parent.IPv6FilterProfiles(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -101,5 +102,5 @@ func dataSourceIPv6FilterProfileRead(d *schema.ResourceData, m interface{}) (err
 
     d.SetId(IPv6FilterProfile.Identifier())
     
-    return
+    return nil
 }

@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceUplinkConnection() *schema.Resource {
@@ -156,8 +156,9 @@ func dataSourceUplinkConnection() *schema.Resource {
 }
 
 
-func dataSourceUplinkConnectionRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceUplinkConnectionRead(d *schema.ResourceData, m interface{}) error {
     filteredUplinkConnections := vspk.UplinkConnectionsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -177,19 +178,19 @@ func dataSourceUplinkConnectionRead(d *schema.ResourceData, m interface{}) (err 
         parent := &vspk.VLANTemplate{ID: attr.(string)}
         filteredUplinkConnections, err = parent.UplinkConnections(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vlan"); ok {
         parent := &vspk.VLAN{ID: attr.(string)}
         filteredUplinkConnections, err = parent.UplinkConnections(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ns_gateway"); ok {
         parent := &vspk.NSGateway{ID: attr.(string)}
         filteredUplinkConnections, err = parent.UplinkConnections(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -242,5 +243,5 @@ func dataSourceUplinkConnectionRead(d *schema.ResourceData, m interface{}) (err 
 
     d.SetId(UplinkConnection.Identifier())
     
-    return
+    return nil
 }

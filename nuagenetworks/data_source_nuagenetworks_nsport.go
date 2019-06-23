@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceNSPort() *schema.Resource {
@@ -128,8 +128,9 @@ func dataSourceNSPort() *schema.Resource {
 }
 
 
-func dataSourceNSPortRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceNSPortRead(d *schema.ResourceData, m interface{}) error {
     filteredNSPorts := vspk.NSPortsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -149,19 +150,19 @@ func dataSourceNSPortRead(d *schema.ResourceData, m interface{}) (err error) {
         parent := &vspk.AutoDiscoveredGateway{ID: attr.(string)}
         filteredNSPorts, err = parent.NSPorts(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_redundant_port"); ok {
         parent := &vspk.RedundantPort{ID: attr.(string)}
         filteredNSPorts, err = parent.NSPorts(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ns_gateway"); ok {
         parent := &vspk.NSGateway{ID: attr.(string)}
         filteredNSPorts, err = parent.NSPorts(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -207,5 +208,5 @@ func dataSourceNSPortRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(NSPort.Identifier())
     
-    return
+    return nil
 }

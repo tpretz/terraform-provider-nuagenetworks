@@ -46,10 +46,12 @@ func resourceGatewayTemplate() *schema.Resource {
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "infrastructure_profile_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "enterprise_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -64,6 +66,7 @@ func resourceGatewayTemplate() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,

@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceVLAN() *schema.Resource {
@@ -158,8 +158,9 @@ func dataSourceVLAN() *schema.Resource {
 }
 
 
-func dataSourceVLANRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceVLANRead(d *schema.ResourceData, m interface{}) error {
     filteredVLANs := vspk.VLANsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -179,31 +180,31 @@ func dataSourceVLANRead(d *schema.ResourceData, m interface{}) (err error) {
         parent := &vspk.NSPort{ID: attr.(string)}
         filteredVLANs, err = parent.VLANs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vsg_redundant_port"); ok {
         parent := &vspk.VsgRedundantPort{ID: attr.(string)}
         filteredVLANs, err = parent.VLANs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_gateway_redundant_port"); ok {
         parent := &vspk.GatewayRedundantPort{ID: attr.(string)}
         filteredVLANs, err = parent.VLANs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_redundant_port"); ok {
         parent := &vspk.RedundantPort{ID: attr.(string)}
         filteredVLANs, err = parent.VLANs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_port"); ok {
         parent := &vspk.Port{ID: attr.(string)}
         filteredVLANs, err = parent.VLANs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -254,5 +255,5 @@ func dataSourceVLANRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(VLAN.Identifier())
     
-    return
+    return nil
 }

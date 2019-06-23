@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceVRS() *schema.Resource {
@@ -257,8 +257,9 @@ func dataSourceVRS() *schema.Resource {
 }
 
 
-func dataSourceVRSRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceVRSRead(d *schema.ResourceData, m interface{}) error {
     filteredVRSs := vspk.VRSsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -278,31 +279,31 @@ func dataSourceVRSRead(d *schema.ResourceData, m interface{}) (err error) {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredVRSs, err = parent.VRSs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vsc"); ok {
         parent := &vspk.VSC{ID: attr.(string)}
         filteredVRSs, err = parent.VRSs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_hsc"); ok {
         parent := &vspk.HSC{ID: attr.(string)}
         filteredVRSs, err = parent.VRSs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vm"); ok {
         parent := &vspk.VM{ID: attr.(string)}
         filteredVRSs, err = parent.VRSs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_container"); ok {
         parent := &vspk.Container{ID: attr.(string)}
         filteredVRSs, err = parent.VRSs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -377,5 +378,5 @@ func dataSourceVRSRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(VRS.Identifier())
     
-    return
+    return nil
 }

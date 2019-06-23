@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceSSIDConnection() *schema.Resource {
@@ -91,8 +91,9 @@ func dataSourceSSIDConnection() *schema.Resource {
 }
 
 
-func dataSourceSSIDConnectionRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceSSIDConnectionRead(d *schema.ResourceData, m interface{}) error {
     filteredSSIDConnections := vspk.SSIDConnectionsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -111,7 +112,7 @@ func dataSourceSSIDConnectionRead(d *schema.ResourceData, m interface{}) (err er
     parent := &vspk.WirelessPort{ID: d.Get("parent_wireless_port").(string)}
     filteredSSIDConnections, err = parent.SSIDConnections(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     SSIDConnection := &vspk.SSIDConnection{}
@@ -149,5 +150,5 @@ func dataSourceSSIDConnectionRead(d *schema.ResourceData, m interface{}) (err er
 
     d.SetId(SSIDConnection.Identifier())
     
-    return
+    return nil
 }

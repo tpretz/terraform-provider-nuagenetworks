@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceIngressACLEntryTemplate() *schema.Resource {
@@ -186,8 +186,9 @@ func dataSourceIngressACLEntryTemplate() *schema.Resource {
 }
 
 
-func dataSourceIngressACLEntryTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceIngressACLEntryTemplateRead(d *schema.ResourceData, m interface{}) error {
     filteredIngressACLEntryTemplates := vspk.IngressACLEntryTemplatesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -207,37 +208,37 @@ func dataSourceIngressACLEntryTemplateRead(d *schema.ResourceData, m interface{}
         parent := &vspk.Domain{ID: attr.(string)}
         filteredIngressACLEntryTemplates, err = parent.IngressACLEntryTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_mirror_destination"); ok {
         parent := &vspk.MirrorDestination{ID: attr.(string)}
         filteredIngressACLEntryTemplates, err = parent.IngressACLEntryTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredIngressACLEntryTemplates, err = parent.IngressACLEntryTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredIngressACLEntryTemplates, err = parent.IngressACLEntryTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ingress_acl_template"); ok {
         parent := &vspk.IngressACLTemplate{ID: attr.(string)}
         filteredIngressACLEntryTemplates, err = parent.IngressACLEntryTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredIngressACLEntryTemplates, err = parent.IngressACLEntryTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -295,5 +296,5 @@ func dataSourceIngressACLEntryTemplateRead(d *schema.ResourceData, m interface{}
 
     d.SetId(IngressACLEntryTemplate.Identifier())
     
-    return
+    return nil
 }

@@ -62,6 +62,7 @@ func resourceVirtualFirewallPolicy() *schema.Resource {
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "allow_address_spoof": &schema.Schema{
                 Type:     schema.TypeBool,
@@ -81,10 +82,12 @@ func resourceVirtualFirewallPolicy() *schema.Resource {
             "priority": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "priority_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_egress_template_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -109,6 +112,7 @@ func resourceVirtualFirewallPolicy() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_domain": &schema.Schema{
                 Type:     schema.TypeString,

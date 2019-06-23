@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourcePublicNetworkMacro() *schema.Resource {
@@ -65,8 +65,9 @@ func dataSourcePublicNetworkMacro() *schema.Resource {
 }
 
 
-func dataSourcePublicNetworkMacroRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourcePublicNetworkMacroRead(d *schema.ResourceData, m interface{}) error {
     filteredPublicNetworkMacros := vspk.PublicNetworkMacrosList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -85,7 +86,7 @@ func dataSourcePublicNetworkMacroRead(d *schema.ResourceData, m interface{}) (er
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     filteredPublicNetworkMacros, err = parent.PublicNetworkMacros(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     PublicNetworkMacro := &vspk.PublicNetworkMacro{}
@@ -117,5 +118,5 @@ func dataSourcePublicNetworkMacroRead(d *schema.ResourceData, m interface{}) (er
 
     d.SetId(PublicNetworkMacro.Identifier())
     
-    return
+    return nil
 }

@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourcePolicyGroupCategory() *schema.Resource {
@@ -57,8 +57,9 @@ func dataSourcePolicyGroupCategory() *schema.Resource {
 }
 
 
-func dataSourcePolicyGroupCategoryRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourcePolicyGroupCategoryRead(d *schema.ResourceData, m interface{}) error {
     filteredPolicyGroupCategories := vspk.PolicyGroupCategoriesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -77,7 +78,7 @@ func dataSourcePolicyGroupCategoryRead(d *schema.ResourceData, m interface{}) (e
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     filteredPolicyGroupCategories, err = parent.PolicyGroupCategories(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     PolicyGroupCategory := &vspk.PolicyGroupCategory{}
@@ -107,5 +108,5 @@ func dataSourcePolicyGroupCategoryRead(d *schema.ResourceData, m interface{}) (e
 
     d.SetId(PolicyGroupCategory.Identifier())
     
-    return
+    return nil
 }

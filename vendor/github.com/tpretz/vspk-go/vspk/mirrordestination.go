@@ -9,7 +9,7 @@
 
 package vspk
 
-import "github.com/nuagenetworks/go-bambou/bambou"
+import "github.com/tpretz/go-bambou/bambou"
 
 // MirrorDestinationIdentity represents the Identity of the object
 var MirrorDestinationIdentity = bambou.Identity{

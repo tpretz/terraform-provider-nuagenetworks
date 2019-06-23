@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceUserContext() *schema.Resource {
@@ -65,8 +65,9 @@ func dataSourceUserContext() *schema.Resource {
 }
 
 
-func dataSourceUserContextRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceUserContextRead(d *schema.ResourceData, m interface{}) error {
     filteredUserContexts := vspk.UserContextsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -85,7 +86,7 @@ func dataSourceUserContextRead(d *schema.ResourceData, m interface{}) (err error
     parent := m.(*vspk.Me)
     filteredUserContexts, err = parent.UserContexts(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     UserContext := &vspk.UserContext{}
@@ -118,5 +119,5 @@ func dataSourceUserContextRead(d *schema.ResourceData, m interface{}) (err error
 
     d.SetId(UserContext.Identifier())
     
-    return
+    return nil
 }

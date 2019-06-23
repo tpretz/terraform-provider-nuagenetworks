@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceVLANTemplate() *schema.Resource {
@@ -91,8 +91,9 @@ func dataSourceVLANTemplate() *schema.Resource {
 }
 
 
-func dataSourceVLANTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceVLANTemplateRead(d *schema.ResourceData, m interface{}) error {
     filteredVLANTemplates := vspk.VLANTemplatesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -112,13 +113,13 @@ func dataSourceVLANTemplateRead(d *schema.ResourceData, m interface{}) (err erro
         parent := &vspk.NSPortTemplate{ID: attr.(string)}
         filteredVLANTemplates, err = parent.VLANTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_port_template"); ok {
         parent := &vspk.PortTemplate{ID: attr.(string)}
         filteredVLANTemplates, err = parent.VLANTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -156,5 +157,5 @@ func dataSourceVLANTemplateRead(d *schema.ResourceData, m interface{}) (err erro
 
     d.SetId(VLANTemplate.Identifier())
     
-    return
+    return nil
 }

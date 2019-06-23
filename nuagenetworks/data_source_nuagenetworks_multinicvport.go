@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceMultiNICVPort() *schema.Resource {
@@ -49,8 +49,9 @@ func dataSourceMultiNICVPort() *schema.Resource {
 }
 
 
-func dataSourceMultiNICVPortRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceMultiNICVPortRead(d *schema.ResourceData, m interface{}) error {
     filteredMultiNICVPorts := vspk.MultiNICVPortsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -69,7 +70,7 @@ func dataSourceMultiNICVPortRead(d *schema.ResourceData, m interface{}) (err err
     parent := &vspk.VRS{ID: d.Get("parent_vrs").(string)}
     filteredMultiNICVPorts, err = parent.MultiNICVPorts(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     MultiNICVPort := &vspk.MultiNICVPort{}
@@ -97,5 +98,5 @@ func dataSourceMultiNICVPortRead(d *schema.ResourceData, m interface{}) (err err
 
     d.SetId(MultiNICVPort.Identifier())
     
-    return
+    return nil
 }

@@ -48,6 +48,7 @@ func resourceEnterprise() *schema.Resource {
             "dhcp_lease_interval": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "vnf_management_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
@@ -76,6 +77,7 @@ func resourceEnterprise() *schema.Resource {
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "shared_enterprise": &schema.Schema{
                 Type:     schema.TypeBool,
@@ -95,27 +97,33 @@ func resourceEnterprise() *schema.Resource {
             "allow_advanced_qos_configuration": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "allow_gateway_management": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "allow_trusted_forwarding_class": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "allowed_forwarding_classes": &schema.Schema{
                 Type:     schema.TypeList,
                 Optional: true,
+                Computed: true,
                 Elem:     &schema.Schema{Type: schema.TypeString},
             },
             "floating_ips_quota": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "floating_ips_used": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "flow_collection_enabled": &schema.Schema{
                 Type:     schema.TypeString,
@@ -135,6 +143,7 @@ func resourceEnterprise() *schema.Resource {
             "enterprise_profile_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -144,6 +153,7 @@ func resourceEnterprise() *schema.Resource {
             "local_as": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "associated_enterprise_security_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -163,18 +173,22 @@ func resourceEnterprise() *schema.Resource {
             "customer_id": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "avatar_data": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "avatar_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
         },
     }

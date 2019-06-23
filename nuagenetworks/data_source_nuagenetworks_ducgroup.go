@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceDUCGroup() *schema.Resource {
@@ -41,8 +41,9 @@ func dataSourceDUCGroup() *schema.Resource {
 }
 
 
-func dataSourceDUCGroupRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceDUCGroupRead(d *schema.ResourceData, m interface{}) error {
     filteredDUCGroups := vspk.DUCGroupsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -61,7 +62,7 @@ func dataSourceDUCGroupRead(d *schema.ResourceData, m interface{}) (err error) {
     parent := m.(*vspk.Me)
     filteredDUCGroups, err = parent.DUCGroups(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     DUCGroup := &vspk.DUCGroup{}
@@ -88,5 +89,5 @@ func dataSourceDUCGroupRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(DUCGroup.Identifier())
     
-    return
+    return nil
 }

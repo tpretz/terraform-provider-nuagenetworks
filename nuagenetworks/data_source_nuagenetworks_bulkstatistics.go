@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceBulkStatistics() *schema.Resource {
@@ -54,8 +54,9 @@ func dataSourceBulkStatistics() *schema.Resource {
 }
 
 
-func dataSourceBulkStatisticsRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceBulkStatisticsRead(d *schema.ResourceData, m interface{}) error {
     filteredBulkStatistics := vspk.BulkStatisticsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -74,7 +75,7 @@ func dataSourceBulkStatisticsRead(d *schema.ResourceData, m interface{}) (err er
     parent := &vspk.PATNATPool{ID: d.Get("parent_patnat_pool").(string)}
     filteredBulkStatistics, err = parent.BulkStatistics(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     BulkStatistics := &vspk.BulkStatistics{}
@@ -103,5 +104,5 @@ func dataSourceBulkStatisticsRead(d *schema.ResourceData, m interface{}) (err er
 
     d.SetId(BulkStatistics.Identifier())
     
-    return
+    return nil
 }

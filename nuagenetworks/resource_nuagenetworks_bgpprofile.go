@@ -47,6 +47,7 @@ func resourceBGPProfile() *schema.Resource {
             "dampening_name": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "dampening_reuse": &schema.Schema{
                 Type:     schema.TypeInt,
@@ -61,6 +62,7 @@ func resourceBGPProfile() *schema.Resource {
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -70,14 +72,17 @@ func resourceBGPProfile() *schema.Resource {
             "associated_export_routing_policy_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_import_routing_policy_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,

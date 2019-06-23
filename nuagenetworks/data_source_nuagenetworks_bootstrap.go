@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceBootstrap() *schema.Resource {
@@ -71,8 +71,9 @@ func dataSourceBootstrap() *schema.Resource {
 }
 
 
-func dataSourceBootstrapRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceBootstrapRead(d *schema.ResourceData, m interface{}) error {
     filteredBootstraps := vspk.BootstrapsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -92,13 +93,13 @@ func dataSourceBootstrapRead(d *schema.ResourceData, m interface{}) (err error) 
         parent := &vspk.NSGateway{ID: attr.(string)}
         filteredBootstraps, err = parent.Bootstraps(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_gateway"); ok {
         parent := &vspk.Gateway{ID: attr.(string)}
         filteredBootstraps, err = parent.Bootstraps(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -131,5 +132,5 @@ func dataSourceBootstrapRead(d *schema.ResourceData, m interface{}) (err error) 
 
     d.SetId(Bootstrap.Identifier())
     
-    return
+    return nil
 }

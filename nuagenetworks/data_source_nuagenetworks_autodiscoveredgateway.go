@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceAutoDiscoveredGateway() *schema.Resource {
@@ -78,8 +78,9 @@ func dataSourceAutoDiscoveredGateway() *schema.Resource {
 }
 
 
-func dataSourceAutoDiscoveredGatewayRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceAutoDiscoveredGatewayRead(d *schema.ResourceData, m interface{}) error {
     filteredAutoDiscoveredGateways := vspk.AutoDiscoveredGatewaysList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -98,7 +99,7 @@ func dataSourceAutoDiscoveredGatewayRead(d *schema.ResourceData, m interface{}) 
     parent := m.(*vspk.Me)
     filteredAutoDiscoveredGateways, err = parent.AutoDiscoveredGateways(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     AutoDiscoveredGateway := &vspk.AutoDiscoveredGateway{}
@@ -134,5 +135,5 @@ func dataSourceAutoDiscoveredGatewayRead(d *schema.ResourceData, m interface{}) 
 
     d.SetId(AutoDiscoveredGateway.Identifier())
     
-    return
+    return nil
 }

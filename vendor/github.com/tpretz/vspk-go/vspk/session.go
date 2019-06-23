@@ -12,7 +12,7 @@ package vspk
 import (
 	"crypto/tls"
 	"fmt"
-	"github.com/nuagenetworks/go-bambou/bambou"
+	"github.com/tpretz/go-bambou/bambou"
 	"strings"
 )
 

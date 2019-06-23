@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceIngressAdvFwdEntryTemplate() *schema.Resource {
@@ -220,8 +220,9 @@ func dataSourceIngressAdvFwdEntryTemplate() *schema.Resource {
 }
 
 
-func dataSourceIngressAdvFwdEntryTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceIngressAdvFwdEntryTemplateRead(d *schema.ResourceData, m interface{}) error {
     filteredIngressAdvFwdEntryTemplates := vspk.IngressAdvFwdEntryTemplatesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -241,25 +242,25 @@ func dataSourceIngressAdvFwdEntryTemplateRead(d *schema.ResourceData, m interfac
         parent := &vspk.MirrorDestination{ID: attr.(string)}
         filteredIngressAdvFwdEntryTemplates, err = parent.IngressAdvFwdEntryTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredIngressAdvFwdEntryTemplates, err = parent.IngressAdvFwdEntryTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ingress_adv_fwd_template"); ok {
         parent := &vspk.IngressAdvFwdTemplate{ID: attr.(string)}
         filteredIngressAdvFwdEntryTemplates, err = parent.IngressAdvFwdEntryTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredIngressAdvFwdEntryTemplates, err = parent.IngressAdvFwdEntryTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -328,5 +329,5 @@ func dataSourceIngressAdvFwdEntryTemplateRead(d *schema.ResourceData, m interfac
 
     d.SetId(IngressAdvFwdEntryTemplate.Identifier())
     
-    return
+    return nil
 }

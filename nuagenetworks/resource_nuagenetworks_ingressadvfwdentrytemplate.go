@@ -33,22 +33,27 @@ func resourceIngressAdvFwdEntryTemplate() *schema.Resource {
             "acl_template_name": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "icmp_code": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "icmp_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "fc_override": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "ipv6_address_override": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "dscp": &schema.Schema{
                 Type:     schema.TypeString,
@@ -57,6 +62,7 @@ func resourceIngressAdvFwdEntryTemplate() *schema.Resource {
             "dscp_remarking": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "failsafe_datapath": &schema.Schema{
                 Type:     schema.TypeString,
@@ -66,6 +72,7 @@ func resourceIngressAdvFwdEntryTemplate() *schema.Resource {
             "name": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "last_updated_by": &schema.Schema{
                 Type:     schema.TypeString,
@@ -79,14 +86,17 @@ func resourceIngressAdvFwdEntryTemplate() *schema.Resource {
             "address_override": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "redirect_rewrite_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "redirect_rewrite_value": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "redirect_vport_tag_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -100,30 +110,37 @@ func resourceIngressAdvFwdEntryTemplate() *schema.Resource {
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "destination_port": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "network_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "network_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "mirror_destination_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "vlan_range": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "flow_logging_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "enterprise_name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -138,6 +155,7 @@ func resourceIngressAdvFwdEntryTemplate() *schema.Resource {
             "location_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "location_type": &schema.Schema{
                 Type:     schema.TypeString,
@@ -146,6 +164,7 @@ func resourceIngressAdvFwdEntryTemplate() *schema.Resource {
             "policy_state": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "domain_name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -155,10 +174,12 @@ func resourceIngressAdvFwdEntryTemplate() *schema.Resource {
             "source_port": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "uplink_preference": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "app_type": &schema.Schema{
                 Type:     schema.TypeString,
@@ -168,10 +189,12 @@ func resourceIngressAdvFwdEntryTemplate() *schema.Resource {
             "priority": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "protocol": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "is_sla_aware": &schema.Schema{
                 Type:     schema.TypeBool,
@@ -181,22 +204,27 @@ func resourceIngressAdvFwdEntryTemplate() *schema.Resource {
             "associated_application_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_forwarding_path_list_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_live_entity_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_traffic_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_traffic_type_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "stats_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -206,6 +234,7 @@ func resourceIngressAdvFwdEntryTemplate() *schema.Resource {
             "stats_logging_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "ether_type": &schema.Schema{
                 Type:     schema.TypeString,
@@ -214,6 +243,7 @@ func resourceIngressAdvFwdEntryTemplate() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_ingress_adv_fwd_template": &schema.Schema{
                 Type:     schema.TypeString,

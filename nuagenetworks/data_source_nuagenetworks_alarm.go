@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceAlarm() *schema.Resource {
@@ -191,8 +191,9 @@ func dataSourceAlarm() *schema.Resource {
 }
 
 
-func dataSourceAlarmRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceAlarmRead(d *schema.ResourceData, m interface{}) error {
     filteredAlarms := vspk.AlarmsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -212,133 +213,133 @@ func dataSourceAlarmRead(d *schema.ResourceData, m interface{}) (err error) {
         parent := &vspk.TCA{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ns_port"); ok {
         parent := &vspk.NSPort{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_shunt_link"); ok {
         parent := &vspk.ShuntLink{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ns_redundant_gateway_group"); ok {
         parent := &vspk.NSRedundantGatewayGroup{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_wan_service"); ok {
         parent := &vspk.WANService{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vsg_redundant_port"); ok {
         parent := &vspk.VsgRedundantPort{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_wireless_port"); ok {
         parent := &vspk.WirelessPort{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ssid_connection"); ok {
         parent := &vspk.SSIDConnection{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vlan"); ok {
         parent := &vspk.VLAN{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vsc"); ok {
         parent := &vspk.VSC{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_hsc"); ok {
         parent := &vspk.HSC{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vrs"); ok {
         parent := &vspk.VRS{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ns_gateway"); ok {
         parent := &vspk.NSGateway{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_port"); ok {
         parent := &vspk.Port{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_redundancy_group"); ok {
         parent := &vspk.RedundancyGroup{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vm"); ok {
         parent := &vspk.VM{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_container"); ok {
         parent := &vspk.Container{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_gateway"); ok {
         parent := &vspk.Gateway{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ike_gateway_connection"); ok {
         parent := &vspk.IKEGatewayConnection{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vsd"); ok {
         parent := &vspk.VSD{ID: attr.(string)}
         filteredAlarms, err = parent.Alarms(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -376,5 +377,5 @@ func dataSourceAlarmRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(Alarm.Identifier())
     
-    return
+    return nil
 }

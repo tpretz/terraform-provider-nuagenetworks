@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourcePolicyGroupTemplate() *schema.Resource {
@@ -71,8 +71,9 @@ func dataSourcePolicyGroupTemplate() *schema.Resource {
 }
 
 
-func dataSourcePolicyGroupTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourcePolicyGroupTemplateRead(d *schema.ResourceData, m interface{}) error {
     filteredPolicyGroupTemplates := vspk.PolicyGroupTemplatesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -92,13 +93,13 @@ func dataSourcePolicyGroupTemplateRead(d *schema.ResourceData, m interface{}) (e
         parent := &vspk.L2DomainTemplate{ID: attr.(string)}
         filteredPolicyGroupTemplates, err = parent.PolicyGroupTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_domain_template"); ok {
         parent := &vspk.DomainTemplate{ID: attr.(string)}
         filteredPolicyGroupTemplates, err = parent.PolicyGroupTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -131,5 +132,5 @@ func dataSourcePolicyGroupTemplateRead(d *schema.ResourceData, m interface{}) (e
 
     d.SetId(PolicyGroupTemplate.Identifier())
     
-    return
+    return nil
 }

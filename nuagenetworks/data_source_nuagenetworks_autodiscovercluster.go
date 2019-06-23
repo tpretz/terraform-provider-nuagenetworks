@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceAutoDiscoverCluster() *schema.Resource {
@@ -57,8 +57,9 @@ func dataSourceAutoDiscoverCluster() *schema.Resource {
 }
 
 
-func dataSourceAutoDiscoverClusterRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceAutoDiscoverClusterRead(d *schema.ResourceData, m interface{}) error {
     filteredAutoDiscoverClusters := vspk.AutoDiscoverClustersList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -77,7 +78,7 @@ func dataSourceAutoDiscoverClusterRead(d *schema.ResourceData, m interface{}) (e
     parent := &vspk.VCenterDataCenter{ID: d.Get("parent_vcenter_data_center").(string)}
     filteredAutoDiscoverClusters, err = parent.AutoDiscoverClusters(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     AutoDiscoverCluster := &vspk.AutoDiscoverCluster{}
@@ -107,5 +108,5 @@ func dataSourceAutoDiscoverClusterRead(d *schema.ResourceData, m interface{}) (e
 
     d.SetId(AutoDiscoverCluster.Identifier())
     
-    return
+    return nil
 }

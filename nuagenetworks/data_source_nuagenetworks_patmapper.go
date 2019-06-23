@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourcePATMapper() *schema.Resource {
@@ -49,8 +49,9 @@ func dataSourcePATMapper() *schema.Resource {
 }
 
 
-func dataSourcePATMapperRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourcePATMapperRead(d *schema.ResourceData, m interface{}) error {
     filteredPATMappers := vspk.PATMappersList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -69,7 +70,7 @@ func dataSourcePATMapperRead(d *schema.ResourceData, m interface{}) (err error) 
     parent := m.(*vspk.Me)
     filteredPATMappers, err = parent.PATMappers(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     PATMapper := &vspk.PATMapper{}
@@ -98,5 +99,5 @@ func dataSourcePATMapperRead(d *schema.ResourceData, m interface{}) (err error) 
 
     d.SetId(PATMapper.Identifier())
     
-    return
+    return nil
 }

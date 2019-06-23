@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceL7applicationsignature() *schema.Resource {
@@ -89,8 +89,9 @@ func dataSourceL7applicationsignature() *schema.Resource {
 }
 
 
-func dataSourceL7applicationsignatureRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceL7applicationsignatureRead(d *schema.ResourceData, m interface{}) error {
     filteredL7applicationsignatures := vspk.L7applicationsignaturesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -109,7 +110,7 @@ func dataSourceL7applicationsignatureRead(d *schema.ResourceData, m interface{})
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     filteredL7applicationsignatures, err = parent.L7applicationsignatures(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     L7applicationsignature := &vspk.L7applicationsignature{}
@@ -147,5 +148,5 @@ func dataSourceL7applicationsignatureRead(d *schema.ResourceData, m interface{})
 
     d.SetId(L7applicationsignature.Identifier())
     
-    return
+    return nil
 }

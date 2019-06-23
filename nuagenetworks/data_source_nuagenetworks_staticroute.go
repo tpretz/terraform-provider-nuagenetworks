@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceStaticRoute() *schema.Resource {
@@ -102,8 +102,9 @@ func dataSourceStaticRoute() *schema.Resource {
 }
 
 
-func dataSourceStaticRouteRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceStaticRouteRead(d *schema.ResourceData, m interface{}) error {
     filteredStaticRoutes := vspk.StaticRoutesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -123,37 +124,37 @@ func dataSourceStaticRouteRead(d *schema.ResourceData, m interface{}) (err error
         parent := &vspk.SharedNetworkResource{ID: attr.(string)}
         filteredStaticRoutes, err = parent.StaticRoutes(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_domain"); ok {
         parent := &vspk.Domain{ID: attr.(string)}
         filteredStaticRoutes, err = parent.StaticRoutes(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vm_interface"); ok {
         parent := &vspk.VMInterface{ID: attr.(string)}
         filteredStaticRoutes, err = parent.StaticRoutes(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_host_interface"); ok {
         parent := &vspk.HostInterface{ID: attr.(string)}
         filteredStaticRoutes, err = parent.StaticRoutes(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_container_interface"); ok {
         parent := &vspk.ContainerInterface{ID: attr.(string)}
         filteredStaticRoutes, err = parent.StaticRoutes(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredStaticRoutes, err = parent.StaticRoutes(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -190,5 +191,5 @@ func dataSourceStaticRouteRead(d *schema.ResourceData, m interface{}) (err error
 
     d.SetId(StaticRoute.Identifier())
     
-    return
+    return nil
 }

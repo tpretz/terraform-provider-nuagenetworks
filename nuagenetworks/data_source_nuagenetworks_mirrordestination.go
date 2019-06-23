@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceMirrorDestination() *schema.Resource {
@@ -53,8 +53,9 @@ func dataSourceMirrorDestination() *schema.Resource {
 }
 
 
-func dataSourceMirrorDestinationRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceMirrorDestinationRead(d *schema.ResourceData, m interface{}) error {
     filteredMirrorDestinations := vspk.MirrorDestinationsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -73,7 +74,7 @@ func dataSourceMirrorDestinationRead(d *schema.ResourceData, m interface{}) (err
     parent := m.(*vspk.Me)
     filteredMirrorDestinations, err = parent.MirrorDestinations(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     MirrorDestination := &vspk.MirrorDestination{}
@@ -103,5 +104,5 @@ func dataSourceMirrorDestinationRead(d *schema.ResourceData, m interface{}) (err
 
     d.SetId(MirrorDestination.Identifier())
     
-    return
+    return nil
 }

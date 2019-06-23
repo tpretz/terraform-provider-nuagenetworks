@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceLicenseStatus() *schema.Resource {
@@ -113,8 +113,9 @@ func dataSourceLicenseStatus() *schema.Resource {
 }
 
 
-func dataSourceLicenseStatusRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceLicenseStatusRead(d *schema.ResourceData, m interface{}) error {
     filteredLicenseStatus := vspk.LicenseStatusList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -133,7 +134,7 @@ func dataSourceLicenseStatusRead(d *schema.ResourceData, m interface{}) (err err
     parent := m.(*vspk.Me)
     filteredLicenseStatus, err = parent.LicenseStatus(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     LicenseStatus := &vspk.LicenseStatus{}
@@ -178,5 +179,5 @@ func dataSourceLicenseStatusRead(d *schema.ResourceData, m interface{}) (err err
 
     d.SetId(LicenseStatus.Identifier())
     
-    return
+    return nil
 }

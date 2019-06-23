@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceZFBAutoAssignment() *schema.Resource {
@@ -70,8 +70,9 @@ func dataSourceZFBAutoAssignment() *schema.Resource {
 }
 
 
-func dataSourceZFBAutoAssignmentRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceZFBAutoAssignmentRead(d *schema.ResourceData, m interface{}) error {
     filteredZFBAutoAssignments := vspk.ZFBAutoAssignmentsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -90,7 +91,7 @@ func dataSourceZFBAutoAssignmentRead(d *schema.ResourceData, m interface{}) (err
     parent := m.(*vspk.Me)
     filteredZFBAutoAssignments, err = parent.ZFBAutoAssignments(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     ZFBAutoAssignment := &vspk.ZFBAutoAssignment{}
@@ -124,5 +125,5 @@ func dataSourceZFBAutoAssignmentRead(d *schema.ResourceData, m interface{}) (err
 
     d.SetId(ZFBAutoAssignment.Identifier())
     
-    return
+    return nil
 }

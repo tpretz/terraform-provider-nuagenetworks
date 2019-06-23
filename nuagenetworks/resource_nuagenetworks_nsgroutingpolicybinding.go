@@ -42,6 +42,7 @@ func resourceNSGRoutingPolicyBinding() *schema.Resource {
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -51,10 +52,12 @@ func resourceNSGRoutingPolicyBinding() *schema.Resource {
             "associated_export_routing_policy_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_import_routing_policy_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_policy_object_group_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -68,6 +71,7 @@ func resourceNSGRoutingPolicyBinding() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_domain": &schema.Schema{
                 Type:     schema.TypeString,

@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceDSCPRemarkingPolicyTable() *schema.Resource {
@@ -53,8 +53,9 @@ func dataSourceDSCPRemarkingPolicyTable() *schema.Resource {
 }
 
 
-func dataSourceDSCPRemarkingPolicyTableRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceDSCPRemarkingPolicyTableRead(d *schema.ResourceData, m interface{}) error {
     filteredDSCPRemarkingPolicyTables := vspk.DSCPRemarkingPolicyTablesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -74,13 +75,13 @@ func dataSourceDSCPRemarkingPolicyTableRead(d *schema.ResourceData, m interface{
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredDSCPRemarkingPolicyTables, err = parent.DSCPRemarkingPolicyTables(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredDSCPRemarkingPolicyTables, err = parent.DSCPRemarkingPolicyTables(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -110,5 +111,5 @@ func dataSourceDSCPRemarkingPolicyTableRead(d *schema.ResourceData, m interface{
 
     d.SetId(DSCPRemarkingPolicyTable.Identifier())
     
-    return
+    return nil
 }

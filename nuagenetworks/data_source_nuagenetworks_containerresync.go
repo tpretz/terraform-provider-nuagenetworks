@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceContainerResync() *schema.Resource {
@@ -63,8 +63,9 @@ func dataSourceContainerResync() *schema.Resource {
 }
 
 
-func dataSourceContainerResyncRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceContainerResyncRead(d *schema.ResourceData, m interface{}) error {
     filteredContainerResyncs := vspk.ContainerResyncsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -84,13 +85,13 @@ func dataSourceContainerResyncRead(d *schema.ResourceData, m interface{}) (err e
         parent := &vspk.Subnet{ID: attr.(string)}
         filteredContainerResyncs, err = parent.ContainerResyncs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_container"); ok {
         parent := &vspk.Container{ID: attr.(string)}
         filteredContainerResyncs, err = parent.ContainerResyncs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -121,5 +122,5 @@ func dataSourceContainerResyncRead(d *schema.ResourceData, m interface{}) (err e
 
     d.SetId(ContainerResync.Identifier())
     
-    return
+    return nil
 }

@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceFloatingIPACLTemplateEntry() *schema.Resource {
@@ -149,8 +149,9 @@ func dataSourceFloatingIPACLTemplateEntry() *schema.Resource {
 }
 
 
-func dataSourceFloatingIPACLTemplateEntryRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceFloatingIPACLTemplateEntryRead(d *schema.ResourceData, m interface{}) error {
     filteredFloatingIPACLTemplateEntries := vspk.FloatingIPACLTemplateEntriesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -169,7 +170,7 @@ func dataSourceFloatingIPACLTemplateEntryRead(d *schema.ResourceData, m interfac
     parent := &vspk.FloatingIPACLTemplate{ID: d.Get("parent_floating_ipacl_template").(string)}
     filteredFloatingIPACLTemplateEntries, err = parent.FloatingIPACLTemplateEntries(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     FloatingIPACLTemplateEntry := &vspk.FloatingIPACLTemplateEntry{}
@@ -222,5 +223,5 @@ func dataSourceFloatingIPACLTemplateEntryRead(d *schema.ResourceData, m interfac
 
     d.SetId(FloatingIPACLTemplateEntry.Identifier())
     
-    return
+    return nil
 }

@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceKeyServerMonitor() *schema.Resource {
@@ -73,8 +73,9 @@ func dataSourceKeyServerMonitor() *schema.Resource {
 }
 
 
-func dataSourceKeyServerMonitorRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceKeyServerMonitorRead(d *schema.ResourceData, m interface{}) error {
     filteredKeyServerMonitors := vspk.KeyServerMonitorsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -93,7 +94,7 @@ func dataSourceKeyServerMonitorRead(d *schema.ResourceData, m interface{}) (err 
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     filteredKeyServerMonitors, err = parent.KeyServerMonitors(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     KeyServerMonitor := &vspk.KeyServerMonitor{}
@@ -127,5 +128,5 @@ func dataSourceKeyServerMonitorRead(d *schema.ResourceData, m interface{}) (err 
 
     d.SetId(KeyServerMonitor.Identifier())
     
-    return
+    return nil
 }

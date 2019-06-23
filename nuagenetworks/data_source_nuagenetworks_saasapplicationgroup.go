@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceSaaSApplicationGroup() *schema.Resource {
@@ -53,8 +53,9 @@ func dataSourceSaaSApplicationGroup() *schema.Resource {
 }
 
 
-func dataSourceSaaSApplicationGroupRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceSaaSApplicationGroupRead(d *schema.ResourceData, m interface{}) error {
     filteredSaaSApplicationGroups := vspk.SaaSApplicationGroupsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -73,7 +74,7 @@ func dataSourceSaaSApplicationGroupRead(d *schema.ResourceData, m interface{}) (
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     filteredSaaSApplicationGroups, err = parent.SaaSApplicationGroups(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     SaaSApplicationGroup := &vspk.SaaSApplicationGroup{}
@@ -102,5 +103,5 @@ func dataSourceSaaSApplicationGroupRead(d *schema.ResourceData, m interface{}) (
 
     d.SetId(SaaSApplicationGroup.Identifier())
     
-    return
+    return nil
 }

@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceWirelessPort() *schema.Resource {
@@ -69,8 +69,9 @@ func dataSourceWirelessPort() *schema.Resource {
 }
 
 
-func dataSourceWirelessPortRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceWirelessPortRead(d *schema.ResourceData, m interface{}) error {
     filteredWirelessPorts := vspk.WirelessPortsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -89,7 +90,7 @@ func dataSourceWirelessPortRead(d *schema.ResourceData, m interface{}) (err erro
     parent := &vspk.NSGateway{ID: d.Get("parent_ns_gateway").(string)}
     filteredWirelessPorts, err = parent.WirelessPorts(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     WirelessPort := &vspk.WirelessPort{}
@@ -122,5 +123,5 @@ func dataSourceWirelessPortRead(d *schema.ResourceData, m interface{}) (err erro
 
     d.SetId(WirelessPort.Identifier())
     
-    return
+    return nil
 }

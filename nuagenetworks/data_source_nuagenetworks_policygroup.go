@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourcePolicyGroup() *schema.Resource {
@@ -117,8 +117,9 @@ func dataSourcePolicyGroup() *schema.Resource {
 }
 
 
-func dataSourcePolicyGroupRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourcePolicyGroupRead(d *schema.ResourceData, m interface{}) error {
     filteredPolicyGroups := vspk.PolicyGroupsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -138,55 +139,55 @@ func dataSourcePolicyGroupRead(d *schema.ResourceData, m interface{}) (err error
         parent := &vspk.Domain{ID: attr.(string)}
         filteredPolicyGroups, err = parent.PolicyGroups(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vm_interface"); ok {
         parent := &vspk.VMInterface{ID: attr.(string)}
         filteredPolicyGroups, err = parent.PolicyGroups(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_host_interface"); ok {
         parent := &vspk.HostInterface{ID: attr.(string)}
         filteredPolicyGroups, err = parent.PolicyGroups(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_container_interface"); ok {
         parent := &vspk.ContainerInterface{ID: attr.(string)}
         filteredPolicyGroups, err = parent.PolicyGroups(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredPolicyGroups, err = parent.PolicyGroups(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_bridge_interface"); ok {
         parent := &vspk.BridgeInterface{ID: attr.(string)}
         filteredPolicyGroups, err = parent.PolicyGroups(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_policy_group_category"); ok {
         parent := &vspk.PolicyGroupCategory{ID: attr.(string)}
         filteredPolicyGroups, err = parent.PolicyGroups(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredPolicyGroups, err = parent.PolicyGroups(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredPolicyGroups, err = parent.PolicyGroups(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -223,5 +224,5 @@ func dataSourcePolicyGroupRead(d *schema.ResourceData, m interface{}) (err error
 
     d.SetId(PolicyGroup.Identifier())
     
-    return
+    return nil
 }

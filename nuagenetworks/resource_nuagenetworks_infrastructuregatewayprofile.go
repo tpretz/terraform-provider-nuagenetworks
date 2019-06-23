@@ -33,10 +33,12 @@ func resourceInfrastructureGatewayProfile() *schema.Resource {
             "ntp_server_key": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "ntp_server_key_id": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -55,6 +57,7 @@ func resourceInfrastructureGatewayProfile() *schema.Resource {
             "dead_timer": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "dead_timer_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
@@ -69,6 +72,7 @@ func resourceInfrastructureGatewayProfile() *schema.Resource {
             "remote_log_server_address": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "remote_log_server_port": &schema.Schema{
                 Type:     schema.TypeInt,
@@ -78,10 +82,12 @@ func resourceInfrastructureGatewayProfile() *schema.Resource {
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "metadata_upgrade_path": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "flow_eviction_threshold": &schema.Schema{
                 Type:     schema.TypeInt,
@@ -91,6 +97,7 @@ func resourceInfrastructureGatewayProfile() *schema.Resource {
             "enterprise_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -144,6 +151,7 @@ func resourceInfrastructureGatewayProfile() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "system_sync_scheduler": &schema.Schema{
                 Type:     schema.TypeString,

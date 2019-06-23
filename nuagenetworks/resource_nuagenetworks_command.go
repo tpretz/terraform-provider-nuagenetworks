@@ -67,10 +67,12 @@ func resourceCommand() *schema.Resource {
             "associated_param": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_param_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "status": &schema.Schema{
                 Type:     schema.TypeString,
@@ -95,6 +97,7 @@ func resourceCommand() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_ns_gateway": &schema.Schema{
                 Type:     schema.TypeString,

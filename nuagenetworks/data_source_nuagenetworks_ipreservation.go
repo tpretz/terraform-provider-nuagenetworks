@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceIPReservation() *schema.Resource {
@@ -57,8 +57,9 @@ func dataSourceIPReservation() *schema.Resource {
 }
 
 
-func dataSourceIPReservationRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceIPReservationRead(d *schema.ResourceData, m interface{}) error {
     filteredIPReservations := vspk.IPReservationsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -77,7 +78,7 @@ func dataSourceIPReservationRead(d *schema.ResourceData, m interface{}) (err err
     parent := &vspk.Subnet{ID: d.Get("parent_subnet").(string)}
     filteredIPReservations, err = parent.IPReservations(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     IPReservation := &vspk.IPReservation{}
@@ -107,5 +108,5 @@ func dataSourceIPReservationRead(d *schema.ResourceData, m interface{}) (err err
 
     d.SetId(IPReservation.Identifier())
     
-    return
+    return nil
 }

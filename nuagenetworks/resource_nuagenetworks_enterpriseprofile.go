@@ -33,10 +33,12 @@ func resourceEnterpriseProfile() *schema.Resource {
             "bgp_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "dhcp_lease_interval": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "vnf_management_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
@@ -65,27 +67,33 @@ func resourceEnterpriseProfile() *schema.Resource {
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "allow_advanced_qos_configuration": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "allow_gateway_management": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "allow_trusted_forwarding_class": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "allowed_forwarding_classes": &schema.Schema{
                 Type:     schema.TypeList,
                 Optional: true,
+                Computed: true,
                 Elem:     &schema.Schema{Type: schema.TypeString},
             },
             "floating_ips_quota": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "enable_application_performance_management": &schema.Schema{
                 Type:     schema.TypeBool,
@@ -95,6 +103,7 @@ func resourceEnterpriseProfile() *schema.Resource {
             "encryption_management_mode": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -104,6 +113,7 @@ func resourceEnterpriseProfile() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
         },
     }

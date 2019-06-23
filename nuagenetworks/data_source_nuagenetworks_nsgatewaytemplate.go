@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceNSGatewayTemplate() *schema.Resource {
@@ -77,8 +77,9 @@ func dataSourceNSGatewayTemplate() *schema.Resource {
 }
 
 
-func dataSourceNSGatewayTemplateRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceNSGatewayTemplateRead(d *schema.ResourceData, m interface{}) error {
     filteredNSGatewayTemplates := vspk.NSGatewayTemplatesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -98,13 +99,13 @@ func dataSourceNSGatewayTemplateRead(d *schema.ResourceData, m interface{}) (err
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredNSGatewayTemplates, err = parent.NSGatewayTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredNSGatewayTemplates, err = parent.NSGatewayTemplates(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -140,5 +141,5 @@ func dataSourceNSGatewayTemplateRead(d *schema.ResourceData, m interface{}) (err
 
     d.SetId(NSGatewayTemplate.Identifier())
     
-    return
+    return nil
 }

@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceAvatar() *schema.Resource {
@@ -55,8 +55,9 @@ func dataSourceAvatar() *schema.Resource {
 }
 
 
-func dataSourceAvatarRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceAvatarRead(d *schema.ResourceData, m interface{}) error {
     filteredAvatars := vspk.AvatarsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -76,13 +77,13 @@ func dataSourceAvatarRead(d *schema.ResourceData, m interface{}) (err error) {
         parent := &vspk.User{ID: attr.(string)}
         filteredAvatars, err = parent.Avatars(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredAvatars, err = parent.Avatars(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -111,5 +112,5 @@ func dataSourceAvatarRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(Avatar.Identifier())
     
-    return
+    return nil
 }

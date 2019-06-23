@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceQOS() *schema.Resource {
@@ -213,8 +213,9 @@ func dataSourceQOS() *schema.Resource {
 }
 
 
-func dataSourceQOSRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceQOSRead(d *schema.ResourceData, m interface{}) error {
     filteredQOSs := vspk.QOSsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -234,73 +235,73 @@ func dataSourceQOSRead(d *schema.ResourceData, m interface{}) (err error) {
         parent := &vspk.Domain{ID: attr.(string)}
         filteredQOSs, err = parent.QOSs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_host_interface"); ok {
         parent := &vspk.HostInterface{ID: attr.(string)}
         filteredQOSs, err = parent.QOSs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredQOSs, err = parent.QOSs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_bridge_interface"); ok {
         parent := &vspk.BridgeInterface{ID: attr.(string)}
         filteredQOSs, err = parent.QOSs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_l2_domain_template"); ok {
         parent := &vspk.L2DomainTemplate{ID: attr.(string)}
         filteredQOSs, err = parent.QOSs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_subnet"); ok {
         parent := &vspk.Subnet{ID: attr.(string)}
         filteredQOSs, err = parent.QOSs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_policy_decision"); ok {
         parent := &vspk.PolicyDecision{ID: attr.(string)}
         filteredQOSs, err = parent.QOSs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_zone_template"); ok {
         parent := &vspk.ZoneTemplate{ID: attr.(string)}
         filteredQOSs, err = parent.QOSs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_zone"); ok {
         parent := &vspk.Zone{ID: attr.(string)}
         filteredQOSs, err = parent.QOSs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredQOSs, err = parent.QOSs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_domain_template"); ok {
         parent := &vspk.DomainTemplate{ID: attr.(string)}
         filteredQOSs, err = parent.QOSs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_subnet_template"); ok {
         parent := &vspk.SubnetTemplate{ID: attr.(string)}
         filteredQOSs, err = parent.QOSs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -356,5 +357,5 @@ func dataSourceQOSRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(QOS.Identifier())
     
-    return
+    return nil
 }

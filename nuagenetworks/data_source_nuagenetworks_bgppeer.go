@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceBGPPeer() *schema.Resource {
@@ -59,8 +59,9 @@ func dataSourceBGPPeer() *schema.Resource {
 }
 
 
-func dataSourceBGPPeerRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceBGPPeerRead(d *schema.ResourceData, m interface{}) error {
     filteredBGPPeers := vspk.BGPPeersList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -80,13 +81,13 @@ func dataSourceBGPPeerRead(d *schema.ResourceData, m interface{}) (err error) {
         parent := &vspk.VSC{ID: attr.(string)}
         filteredBGPPeers, err = parent.BGPPeers(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_hsc"); ok {
         parent := &vspk.HSC{ID: attr.(string)}
         filteredBGPPeers, err = parent.BGPPeers(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -116,5 +117,5 @@ func dataSourceBGPPeerRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(BGPPeer.Identifier())
     
-    return
+    return nil
 }

@@ -42,6 +42,7 @@ func resourceRedundancyGroup() *schema.Resource {
             "gateway_peer1_autodiscovered_gateway_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "gateway_peer1_connected": &schema.Schema{
                 Type:     schema.TypeBool,
@@ -51,14 +52,17 @@ func resourceRedundancyGroup() *schema.Resource {
             "gateway_peer1_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "gateway_peer1_name": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "gateway_peer2_autodiscovered_gateway_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "gateway_peer2_connected": &schema.Schema{
                 Type:     schema.TypeBool,
@@ -68,26 +72,32 @@ func resourceRedundancyGroup() *schema.Resource {
             "gateway_peer2_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "gateway_peer2_name": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "redundant_gateway_status": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "permitted_action": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "personality": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "enterprise_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -102,10 +112,12 @@ func resourceRedundancyGroup() *schema.Resource {
             "vtep": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,

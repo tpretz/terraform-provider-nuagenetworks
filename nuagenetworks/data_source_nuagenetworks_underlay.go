@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceUnderlay() *schema.Resource {
@@ -57,8 +57,9 @@ func dataSourceUnderlay() *schema.Resource {
 }
 
 
-func dataSourceUnderlayRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceUnderlayRead(d *schema.ResourceData, m interface{}) error {
     filteredUnderlays := vspk.UnderlaysList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -78,13 +79,13 @@ func dataSourceUnderlayRead(d *schema.ResourceData, m interface{}) (err error) {
         parent := &vspk.UplinkConnection{ID: attr.(string)}
         filteredUnderlays, err = parent.Underlays(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredUnderlays, err = parent.Underlays(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -115,5 +116,5 @@ func dataSourceUnderlayRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(Underlay.Identifier())
     
-    return
+    return nil
 }

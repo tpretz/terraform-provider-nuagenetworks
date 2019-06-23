@@ -9,7 +9,7 @@
 
 package vspk
 
-import "github.com/nuagenetworks/go-bambou/bambou"
+import "github.com/tpretz/go-bambou/bambou"
 
 // SSHKeyIdentity represents the Identity of the object
 var SSHKeyIdentity = bambou.Identity{

@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceVPort() *schema.Resource {
@@ -250,8 +250,9 @@ func dataSourceVPort() *schema.Resource {
 }
 
 
-func dataSourceVPortRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceVPortRead(d *schema.ResourceData, m interface{}) error {
     filteredVPorts := vspk.VPortsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -271,79 +272,79 @@ func dataSourceVPortRead(d *schema.ResourceData, m interface{}) (err error) {
         parent := &vspk.Domain{ID: attr.(string)}
         filteredVPorts, err = parent.VPorts(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredVPorts, err = parent.VPorts(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_subnet"); ok {
         parent := &vspk.Subnet{ID: attr.(string)}
         filteredVPorts, err = parent.VPorts(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_redirection_target"); ok {
         parent := &vspk.RedirectionTarget{ID: attr.(string)}
         filteredVPorts, err = parent.VPorts(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_policy_group"); ok {
         parent := &vspk.PolicyGroup{ID: attr.(string)}
         filteredVPorts, err = parent.VPorts(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_egress_profile"); ok {
         parent := &vspk.EgressProfile{ID: attr.(string)}
         filteredVPorts, err = parent.VPorts(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_zone"); ok {
         parent := &vspk.Zone{ID: attr.(string)}
         filteredVPorts, err = parent.VPorts(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vrs"); ok {
         parent := &vspk.VRS{ID: attr.(string)}
         filteredVPorts, err = parent.VPorts(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_multi_nic_vport"); ok {
         parent := &vspk.MultiNICVPort{ID: attr.(string)}
         filteredVPorts, err = parent.VPorts(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_floating_ip"); ok {
         parent := &vspk.FloatingIp{ID: attr.(string)}
         filteredVPorts, err = parent.VPorts(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_trunk"); ok {
         parent := &vspk.Trunk{ID: attr.(string)}
         filteredVPorts, err = parent.VPorts(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ingress_profile"); ok {
         parent := &vspk.IngressProfile{ID: attr.(string)}
         filteredVPorts, err = parent.VPorts(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_overlay_mirror_destination"); ok {
         parent := &vspk.OverlayMirrorDestination{ID: attr.(string)}
         filteredVPorts, err = parent.VPorts(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -407,5 +408,5 @@ func dataSourceVPortRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(VPort.Identifier())
     
-    return
+    return nil
 }

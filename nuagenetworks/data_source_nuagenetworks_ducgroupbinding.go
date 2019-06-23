@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceDUCGroupBinding() *schema.Resource {
@@ -45,8 +45,9 @@ func dataSourceDUCGroupBinding() *schema.Resource {
 }
 
 
-func dataSourceDUCGroupBindingRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceDUCGroupBindingRead(d *schema.ResourceData, m interface{}) error {
     filteredDUCGroupBindings := vspk.DUCGroupBindingsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -65,7 +66,7 @@ func dataSourceDUCGroupBindingRead(d *schema.ResourceData, m interface{}) (err e
     parent := &vspk.NSGGroup{ID: d.Get("parent_nsg_group").(string)}
     filteredDUCGroupBindings, err = parent.DUCGroupBindings(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     DUCGroupBinding := &vspk.DUCGroupBinding{}
@@ -92,5 +93,5 @@ func dataSourceDUCGroupBindingRead(d *schema.ResourceData, m interface{}) (err e
 
     d.SetId(DUCGroupBinding.Identifier())
     
-    return
+    return nil
 }

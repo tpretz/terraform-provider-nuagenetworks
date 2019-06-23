@@ -56,6 +56,7 @@ func resourceProxyARPFilter() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_subnet": &schema.Schema{
                 Type:     schema.TypeString,

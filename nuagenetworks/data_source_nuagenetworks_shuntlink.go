@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceShuntLink() *schema.Resource {
@@ -85,8 +85,9 @@ func dataSourceShuntLink() *schema.Resource {
 }
 
 
-func dataSourceShuntLinkRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceShuntLinkRead(d *schema.ResourceData, m interface{}) error {
     filteredShuntLinks := vspk.ShuntLinksList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -105,7 +106,7 @@ func dataSourceShuntLinkRead(d *schema.ResourceData, m interface{}) (err error) 
     parent := &vspk.NSRedundantGatewayGroup{ID: d.Get("parent_ns_redundant_gateway_group").(string)}
     filteredShuntLinks, err = parent.ShuntLinks(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     ShuntLink := &vspk.ShuntLink{}
@@ -142,5 +143,5 @@ func dataSourceShuntLinkRead(d *schema.ResourceData, m interface{}) (err error) 
 
     d.SetId(ShuntLink.Identifier())
     
-    return
+    return nil
 }

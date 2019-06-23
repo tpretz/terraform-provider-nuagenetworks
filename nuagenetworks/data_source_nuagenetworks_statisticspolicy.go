@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceStatisticsPolicy() *schema.Resource {
@@ -93,8 +93,9 @@ func dataSourceStatisticsPolicy() *schema.Resource {
 }
 
 
-func dataSourceStatisticsPolicyRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceStatisticsPolicyRead(d *schema.ResourceData, m interface{}) error {
     filteredStatisticsPolicies := vspk.StatisticsPoliciesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -114,49 +115,49 @@ func dataSourceStatisticsPolicyRead(d *schema.ResourceData, m interface{}) (err 
         parent := &vspk.Domain{ID: attr.(string)}
         filteredStatisticsPolicies, err = parent.StatisticsPolicies(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredStatisticsPolicies, err = parent.StatisticsPolicies(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_subnet"); ok {
         parent := &vspk.Subnet{ID: attr.(string)}
         filteredStatisticsPolicies, err = parent.StatisticsPolicies(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ns_port"); ok {
         parent := &vspk.NSPort{ID: attr.(string)}
         filteredStatisticsPolicies, err = parent.StatisticsPolicies(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_zone"); ok {
         parent := &vspk.Zone{ID: attr.(string)}
         filteredStatisticsPolicies, err = parent.StatisticsPolicies(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_patnat_pool"); ok {
         parent := &vspk.PATNATPool{ID: attr.(string)}
         filteredStatisticsPolicies, err = parent.StatisticsPolicies(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredStatisticsPolicies, err = parent.StatisticsPolicies(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_address_map"); ok {
         parent := &vspk.AddressMap{ID: attr.(string)}
         filteredStatisticsPolicies, err = parent.StatisticsPolicies(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -187,5 +188,5 @@ func dataSourceStatisticsPolicyRead(d *schema.ResourceData, m interface{}) (err 
 
     d.SetId(StatisticsPolicy.Identifier())
     
-    return
+    return nil
 }

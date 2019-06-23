@@ -42,6 +42,7 @@ func resourceOSPFInstance() *schema.Resource {
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -56,10 +57,12 @@ func resourceOSPFInstance() *schema.Resource {
             "associated_export_routing_policy_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_import_routing_policy_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "super_backbone_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
@@ -78,6 +81,7 @@ func resourceOSPFInstance() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "external_preference": &schema.Schema{
                 Type:     schema.TypeInt,

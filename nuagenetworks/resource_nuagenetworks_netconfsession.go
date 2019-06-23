@@ -33,6 +33,7 @@ func resourceNetconfSession() *schema.Resource {
             "associated_gateway_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_gateway_name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -42,6 +43,7 @@ func resourceNetconfSession() *schema.Resource {
             "status": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_netconf_manager": &schema.Schema{
                 Type:     schema.TypeString,

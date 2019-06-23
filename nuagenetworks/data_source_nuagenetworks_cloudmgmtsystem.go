@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceCloudMgmtSystem() *schema.Resource {
@@ -45,8 +45,9 @@ func dataSourceCloudMgmtSystem() *schema.Resource {
 }
 
 
-func dataSourceCloudMgmtSystemRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceCloudMgmtSystemRead(d *schema.ResourceData, m interface{}) error {
     filteredCloudMgmtSystems := vspk.CloudMgmtSystemsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -65,7 +66,7 @@ func dataSourceCloudMgmtSystemRead(d *schema.ResourceData, m interface{}) (err e
     parent := m.(*vspk.Me)
     filteredCloudMgmtSystems, err = parent.CloudMgmtSystems(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     CloudMgmtSystem := &vspk.CloudMgmtSystem{}
@@ -93,5 +94,5 @@ func dataSourceCloudMgmtSystemRead(d *schema.ResourceData, m interface{}) (err e
 
     d.SetId(CloudMgmtSystem.Identifier())
     
-    return
+    return nil
 }

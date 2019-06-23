@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceVM() *schema.Resource {
@@ -181,8 +181,9 @@ func dataSourceVM() *schema.Resource {
 }
 
 
-func dataSourceVMRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceVMRead(d *schema.ResourceData, m interface{}) error {
     filteredVMs := vspk.VMsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -202,73 +203,73 @@ func dataSourceVMRead(d *schema.ResourceData, m interface{}) (err error) {
         parent := &vspk.Domain{ID: attr.(string)}
         filteredVMs, err = parent.VMs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_qos"); ok {
         parent := &vspk.QOS{ID: attr.(string)}
         filteredVMs, err = parent.VMs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredVMs, err = parent.VMs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_subnet"); ok {
         parent := &vspk.Subnet{ID: attr.(string)}
         filteredVMs, err = parent.VMs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_user"); ok {
         parent := &vspk.User{ID: attr.(string)}
         filteredVMs, err = parent.VMs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredVMs, err = parent.VMs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_egress_acl_template"); ok {
         parent := &vspk.EgressACLTemplate{ID: attr.(string)}
         filteredVMs, err = parent.VMs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_zone"); ok {
         parent := &vspk.Zone{ID: attr.(string)}
         filteredVMs, err = parent.VMs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredVMs, err = parent.VMs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vrs"); ok {
         parent := &vspk.VRS{ID: attr.(string)}
         filteredVMs, err = parent.VMs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ingress_acl_template"); ok {
         parent := &vspk.IngressACLTemplate{ID: attr.(string)}
         filteredVMs, err = parent.VMs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredVMs, err = parent.VMs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -316,5 +317,5 @@ func dataSourceVMRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(VM.Identifier())
     
-    return
+    return nil
 }

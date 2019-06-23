@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceNetworkPerformanceBinding() *schema.Resource {
@@ -56,8 +56,9 @@ func dataSourceNetworkPerformanceBinding() *schema.Resource {
 }
 
 
-func dataSourceNetworkPerformanceBindingRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceNetworkPerformanceBindingRead(d *schema.ResourceData, m interface{}) error {
     filteredNetworkPerformanceBindings := vspk.NetworkPerformanceBindingsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -77,19 +78,19 @@ func dataSourceNetworkPerformanceBindingRead(d *schema.ResourceData, m interface
         parent := &vspk.Domain{ID: attr.(string)}
         filteredNetworkPerformanceBindings, err = parent.NetworkPerformanceBindings(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredNetworkPerformanceBindings, err = parent.NetworkPerformanceBindings(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_network_performance_measurement"); ok {
         parent := &vspk.NetworkPerformanceMeasurement{ID: attr.(string)}
         filteredNetworkPerformanceBindings, err = parent.NetworkPerformanceBindings(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -117,5 +118,5 @@ func dataSourceNetworkPerformanceBindingRead(d *schema.ResourceData, m interface
 
     d.SetId(NetworkPerformanceBinding.Identifier())
     
-    return
+    return nil
 }

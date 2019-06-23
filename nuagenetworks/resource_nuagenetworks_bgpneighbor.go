@@ -43,6 +43,7 @@ func resourceBGPNeighbor() *schema.Resource {
             "ipv6_address": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -51,6 +52,7 @@ func resourceBGPNeighbor() *schema.Resource {
             "dampening_enabled": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "peer_as": &schema.Schema{
                 Type:     schema.TypeInt,
@@ -59,14 +61,17 @@ func resourceBGPNeighbor() *schema.Resource {
             "peer_ip": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "session": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -76,14 +81,17 @@ func resourceBGPNeighbor() *schema.Resource {
             "associated_export_routing_policy_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "associated_import_routing_policy_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_subnet": &schema.Schema{
                 Type:     schema.TypeString,

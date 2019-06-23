@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceSaaSApplicationType() *schema.Resource {
@@ -63,8 +63,9 @@ func dataSourceSaaSApplicationType() *schema.Resource {
 }
 
 
-func dataSourceSaaSApplicationTypeRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceSaaSApplicationTypeRead(d *schema.ResourceData, m interface{}) error {
     filteredSaaSApplicationTypes := vspk.SaaSApplicationTypesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -84,13 +85,13 @@ func dataSourceSaaSApplicationTypeRead(d *schema.ResourceData, m interface{}) (e
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredSaaSApplicationTypes, err = parent.SaaSApplicationTypes(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_saa_s_application_group"); ok {
         parent := &vspk.SaaSApplicationGroup{ID: attr.(string)}
         filteredSaaSApplicationTypes, err = parent.SaaSApplicationTypes(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -121,5 +122,5 @@ func dataSourceSaaSApplicationTypeRead(d *schema.ResourceData, m interface{}) (e
 
     d.SetId(SaaSApplicationType.Identifier())
     
-    return
+    return nil
 }

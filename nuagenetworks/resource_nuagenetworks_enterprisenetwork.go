@@ -33,10 +33,12 @@ func resourceEnterpriseNetwork() *schema.Resource {
             "ip_type": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "ipv6_address": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "name": &schema.Schema{
                 Type:     schema.TypeString,
@@ -63,6 +65,7 @@ func resourceEnterpriseNetwork() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_saa_s_application_type": &schema.Schema{
                 Type:     schema.TypeString,

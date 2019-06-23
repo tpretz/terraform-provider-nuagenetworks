@@ -33,10 +33,12 @@ func resourceCustomProperty() *schema.Resource {
             "attribute_name": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "attribute_value": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_uplink_connection": &schema.Schema{
                 Type:     schema.TypeString,

@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceIngressProfile() *schema.Resource {
@@ -79,8 +79,9 @@ func dataSourceIngressProfile() *schema.Resource {
 }
 
 
-func dataSourceIngressProfileRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceIngressProfileRead(d *schema.ResourceData, m interface{}) error {
     filteredIngressProfiles := vspk.IngressProfilesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -100,13 +101,13 @@ func dataSourceIngressProfileRead(d *schema.ResourceData, m interface{}) (err er
         parent := &vspk.RedundancyGroup{ID: attr.(string)}
         filteredIngressProfiles, err = parent.IngressProfiles(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_gateway"); ok {
         parent := &vspk.Gateway{ID: attr.(string)}
         filteredIngressProfiles, err = parent.IngressProfiles(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -141,5 +142,5 @@ func dataSourceIngressProfileRead(d *schema.ResourceData, m interface{}) (err er
 
     d.SetId(IngressProfile.Identifier())
     
-    return
+    return nil
 }

@@ -33,10 +33,12 @@ func resourcePATIPEntry() *schema.Resource {
             "pat_centralized": &schema.Schema{
                 Type:     schema.TypeBool,
                 Optional: true,
+                Computed: true,
             },
             "ip_address": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "ip_type": &schema.Schema{
                 Type:     schema.TypeString,
@@ -56,14 +58,17 @@ func resourcePATIPEntry() *schema.Resource {
             "associated_domain_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "hypervisor_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_shared_network_resource": &schema.Schema{
                 Type:     schema.TypeString,

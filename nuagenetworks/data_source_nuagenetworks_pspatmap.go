@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourcePSPATMap() *schema.Resource {
@@ -46,8 +46,9 @@ func dataSourcePSPATMap() *schema.Resource {
 }
 
 
-func dataSourcePSPATMapRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourcePSPATMapRead(d *schema.ResourceData, m interface{}) error {
     filteredPSPATMaps := vspk.PSPATMapsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -66,7 +67,7 @@ func dataSourcePSPATMapRead(d *schema.ResourceData, m interface{}) (err error) {
     parent := &vspk.PSNATPool{ID: d.Get("parent_psnat_pool").(string)}
     filteredPSPATMaps, err = parent.PSPATMaps(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     PSPATMap := &vspk.PSPATMap{}
@@ -93,5 +94,5 @@ func dataSourcePSPATMapRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(PSPATMap.Identifier())
     
-    return
+    return nil
 }

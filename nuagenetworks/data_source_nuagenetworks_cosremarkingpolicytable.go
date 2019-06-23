@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceCOSRemarkingPolicyTable() *schema.Resource {
@@ -53,8 +53,9 @@ func dataSourceCOSRemarkingPolicyTable() *schema.Resource {
 }
 
 
-func dataSourceCOSRemarkingPolicyTableRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceCOSRemarkingPolicyTableRead(d *schema.ResourceData, m interface{}) error {
     filteredCOSRemarkingPolicyTables := vspk.COSRemarkingPolicyTablesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -74,13 +75,13 @@ func dataSourceCOSRemarkingPolicyTableRead(d *schema.ResourceData, m interface{}
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredCOSRemarkingPolicyTables, err = parent.COSRemarkingPolicyTables(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredCOSRemarkingPolicyTables, err = parent.COSRemarkingPolicyTables(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -110,5 +111,5 @@ func dataSourceCOSRemarkingPolicyTableRead(d *schema.ResourceData, m interface{}
 
     d.SetId(COSRemarkingPolicyTable.Identifier())
     
-    return
+    return nil
 }

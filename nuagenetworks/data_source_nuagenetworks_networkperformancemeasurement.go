@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceNetworkPerformanceMeasurement() *schema.Resource {
@@ -53,8 +53,9 @@ func dataSourceNetworkPerformanceMeasurement() *schema.Resource {
 }
 
 
-func dataSourceNetworkPerformanceMeasurementRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceNetworkPerformanceMeasurementRead(d *schema.ResourceData, m interface{}) error {
     filteredNetworkPerformanceMeasurements := vspk.NetworkPerformanceMeasurementsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -73,7 +74,7 @@ func dataSourceNetworkPerformanceMeasurementRead(d *schema.ResourceData, m inter
     parent := &vspk.Enterprise{ID: d.Get("parent_enterprise").(string)}
     filteredNetworkPerformanceMeasurements, err = parent.NetworkPerformanceMeasurements(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     NetworkPerformanceMeasurement := &vspk.NetworkPerformanceMeasurement{}
@@ -102,5 +103,5 @@ func dataSourceNetworkPerformanceMeasurementRead(d *schema.ResourceData, m inter
 
     d.SetId(NetworkPerformanceMeasurement.Identifier())
     
-    return
+    return nil
 }

@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceTier() *schema.Resource {
@@ -65,8 +65,9 @@ func dataSourceTier() *schema.Resource {
 }
 
 
-func dataSourceTierRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceTierRead(d *schema.ResourceData, m interface{}) error {
     filteredTiers := vspk.TiersList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -85,7 +86,7 @@ func dataSourceTierRead(d *schema.ResourceData, m interface{}) (err error) {
     parent := &vspk.PerformanceMonitor{ID: d.Get("parent_performance_monitor").(string)}
     filteredTiers, err = parent.Tiers(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     Tier := &vspk.Tier{}
@@ -117,5 +118,5 @@ func dataSourceTierRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(Tier.Identifier())
     
-    return
+    return nil
 }

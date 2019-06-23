@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceCSNATPool() *schema.Resource {
@@ -45,8 +45,9 @@ func dataSourceCSNATPool() *schema.Resource {
 }
 
 
-func dataSourceCSNATPoolRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceCSNATPoolRead(d *schema.ResourceData, m interface{}) error {
     filteredCSNATPools := vspk.CSNATPoolsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -65,7 +66,7 @@ func dataSourceCSNATPoolRead(d *schema.ResourceData, m interface{}) (err error) 
     parent := &vspk.Link{ID: d.Get("parent_link").(string)}
     filteredCSNATPools, err = parent.CSNATPools(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     CSNATPool := &vspk.CSNATPool{}
@@ -92,5 +93,5 @@ func dataSourceCSNATPoolRead(d *schema.ResourceData, m interface{}) (err error) 
 
     d.SetId(CSNATPool.Identifier())
     
-    return
+    return nil
 }

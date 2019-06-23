@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceSSHKey() *schema.Resource {
@@ -49,8 +49,9 @@ func dataSourceSSHKey() *schema.Resource {
 }
 
 
-func dataSourceSSHKeyRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceSSHKeyRead(d *schema.ResourceData, m interface{}) error {
     filteredSSHKeys := vspk.SSHKeysList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -69,7 +70,7 @@ func dataSourceSSHKeyRead(d *schema.ResourceData, m interface{}) (err error) {
     parent := &vspk.InfrastructureAccessProfile{ID: d.Get("parent_infrastructure_access_profile").(string)}
     filteredSSHKeys, err = parent.SSHKeys(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     SSHKey := &vspk.SSHKey{}
@@ -97,5 +98,5 @@ func dataSourceSSHKeyRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(SSHKey.Identifier())
     
-    return
+    return nil
 }

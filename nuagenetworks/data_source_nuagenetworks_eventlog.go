@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceEventLog() *schema.Resource {
@@ -367,8 +367,9 @@ func dataSourceEventLog() *schema.Resource {
 }
 
 
-func dataSourceEventLogRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceEventLogRead(d *schema.ResourceData, m interface{}) error {
     filteredEventLogs := vspk.EventLogsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -388,343 +389,343 @@ func dataSourceEventLogRead(d *schema.ResourceData, m interface{}) (err error) {
         parent := &vspk.Domain{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_tca"); ok {
         parent := &vspk.TCA{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_enterprise_profile"); ok {
         parent := &vspk.EnterpriseProfile{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vm_interface"); ok {
         parent := &vspk.VMInterface{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_auto_discovered_gateway"); ok {
         parent := &vspk.AutoDiscoveredGateway{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_host_interface"); ok {
         parent := &vspk.HostInterface{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_qos"); ok {
         parent := &vspk.QOS{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_permission"); ok {
         parent := &vspk.Permission{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_container_interface"); ok {
         parent := &vspk.ContainerInterface{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vsp"); ok {
         parent := &vspk.VSP{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_l2_domain"); ok {
         parent := &vspk.L2Domain{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_static_route"); ok {
         parent := &vspk.StaticRoute{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_bridge_interface"); ok {
         parent := &vspk.BridgeInterface{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_redirection_target_template"); ok {
         parent := &vspk.RedirectionTargetTemplate{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_l2_domain_template"); ok {
         parent := &vspk.L2DomainTemplate{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_subnet"); ok {
         parent := &vspk.Subnet{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ns_port"); ok {
         parent := &vspk.NSPort{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_user"); ok {
         parent := &vspk.User{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_license"); ok {
         parent := &vspk.License{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_dhcp_option"); ok {
         parent := &vspk.DHCPOption{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_enterprise_network"); ok {
         parent := &vspk.EnterpriseNetwork{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ns_redundant_gateway_group"); ok {
         parent := &vspk.NSRedundantGatewayGroup{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_zone_template"); ok {
         parent := &vspk.ZoneTemplate{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_redirection_target"); ok {
         parent := &vspk.RedirectionTarget{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_enterprise"); ok {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_wan_service"); ok {
         parent := &vspk.WANService{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_policy_group_template"); ok {
         parent := &vspk.PolicyGroupTemplate{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_egress_acl_template"); ok {
         parent := &vspk.EgressACLTemplate{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_metadata"); ok {
         parent := &vspk.Metadata{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_wireless_port"); ok {
         parent := &vspk.WirelessPort{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_proxy_arp_filter"); ok {
         parent := &vspk.ProxyARPFilter{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_public_network_macro"); ok {
         parent := &vspk.PublicNetworkMacro{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_policy_group"); ok {
         parent := &vspk.PolicyGroup{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_zone"); ok {
         parent := &vspk.Zone{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_multi_cast_channel_map"); ok {
         parent := &vspk.MultiCastChannelMap{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ssid_connection"); ok {
         parent := &vspk.SSIDConnection{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vlan"); ok {
         parent := &vspk.VLAN{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vport"); ok {
         parent := &vspk.VPort{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vsc"); ok {
         parent := &vspk.VSC{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_hsc"); ok {
         parent := &vspk.HSC{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vrs"); ok {
         parent := &vspk.VRS{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_group"); ok {
         parent := &vspk.Group{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_address_range"); ok {
         parent := &vspk.AddressRange{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_floating_ip"); ok {
         parent := &vspk.FloatingIp{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ns_gateway"); ok {
         parent := &vspk.NSGateway{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_multi_cast_range"); ok {
         parent := &vspk.MultiCastRange{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_domain_template"); ok {
         parent := &vspk.DomainTemplate{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ingress_acl_template"); ok {
         parent := &vspk.IngressACLTemplate{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_port"); ok {
         parent := &vspk.Port{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_redundancy_group"); ok {
         parent := &vspk.RedundancyGroup{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vm"); ok {
         parent := &vspk.VM{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_container"); ok {
         parent := &vspk.Container{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_virtual_ip"); ok {
         parent := &vspk.VirtualIP{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_subnet_template"); ok {
         parent := &vspk.SubnetTemplate{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_ip_reservation"); ok {
         parent := &vspk.IPReservation{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_gateway"); ok {
         parent := &vspk.Gateway{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_vsd"); ok {
         parent := &vspk.VSD{ID: attr.(string)}
         filteredEventLogs, err = parent.EventLogs(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -762,5 +763,5 @@ func dataSourceEventLogRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(EventLog.Identifier())
     
-    return
+    return nil
 }

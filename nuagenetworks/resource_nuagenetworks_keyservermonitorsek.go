@@ -38,14 +38,17 @@ func resourceKeyServerMonitorSEK() *schema.Resource {
             "seed_payload_authentication_algorithm": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "seed_payload_encryption_algorithm": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "lifetime": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "entity_scope": &schema.Schema{
                 Type:     schema.TypeString,
@@ -55,14 +58,17 @@ func resourceKeyServerMonitorSEK() *schema.Resource {
             "creation_time": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "start_time": &schema.Schema{
                 Type:     schema.TypeInt,
                 Optional: true,
+                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_key_server_monitor": &schema.Schema{
                 Type:     schema.TypeString,

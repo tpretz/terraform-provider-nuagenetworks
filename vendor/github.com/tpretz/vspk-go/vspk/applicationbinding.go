@@ -9,7 +9,7 @@
 
 package vspk
 
-import "github.com/nuagenetworks/go-bambou/bambou"
+import "github.com/tpretz/go-bambou/bambou"
 
 // ApplicationBindingIdentity represents the Identity of the object
 var ApplicationBindingIdentity = bambou.Identity{

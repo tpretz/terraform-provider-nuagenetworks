@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceUser() *schema.Resource {
@@ -95,8 +95,9 @@ func dataSourceUser() *schema.Resource {
 }
 
 
-func dataSourceUserRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceUserRead(d *schema.ResourceData, m interface{}) error {
     filteredUsers := vspk.UsersList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -116,19 +117,19 @@ func dataSourceUserRead(d *schema.ResourceData, m interface{}) (err error) {
         parent := &vspk.Enterprise{ID: attr.(string)}
         filteredUsers, err = parent.Users(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_group"); ok {
         parent := &vspk.Group{ID: attr.(string)}
         filteredUsers, err = parent.Users(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else {
         parent := m.(*vspk.Me)
         filteredUsers, err = parent.Users(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -167,5 +168,5 @@ func dataSourceUserRead(d *schema.ResourceData, m interface{}) (err error) {
 
     d.SetId(User.Identifier())
     
-    return
+    return nil
 }

@@ -33,6 +33,7 @@ func resourceVirtualIP() *schema.Resource {
             "mac": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "ip_type": &schema.Schema{
                 Type:     schema.TypeString,
@@ -56,14 +57,17 @@ func resourceVirtualIP() *schema.Resource {
             "associated_floating_ip_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "subnet_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_redirection_target": &schema.Schema{
                 Type:     schema.TypeString,

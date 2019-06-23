@@ -42,6 +42,7 @@ func resourceNSRedundantGatewayGroup() *schema.Resource {
             "gateway_peer1_autodiscovered_gateway_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "gateway_peer1_connected": &schema.Schema{
                 Type:     schema.TypeBool,
@@ -51,14 +52,17 @@ func resourceNSRedundantGatewayGroup() *schema.Resource {
             "gateway_peer1_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "gateway_peer1_name": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "gateway_peer2_autodiscovered_gateway_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "gateway_peer2_connected": &schema.Schema{
                 Type:     schema.TypeBool,
@@ -68,10 +72,12 @@ func resourceNSRedundantGatewayGroup() *schema.Resource {
             "gateway_peer2_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "gateway_peer2_name": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "heartbeat_interval": &schema.Schema{
                 Type:     schema.TypeInt,
@@ -86,6 +92,7 @@ func resourceNSRedundantGatewayGroup() *schema.Resource {
             "redundancy_port_ids": &schema.Schema{
                 Type:     schema.TypeList,
                 Optional: true,
+                Computed: true,
                 Elem:     &schema.Schema{Type: schema.TypeString},
             },
             "redundant_gateway_status": &schema.Schema{
@@ -96,14 +103,17 @@ func resourceNSRedundantGatewayGroup() *schema.Resource {
             "permitted_action": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "personality": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "enterprise_id": &schema.Schema{
                 Type:     schema.TypeString,
@@ -123,6 +133,7 @@ func resourceNSRedundantGatewayGroup() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "parent_enterprise": &schema.Schema{
                 Type:     schema.TypeString,

@@ -52,6 +52,7 @@ func resourceVNFThresholdPolicy() *schema.Resource {
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "min_occurrence": &schema.Schema{
                 Type:     schema.TypeInt,

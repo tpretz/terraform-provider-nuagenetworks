@@ -42,6 +42,7 @@ func resourceUnderlay() *schema.Resource {
             "description": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
             "underlay_id": &schema.Schema{
                 Type:     schema.TypeInt,
@@ -56,6 +57,7 @@ func resourceUnderlay() *schema.Resource {
             "external_id": &schema.Schema{
                 Type:     schema.TypeString,
                 Optional: true,
+                Computed: true,
             },
         },
     }

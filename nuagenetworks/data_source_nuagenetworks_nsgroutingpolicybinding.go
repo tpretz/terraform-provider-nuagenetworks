@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceNSGRoutingPolicyBinding() *schema.Resource {
@@ -69,8 +69,9 @@ func dataSourceNSGRoutingPolicyBinding() *schema.Resource {
 }
 
 
-func dataSourceNSGRoutingPolicyBindingRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceNSGRoutingPolicyBindingRead(d *schema.ResourceData, m interface{}) error {
     filteredNSGRoutingPolicyBindings := vspk.NSGRoutingPolicyBindingsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -89,7 +90,7 @@ func dataSourceNSGRoutingPolicyBindingRead(d *schema.ResourceData, m interface{}
     parent := &vspk.Domain{ID: d.Get("parent_domain").(string)}
     filteredNSGRoutingPolicyBindings, err = parent.NSGRoutingPolicyBindings(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     NSGRoutingPolicyBinding := &vspk.NSGRoutingPolicyBinding{}
@@ -122,5 +123,5 @@ func dataSourceNSGRoutingPolicyBindingRead(d *schema.ResourceData, m interface{}
 
     d.SetId(NSGRoutingPolicyBinding.Identifier())
     
-    return
+    return nil
 }

@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceEnterpriseSecuredData() *schema.Resource {
@@ -65,8 +65,9 @@ func dataSourceEnterpriseSecuredData() *schema.Resource {
 }
 
 
-func dataSourceEnterpriseSecuredDataRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceEnterpriseSecuredDataRead(d *schema.ResourceData, m interface{}) error {
     filteredEnterpriseSecuredDatas := vspk.EnterpriseSecuredDatasList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -85,7 +86,7 @@ func dataSourceEnterpriseSecuredDataRead(d *schema.ResourceData, m interface{}) 
     parent := &vspk.EnterpriseSecurity{ID: d.Get("parent_enterprise_security").(string)}
     filteredEnterpriseSecuredDatas, err = parent.EnterpriseSecuredDatas(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     EnterpriseSecuredData := &vspk.EnterpriseSecuredData{}
@@ -117,5 +118,5 @@ func dataSourceEnterpriseSecuredDataRead(d *schema.ResourceData, m interface{}) 
 
     d.SetId(EnterpriseSecuredData.Identifier())
     
-    return
+    return nil
 }

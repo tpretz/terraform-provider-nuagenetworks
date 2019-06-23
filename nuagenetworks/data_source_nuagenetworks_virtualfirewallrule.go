@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceVirtualFirewallRule() *schema.Resource {
@@ -153,8 +153,9 @@ func dataSourceVirtualFirewallRule() *schema.Resource {
 }
 
 
-func dataSourceVirtualFirewallRuleRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceVirtualFirewallRuleRead(d *schema.ResourceData, m interface{}) error {
     filteredVirtualFirewallRules := vspk.VirtualFirewallRulesList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -173,7 +174,7 @@ func dataSourceVirtualFirewallRuleRead(d *schema.ResourceData, m interface{}) (e
     parent := &vspk.VirtualFirewallPolicy{ID: d.Get("parent_virtual_firewall_policy").(string)}
     filteredVirtualFirewallRules, err = parent.VirtualFirewallRules(fetchFilter)
     if err != nil {
-        return
+        return err
     }
 
     VirtualFirewallRule := &vspk.VirtualFirewallRule{}
@@ -227,5 +228,5 @@ func dataSourceVirtualFirewallRuleRead(d *schema.ResourceData, m interface{}) (e
 
     d.SetId(VirtualFirewallRule.Identifier())
     
-    return
+    return nil
 }

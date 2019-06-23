@@ -4,7 +4,7 @@ import (
     "fmt"
     "github.com/hashicorp/terraform/helper/schema"
     "github.com/tpretz/vspk-go/vspk"
-    "github.com/nuagenetworks/go-bambou/bambou"
+    "github.com/tpretz/go-bambou/bambou"
 )
 
 func dataSourceKeyServerMonitorEncryptedSeed() *schema.Resource {
@@ -79,8 +79,9 @@ func dataSourceKeyServerMonitorEncryptedSeed() *schema.Resource {
 }
 
 
-func dataSourceKeyServerMonitorEncryptedSeedRead(d *schema.ResourceData, m interface{}) (err error) {
+func dataSourceKeyServerMonitorEncryptedSeedRead(d *schema.ResourceData, m interface{}) error {
     filteredKeyServerMonitorEncryptedSeeds := vspk.KeyServerMonitorEncryptedSeedsList{}
+    err := &bambou.Error{}
     fetchFilter := &bambou.FetchingInfo{}
     
     filters, filtersOk := d.GetOk("filter")
@@ -100,13 +101,13 @@ func dataSourceKeyServerMonitorEncryptedSeedRead(d *schema.ResourceData, m inter
         parent := &vspk.KeyServerMonitorSeed{ID: attr.(string)}
         filteredKeyServerMonitorEncryptedSeeds, err = parent.KeyServerMonitorEncryptedSeeds(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     } else if attr, ok := d.GetOk("parent_key_server_monitor"); ok {
         parent := &vspk.KeyServerMonitor{ID: attr.(string)}
         filteredKeyServerMonitorEncryptedSeeds, err = parent.KeyServerMonitorEncryptedSeeds(fetchFilter)
         if err != nil {
-            return
+            return err
         }
     }
 
@@ -141,5 +142,5 @@ func dataSourceKeyServerMonitorEncryptedSeedRead(d *schema.ResourceData, m inter
 
     d.SetId(KeyServerMonitorEncryptedSeed.Identifier())
     
-    return
+    return nil
 }
